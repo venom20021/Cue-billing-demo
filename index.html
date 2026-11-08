@@ -1,0 +1,1129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="data:," />
+<title>Cue Club — Snooker & Pool Billing Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,600;6..72,700&family=Public+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f3efe6;
+    --bg-2:#ebe5d6;
+    --surface:#fffdf7;
+    --surface-2:#f7f2e6;
+    --ink:#1a2420;
+    --ink-2:#4a554e;
+    --ink-3:#7a847d;
+    --line:#ddd4bf;
+    --line-strong:#c9bc9c;
+    --baize:#14532d;
+    --baize-deep:#0c3820;
+    --baize-ink:#eaf5ec;
+    --brass:#b98a2f;
+    --brass-bright:#d4a93c;
+    --brass-soft:#f3e5bd;
+    --red:#b3402e;
+    --red-soft:#fbe9e4;
+    --amber:#96660a;
+    --amber-soft:#fdf0cd;
+    --green-ok:#1c7a43;
+    --green-soft:#e2f2e6;
+    --blue-soft:#e3ecf7;
+    --blue-ink:#2c5f8a;
+    --shadow:0 1px 2px rgba(26,36,32,.06),0 10px 28px rgba(26,36,32,.07);
+    --shadow-lg:0 18px 50px rgba(12,30,20,.28);
+    --radius:14px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0d1512;
+      --bg-2:#111c17;
+      --surface:#16211b;
+      --surface-2:#1a2820;
+      --ink:#eef2ec;
+      --ink-2:#b9c4ba;
+      --ink-3:#849184;
+      --line:#2a3a30;
+      --line-strong:#3a5041;
+      --baize:#175c33;
+      --baize-deep:#0f4225;
+      --brass:#d4a93c;
+      --brass-bright:#e8c25e;
+      --brass-soft:#3a3016;
+      --red-soft:#40201a;
+      --amber-soft:#3d3110;
+      --amber:#eec25e;
+      --green-soft:#173526;
+      --blue-soft:#1b2c3d;
+      --blue-ink:#9cc2e4;
+      --shadow:0 1px 2px rgba(0,0,0,.35),0 10px 28px rgba(0,0,0,.3);
+    }
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+    font-size:15px;line-height:1.45;
+  }
+  button,input,select{font:inherit;color:inherit}
+  button{cursor:pointer}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 16px 56px}
+
+  /* ---------- Top bar ---------- */
+  .topbar{
+    background:var(--baize-deep);color:var(--baize-ink);
+    border-bottom:3px solid var(--brass);
+  }
+  .topbar-in{max-width:1120px;margin:0 auto;padding:18px 16px 16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .ball{
+    width:46px;height:46px;border-radius:50%;flex:none;
+    background:radial-gradient(circle at 32% 30%,#ffffff,#d9d9d9 55%,#a9a9a9);
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:inset 0 -4px 8px rgba(0,0,0,.25),0 2px 6px rgba(0,0,0,.35);
+  }
+  .ball span{
+    width:24px;height:24px;border-radius:50%;background:#fff;border:1.5px solid #222;
+    color:#111;font-family:"IBM Plex Mono",monospace;font-weight:700;font-size:13px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .brand h1{
+    margin:0;font-family:"Newsreader",Georgia,serif;font-weight:700;
+    font-size:30px;line-height:1.05;letter-spacing:.2px;color:#fff;
+  }
+  .brand p{margin:3px 0 0;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:#cfe3d2;font-weight:600}
+  .demo-pill{
+    margin-left:auto;background:var(--brass);color:#221a05;font-weight:800;
+    font-size:12px;letter-spacing:.12em;text-transform:uppercase;
+    padding:7px 12px;border-radius:999px;white-space:nowrap;
+  }
+  .demo-note{
+    background:var(--amber-soft);color:var(--amber);
+    border-bottom:1px solid var(--line);
+  }
+  .demo-note-in{max-width:1120px;margin:0 auto;padding:9px 16px;font-size:13.5px;font-weight:600;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+  .demo-note strong{font-weight:800}
+  @media (prefers-color-scheme: dark){ .demo-note{color:var(--amber)} }
+
+  /* ---------- Stats ---------- */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0 4px}
+  @media (max-width:720px){ .stats{grid-template-columns:repeat(2,1fr)} }
+  .stat{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:13px 15px;box-shadow:var(--shadow);
+  }
+  .stat .k{font-size:11.5px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3)}
+  .stat .v{font-family:"IBM Plex Mono",monospace;font-size:24px;font-weight:700;margin-top:3px;font-variant-numeric:tabular-nums}
+  .stat .s{font-size:12.5px;color:var(--ink-2);margin-top:1px}
+  .stat.pending .v{color:var(--red)}
+  .stat.live .v{color:var(--baize)}
+  @media (prefers-color-scheme: dark){ .stat.live .v{color:#7fd79b} .stat.pending .v{color:#ff9a86} }
+
+  /* ---------- Tabs ---------- */
+  .tabs{display:flex;gap:8px;margin:18px 0 16px;flex-wrap:wrap}
+  .tab{
+    border:1.5px solid var(--line-strong);background:var(--surface);border-radius:999px;
+    padding:9px 18px;font-weight:700;font-size:14.5px;
+  }
+  .tab[aria-selected="true"]{background:var(--baize-deep);border-color:var(--baize-deep);color:#fff}
+  .tab .count{
+    display:inline-block;min-width:20px;text-align:center;margin-left:6px;
+    background:var(--brass);color:#221a05;border-radius:999px;font-size:12px;padding:1px 6px;font-weight:800;
+  }
+  .try-hint{
+    margin-left:auto;align-self:center;font-size:13px;color:var(--ink-2);max-width:420px;
+  }
+  @media (max-width:720px){ .try-hint{margin-left:0} }
+
+  /* ---------- Table cards ---------- */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:820px){ .grid{grid-template-columns:1fr} }
+  .card{
+    background:var(--surface);border:1px solid var(--line);border-radius:18px;
+    box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;
+  }
+  .card-head{
+    display:flex;align-items:center;gap:10px;padding:14px 16px 10px;
+  }
+  .tname{font-family:"Newsreader",Georgia,serif;font-size:21px;font-weight:700;line-height:1.1}
+  .ttype{font-size:12px;color:var(--ink-2);font-weight:600;margin-top:2px}
+  .rate-badge{
+    margin-left:auto;text-align:right;font-family:"IBM Plex Mono",monospace;
+    font-weight:700;font-size:15px;color:var(--baize);white-space:nowrap;
+  }
+  @media (prefers-color-scheme: dark){ .rate-badge{color:#7fd79b} }
+  .rate-badge small{display:block;font-family:"Public Sans",sans-serif;font-weight:600;font-size:11px;color:var(--ink-3);letter-spacing:.06em}
+  .status{
+    font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+    padding:4px 9px;border-radius:999px;white-space:nowrap;
+  }
+  .status.free{background:var(--green-soft);color:var(--green-ok)}
+  .status.live{background:var(--red-soft);color:var(--red)}
+  .status.paused{background:var(--amber-soft);color:var(--amber)}
+  @media (prefers-color-scheme: dark){ .status.live{color:#ff9a86} .status.free{color:#7fd79b} }
+  .live-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--red);margin-right:5px;vertical-align:1px;animation:pulse 1.4s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+  @media (prefers-reduced-motion: reduce){ .live-dot{animation:none} }
+
+  .card-body{padding:2px 16px 16px;display:flex;flex-direction:column;gap:12px;flex:1}
+  .felt{
+    background:linear-gradient(160deg,var(--baize),var(--baize-deep));
+    border-radius:12px;color:var(--baize-ink);padding:14px 16px;
+    border:1px solid rgba(0,0,0,.25);
+    box-shadow:inset 0 0 0 3px rgba(255,255,255,.05),inset 0 -14px 24px rgba(0,0,0,.25);
+  }
+  .felt .players{font-weight:700;font-size:16.5px;color:#fff;line-height:1.3;word-break:break-word}
+  .felt .players .vs{color:var(--brass-bright);font-weight:600;font-size:13px;margin:0 4px;letter-spacing:.08em}
+  .felt .started{font-size:12.5px;color:#cfe3d2;margin-top:2px}
+  .clockrow{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-top:10px;flex-wrap:wrap}
+  .clock{font-family:"IBM Plex Mono",monospace;font-size:42px;font-weight:700;line-height:1;color:#fff;font-variant-numeric:tabular-nums;letter-spacing:.01em}
+  .clock small{display:block;font-family:"Public Sans",sans-serif;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#cfe3d2;margin-bottom:5px}
+  .runbill{text-align:right}
+  .runbill .amt{font-family:"IBM Plex Mono",monospace;font-size:26px;font-weight:700;color:var(--brass-bright);font-variant-numeric:tabular-nums}
+  .runbill .lab{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#cfe3d2}
+
+  label.flabel{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:5px}
+  .pinputs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media (max-width:420px){ .pinputs{grid-template-columns:1fr} }
+  .pinputs input{
+    width:100%;padding:11px 12px;border:1.5px solid var(--line-strong);border-radius:10px;
+    background:var(--surface-2);font-size:15.5px;font-weight:600;
+  }
+  .pinputs input:focus{outline:2px solid var(--brass);outline-offset:1px;border-color:var(--brass)}
+  .free-note{font-size:13px;color:var(--ink-2);background:var(--surface-2);border:1px dashed var(--line-strong);border-radius:10px;padding:10px 12px}
+
+  .btn{
+    border:none;border-radius:11px;padding:13px 18px;font-weight:800;font-size:15.5px;
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;
+  }
+  .btn-start{background:var(--baize);color:#fff}
+  .btn-start:hover{background:var(--baize-deep)}
+  .btn-end{background:var(--red);color:#fff}
+  .btn-end:hover{filter:brightness(.92)}
+  .btn-ghost{background:var(--surface-2);border:1.5px solid var(--line-strong);color:var(--ink)}
+  .btn-brass{background:var(--brass);color:#221a05}
+  .btn:active{transform:translateY(1px)}
+
+  /* food on card */
+  .food-sec{border-top:1px solid var(--line);padding-top:11px}
+  .food-sec h4{margin:0 0 8px;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);display:flex;justify-content:space-between;align-items:baseline}
+  .food-sec h4 .ftotal{font-family:"IBM Plex Mono",monospace;color:var(--ink);font-size:14px;letter-spacing:0;text-transform:none}
+  .food-line{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px dashed var(--line);font-size:14.5px}
+  .food-line:last-of-type{border-bottom:none}
+  .food-line .fname{font-weight:600}
+  .food-line .fqty{color:var(--ink-2);font-size:13px}
+  .food-line .famt{margin-left:auto;font-family:"IBM Plex Mono",monospace;font-weight:600;font-variant-numeric:tabular-nums}
+  .qty-btn{
+    width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line-strong);
+    background:var(--surface);font-weight:800;line-height:1;font-size:15px;flex:none;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .food-empty{font-size:13.5px;color:var(--ink-3)}
+  .menu-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
+  .chip{
+    border:1.5px solid var(--line-strong);background:var(--surface-2);border-radius:999px;
+    padding:7px 12px;font-size:13.5px;font-weight:700;
+  }
+  .chip .cp{font-family:"IBM Plex Mono",monospace;font-weight:600;color:var(--baize);font-size:12.5px;margin-left:4px}
+  @media (prefers-color-scheme: dark){ .chip .cp{color:#7fd79b} }
+  .chip:hover{border-color:var(--brass)}
+  .bill-strip{
+    display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+    background:var(--brass-soft);border-radius:10px;padding:10px 13px;
+  }
+  .bill-strip .bl{font-size:12px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--amber)}
+  .bill-strip .ba{font-family:"IBM Plex Mono",monospace;font-size:21px;font-weight:700;font-variant-numeric:tabular-nums}
+  .bill-strip .bd{font-size:12px;color:var(--ink-2)}
+
+  /* frames */
+  .frames{border-top:1px solid var(--line);padding-top:11px}
+  .frames h4{margin:0 0 9px;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);display:flex;justify-content:space-between;align-items:baseline}
+  .frames h4 .fhint{font-family:"IBM Plex Mono",monospace;color:var(--ink);font-size:13px;letter-spacing:0;text-transform:none}
+  .frame-row{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:stretch}
+  .frame-box{background:var(--surface-2);border:1.5px solid var(--line-strong);border-radius:12px;padding:10px 12px;text-align:center}
+  .frame-box .fp{font-weight:700;font-size:14.5px;line-height:1.25;word-break:break-word}
+  .frame-box .fc{font-family:"IBM Plex Mono",monospace;font-size:34px;font-weight:700;line-height:1.15;font-variant-numeric:tabular-nums}
+  .frame-box .fl{font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+  .frame-btns{display:flex;gap:6px;justify-content:center;align-items:center;margin-top:9px}
+  .frame-add{background:var(--baize);color:#fff;border:none;border-radius:9px;padding:8px 13px;font-weight:800;font-size:13.5px}
+  .frame-add:hover{background:var(--baize-deep)}
+  .frame-vs{align-self:center;font-weight:800;color:var(--ink-3);font-size:15px}
+  .split-note{font-size:13.5px;color:var(--ink-2);margin-top:10px;line-height:1.5}
+  .split-note strong{color:var(--ink)}
+  .frame-add:disabled{opacity:.45;cursor:not-allowed}
+  .frame-times{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .frame-times .ft{font-family:"IBM Plex Mono",monospace;font-size:12.5px;font-weight:600;background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-variant-numeric:tabular-nums}
+  .frame-times .ft.cur{border-color:var(--brass);color:var(--amber)}
+  .pause-banner{background:var(--amber-soft);border:1.5px solid var(--brass);border-radius:12px;padding:13px 14px;margin-top:11px}
+  .pause-banner .pb-t{font-weight:800;font-size:15px;color:var(--amber)}
+  .pause-banner .pb-s{font-size:13.5px;color:var(--ink-2);margin-top:2px;line-height:1.45}
+  .pause-banner .pb-btns{display:grid;grid-template-columns:1.3fr 1fr;gap:8px;margin-top:11px}
+  .pause-banner .pb-btns .btn{padding:11px 10px;font-size:14.5px}
+  .felt.is-paused{filter:saturate(.55)}
+
+  /* per-share payment groups in checkout */
+  .pay-group{margin-top:14px}
+  .pay-group .pg-label{font-weight:800;font-size:14.5px;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+  .pay-group .pg-label .pg-amt{font-family:"IBM Plex Mono",monospace;font-weight:700;font-variant-numeric:tabular-nums}
+  .pay-group .pay-opts{margin:8px 0 0}
+
+  /* ---------- Day book ---------- */
+  .book-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+  @media (max-width:720px){ .book-summary{grid-template-columns:repeat(2,1fr)} }
+  .ledger-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+  .ledger-row{
+    display:grid;grid-template-columns:86px 1fr auto;gap:6px 14px;
+    padding:13px 16px;border-bottom:1px solid var(--line);align-items:start;
+  }
+  .ledger-row:last-child{border-bottom:none}
+  .ledger-row .lt{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--ink-2);font-variant-numeric:tabular-nums;line-height:1.5}
+  .ledger-row .ltab{font-weight:700;color:var(--ink);font-size:13.5px}
+  .ledger-row .lp{font-weight:700;font-size:15.5px}
+  .ledger-row .ld{font-size:13px;color:var(--ink-2);margin-top:2px}
+  .ledger-row .lamt{font-family:"IBM Plex Mono",monospace;font-weight:700;font-size:17px;text-align:right;font-variant-numeric:tabular-nums}
+  .pay{
+    display:inline-block;margin-top:5px;font-size:11px;font-weight:800;letter-spacing:.08em;
+    text-transform:uppercase;padding:3px 9px;border-radius:999px;
+  }
+  .pay.cash{background:var(--green-soft);color:var(--green-ok)}
+  .pay.upi{background:var(--blue-soft);color:var(--blue-ink)}
+  .pay.pending{background:var(--red-soft);color:var(--red)}
+  @media (prefers-color-scheme: dark){ .pay.cash{color:#7fd79b} .pay.pending{color:#ff9a86} }
+  .empty{
+    text-align:center;padding:44px 20px;color:var(--ink-2);
+  }
+  .empty .big{font-family:"Newsreader",Georgia,serif;font-size:22px;color:var(--ink);margin-bottom:6px}
+  .day-total-bar{
+    display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+    background:var(--baize-deep);color:#fff;border-radius:var(--radius);padding:15px 18px;margin-top:14px;
+  }
+  .day-total-bar .dl{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#cfe3d2}
+  .day-total-bar .da{font-family:"IBM Plex Mono",monospace;font-size:27px;font-weight:700;color:var(--brass-bright);font-variant-numeric:tabular-nums}
+
+  /* ---------- Students / Coaching ---------- */
+  .students-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+  @media (max-width:720px){ .students-summary{grid-template-columns:repeat(2,1fr)} }
+  .student-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:820px){ .student-grid{grid-template-columns:1fr} }
+  .student-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:16px 18px 14px}
+  .student-head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+  .student-avatar{width:44px;height:44px;border-radius:50%;background:var(--baize-deep);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;letter-spacing:.02em;flex:none}
+  .student-name{font-family:"Newsreader",Georgia,serif;font-size:20px;font-weight:700;line-height:1.1}
+  .student-sub{font-size:12.5px;color:var(--ink-2);font-weight:600;margin-top:2px}
+  .fee-status{margin-left:auto;font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;padding:5px 10px;border-radius:999px;white-space:nowrap}
+  .fee-status.paid{background:var(--green-soft);color:var(--green-ok)}
+  .fee-status.pending{background:var(--red-soft);color:var(--red)}
+  @media (prefers-color-scheme: dark){ .fee-status.paid{color:#7fd79b} .fee-status.pending{color:#ff9a86} }
+  .learning-box{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:11px 13px;display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+  .learning-box .lb-k{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+  .learning-box .lb-v{font-weight:800;font-size:16.5px;line-height:1.2;margin-top:2px}
+  .learning-box .lb-s{font-size:12.5px;color:var(--ink-2)}
+  .learning-box .lb-sessions{text-align:right;flex:none}
+  .learning-box .lb-sessions .n{font-family:"IBM Plex Mono",monospace;font-size:24px;font-weight:700;line-height:1}
+  .learning-box .lb-sessions .l{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-top:3px}
+  .student-rows{display:grid;grid-template-columns:1fr 1fr;gap:9px 16px}
+  @media (max-width:420px){ .student-rows{grid-template-columns:1fr} }
+  .student-rows .sr .k{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+  .student-rows .sr .v{font-weight:700;font-size:14.5px;margin-top:1px}
+  .student-rows .sr .v.mono{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+  .student-rows .sr .v.due-pending{color:var(--red)}
+  @media (prefers-color-scheme: dark){ .student-rows .sr .v.due-pending{color:#ff9a86} }
+  .sample-badge{display:inline-block;background:var(--brass-soft);color:var(--amber);border:1px solid var(--brass);font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;padding:4px 9px;border-radius:999px;margin-left:8px;vertical-align:2px}
+
+  /* ---------- Menu view ---------- */
+  .menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  @media (max-width:820px){ .menu-grid{grid-template-columns:repeat(2,1fr)} }
+  @media (max-width:480px){ .menu-grid{grid-template-columns:1fr} }
+  .menu-item{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:15px 16px;box-shadow:var(--shadow);display:flex;align-items:center;gap:12px}
+  .menu-item .mn{font-weight:700;font-size:16px}
+  .menu-item .mc{font-size:12.5px;color:var(--ink-3);font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+  .menu-item .mp{margin-left:auto;font-family:"IBM Plex Mono",monospace;font-weight:700;font-size:18px;color:var(--baize);font-variant-numeric:tabular-nums}
+  @media (prefers-color-scheme: dark){ .menu-item .mp{color:#7fd79b} }
+  .section-note{font-size:13.5px;color:var(--ink-2);margin:0 0 14px}
+
+  /* ---------- Roadmap / coming soon ---------- */
+  .roadmap{
+    margin-top:22px;border:1.5px dashed var(--brass);border-radius:18px;
+    background:var(--surface-2);padding:18px 20px;display:flex;gap:16px;align-items:flex-start;
+  }
+  @media (max-width:560px){ .roadmap{flex-direction:column;gap:10px} }
+  .roadmap .qr-ic{
+    flex:none;width:52px;height:52px;border-radius:12px;background:var(--surface);
+    border:1.5px solid var(--line-strong);display:flex;align-items:center;justify-content:center;color:var(--ink-2);
+  }
+  .roadmap .rm-tag{
+    display:inline-block;background:var(--brass);color:#221a05;font-weight:800;
+    font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+    padding:4px 10px;border-radius:999px;margin-bottom:7px;
+  }
+  .roadmap h3{margin:0;font-family:"Newsreader",Georgia,serif;font-size:21px;font-weight:700;line-height:1.15}
+  .roadmap p{margin:6px 0 0;font-size:14.5px;color:var(--ink-2);line-height:1.55;max-width:760px}
+  .roadmap p strong{color:var(--ink)}
+  .roadmap .rm-note{margin-top:9px;font-size:13px;font-weight:700;color:var(--amber)}
+
+  footer{margin-top:34px;border-top:1px solid var(--line);padding-top:16px;font-size:13px;color:var(--ink-3);display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between}
+
+  /* ---------- Modal ---------- */
+  .overlay{
+    position:fixed;inset:0;background:rgba(8,18,12,.62);z-index:50;
+    display:none;align-items:flex-end;justify-content:center;padding:0;
+  }
+  .overlay.open{display:flex}
+  @media (min-width:640px){ .overlay{align-items:center;padding:20px} }
+  .modal{
+    background:var(--surface);width:100%;max-width:520px;max-height:92vh;overflow:auto;
+    border-radius:20px 20px 0 0;padding:22px 20px 20px;box-shadow:var(--shadow-lg);
+  }
+  @media (min-width:640px){ .modal{border-radius:20px} }
+  .modal h2{font-family:"Newsreader",Georgia,serif;margin:0 0 2px;font-size:25px}
+  .modal .sub{color:var(--ink-2);font-size:14px;margin-bottom:14px}
+  .bill-table{width:100%;border-collapse:collapse;font-size:15px}
+  .bill-table td{padding:8px 2px;border-bottom:1px dashed var(--line);vertical-align:top}
+  .bill-table td.r{text-align:right;font-family:"IBM Plex Mono",monospace;font-weight:600;white-space:nowrap;font-variant-numeric:tabular-nums}
+  .bill-table .dim{color:var(--ink-2);font-size:13px}
+  .bill-table tr.grand td{border-bottom:none;border-top:2px solid var(--line-strong);padding-top:12px;font-weight:800;font-size:18px}
+  .bill-table tr.grand td.r{color:var(--baize)}
+  @media (prefers-color-scheme: dark){ .bill-table tr.grand td.r{color:#7fd79b} }
+  .pay-opts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0}
+  .pay-opt{
+    border:2px solid var(--line-strong);background:var(--surface-2);border-radius:12px;
+    padding:12px 6px;font-weight:800;font-size:14px;text-align:center;line-height:1.25;
+  }
+  .pay-opt small{display:block;font-weight:600;font-size:11.5px;color:var(--ink-2);margin-top:2px}
+  .pay-opt.sel-cash{border-color:var(--green-ok);background:var(--green-soft)}
+  .pay-opt.sel-upi{border-color:var(--blue-ink);background:var(--blue-soft)}
+  .pay-opt.sel-pending{border-color:var(--red);background:var(--red-soft)}
+  .modal-btns{display:grid;grid-template-columns:1fr 1.6fr;gap:10px}
+  .receipt-check{
+    width:58px;height:58px;border-radius:50%;background:var(--green-soft);color:var(--green-ok);
+    display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;margin:4px auto 10px;
+  }
+  @media (prefers-color-scheme: dark){ .receipt-check{color:#7fd79b} }
+  .toast{
+    position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(80px);
+    background:var(--ink);color:var(--bg);padding:12px 20px;border-radius:999px;font-weight:700;
+    font-size:14.5px;z-index:60;transition:transform .25s ease;box-shadow:var(--shadow-lg);max-width:92vw;text-align:center;
+  }
+  .toast.show{transform:translateX(-50%) translateY(0)}
+  .hidden{display:none !important}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <div class="ball" aria-hidden="true"><span>8</span></div>
+    <div class="brand">
+      <h1>Cue Club</h1>
+      <p>Snooker &amp; Pool · Counter Billing</p>
+    </div>
+    <div class="demo-pill">Demo version</div>
+  </div>
+</header>
+<div class="demo-note" role="note">
+  <div class="demo-note-in">
+    <span>⚠</span>
+    <span><strong>This is a try-out demo — nothing is saved.</strong> Start a table, add food, finish a bill: it all resets the moment you reload or close this page.</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- Stats -->
+  <section class="stats" aria-label="Today at a glance">
+    <div class="stat live">
+      <div class="k">Tables live now</div>
+      <div class="v" id="statLive">0 / 6</div>
+      <div class="s" id="statLiveSub">All tables free</div>
+    </div>
+    <div class="stat">
+      <div class="k">Billed today</div>
+      <div class="v" id="statBilled">₹0</div>
+      <div class="s" id="statSessions">0 sessions finished</div>
+    </div>
+    <div class="stat">
+      <div class="k">Collected</div>
+      <div class="v" id="statCollected">₹0</div>
+      <div class="s">Cash + UPI-Scanner</div>
+    </div>
+    <div class="stat pending">
+      <div class="k">Pending</div>
+      <div class="v" id="statPending">₹0</div>
+      <div class="s" id="statPendingSub">Nobody owes anything</div>
+    </div>
+  </section>
+
+  <!-- Tabs -->
+  <nav class="tabs" aria-label="Views">
+    <button class="tab" id="tabTables" aria-selected="true" onclick="showView('tables')">Tables</button>
+    <button class="tab" id="tabBook" aria-selected="false" onclick="showView('book')">Day Book <span class="count" id="bookCount">0</span></button>
+    <button class="tab" id="tabStudents" aria-selected="false" onclick="showView('students')">Students / Coaching <span class="count" id="studentCount">4</span></button>
+    <button class="tab" id="tabMenu" aria-selected="false" onclick="showView('menu')">Canteen Menu</button>
+    <span class="try-hint">Try it: start Table 1, tap “+ Frame” when a frame is won — the timer pauses while the next frame is set up (setup time is never billed), then tap Start Next Frame. After 3–4 frames, End &amp; Bill shows every frame’s time and one total. Also tap <strong>Students / Coaching</strong> to see student fees &amp; learning history.</span>
+  </nav>
+
+  <!-- Tables view -->
+  <section id="viewTables">
+    <div class="grid" id="tableGrid"></div>
+  </section>
+
+  <!-- Day book view -->
+  <section id="viewBook" class="hidden">
+    <div class="book-summary">
+      <div class="stat"><div class="k">Sessions</div><div class="v" id="bookSessions">0</div><div class="s">Finished today</div></div>
+      <div class="stat"><div class="k">Cash</div><div class="v" id="bookCash">₹0</div><div class="s">In the drawer</div></div>
+      <div class="stat"><div class="k">UPI-Scanner</div><div class="v" id="bookUpi">₹0</div><div class="s">QR payments</div></div>
+      <div class="stat pending"><div class="k">Pending</div><div class="v" id="bookPending">₹0</div><div class="s">To collect later</div></div>
+    </div>
+    <div class="ledger-card" id="ledgerCard">
+      <div class="empty" id="ledgerEmpty">
+        <div class="big">No bills yet today</div>
+        <div>Finish a table with End &amp; Bill and its entry lands here automatically — names, timings, food and payment status, all added up.</div>
+      </div>
+      <div id="ledgerRows"></div>
+    </div>
+    <div class="day-total-bar">
+      <div>
+        <div class="dl">Day-end total</div>
+        <div style="font-size:13px;color:#cfe3d2" id="dayTotalBreak">Cash ₹0 + UPI ₹0 + Pending ₹0</div>
+      </div>
+      <div class="da" id="dayTotal">₹0</div>
+    </div>
+  </section>
+
+  <!-- Students / Coaching view -->
+  <section id="viewStudents" class="hidden">
+    <p class="section-note">Coaching students at a glance — who joined when, how long they have been learning, their monthly fee, whether this month is paid or pending, and how many sessions they have attended. <strong>Sample data for this demo only</strong> — in the full version the owner adds real students and marks fees as they come in.</p>
+    <div class="students-summary">
+      <div class="stat"><div class="k">Active students</div><div class="v" id="stuTotal">4</div><div class="s">Currently learning</div></div>
+      <div class="stat"><div class="k">Fees collected · Nov</div><div class="v" id="stuCollected">₹0</div><div class="s" id="stuCollectedSub">This month</div></div>
+      <div class="stat pending"><div class="k">Fees pending · Nov</div><div class="v" id="stuPending">₹0</div><div class="s" id="stuPendingSub">To collect</div></div>
+      <div class="stat"><div class="k">Sessions attended</div><div class="v" id="stuSessions">0</div><div class="s">All students, total</div></div>
+    </div>
+    <div class="student-grid" id="studentGrid"></div>
+    <p class="section-note" style="margin:14px 0 0">In the full version: tap a student to see full fee history month by month, mark a fee paid in one tap, and see joining anniversaries — e.g. “learning for 6 months” — automatically, no manual counting.</p>
+  </section>
+
+  <!-- Menu view -->
+  <section id="viewMenu" class="hidden">
+    <p class="section-note">Sample canteen menu for this demo. While a table is running, tap any item on that table's card and it joins the same bill — table time and food stay as separate lines, one total at checkout.</p>
+    <div class="menu-grid" id="menuGrid"></div>
+  </section>
+
+  <!-- Roadmap teaser — future feature, NOT part of this V1 demo -->
+  <aside class="roadmap" aria-label="Coming in a future version">
+    <div class="qr-ic" aria-hidden="true">
+      <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3z"/><path d="M21 14v.01M14 21h.01M21 21v.01M17.5 21h.01"/></svg>
+    </div>
+    <div>
+      <span class="rm-tag">Coming in V2 / V3 · Roadmap</span>
+      <h3>Coming Soon — Scan &amp; Play</h3>
+      <p>A <strong>QR code at each table</strong>. Scan it, start your frame — the <strong>table light and heater switch on automatically</strong> and your timer starts. End a frame and the timer pauses and asks <strong>Play More or End</strong> — no counter visit needed.</p>
+      <p class="rm-note">Not part of this demo — this is a future upgrade on the roadmap, not a V1 feature.</p>
+    </div>
+  </aside>
+
+  <footer>
+    <span>Cue Club — billing demo · 4 snooker tables @ ₹4/min · 2 pool tables @ ₹2/min · billed per started minute</span>
+    <span>Demo data only — resets on reload</span>
+  </footer>
+</div>
+
+<!-- Checkout modal -->
+<div class="overlay" id="checkoutOverlay" role="dialog" aria-modal="true" aria-labelledby="coTitle">
+  <div class="modal">
+    <h2 id="coTitle">Final bill</h2>
+    <div class="sub" id="coSub"></div>
+    <table class="bill-table"><tbody id="coBody"></tbody></table>
+    <div id="payArea"></div>
+    <div class="modal-btns" style="margin-top:18px">
+      <button class="btn btn-ghost" id="keepPlayingBtn" onclick="closeCheckout()">Keep playing</button>
+      <button class="btn btn-brass" id="confirmBillBtn" onclick="confirmBill()">Save bill &amp; free table</button>
+    </div>
+  </div>
+</div>
+
+<!-- Receipt modal -->
+<div class="overlay" id="receiptOverlay" role="dialog" aria-modal="true">
+  <div class="modal" style="text-align:center">
+    <div class="receipt-check">✓</div>
+    <h2>Bill saved to Day Book</h2>
+    <div class="sub" id="receiptSub"></div>
+    <table class="bill-table" style="text-align:left"><tbody id="receiptBody"></tbody></table>
+    <div style="margin-top:18px">
+      <button class="btn btn-start" onclick="closeReceipt()">Done — back to tables</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* =============== Demo state — in memory only, resets on reload =============== */
+var MENU = [
+  { id:'chai',    name:'Masala Chai',    price:20, cat:'Drinks' },
+  { id:'coffee',  name:'Filter Coffee',  price:30, cat:'Drinks' },
+  { id:'cold',    name:'Cold Drink',     price:40, cat:'Drinks' },
+  { id:'water',   name:'Mineral Water',  price:20, cat:'Drinks' },
+  { id:'maggi',   name:'Masala Maggi',   price:70, cat:'Snacks' },
+  { id:'sandwich',name:'Veg Sandwich',   price:60, cat:'Snacks' },
+  { id:'fries',   name:'French Fries',   price:80, cat:'Snacks' },
+  { id:'biscuit', name:'Biscuits',       price:10, cat:'Snacks' }
+];
+function menuItem(id){ for (var i=0;i<MENU.length;i++) if (MENU[i].id===id) return MENU[i]; return null; }
+
+var TABLES = [
+  { id:1, name:'Table 1', kind:'Snooker', detail:'Sharma S1 Pro', rate:4 },
+  { id:2, name:'Table 2', kind:'Snooker', detail:'Sharma S1 Pro', rate:4 },
+  { id:3, name:'Table 3', kind:'Snooker', detail:'Sharma S1 Pro', rate:4 },
+  { id:4, name:'Table 4', kind:'Snooker', detail:'Sharma S1 Pro', rate:4 },
+  { id:5, name:'Pool 1',  kind:'Pool',    detail:'Pool table',    rate:2 },
+  { id:6, name:'Pool 2',  kind:'Pool',    detail:'Pool table',    rate:2 }
+];
+/* session: { p1, p2, startTs, food: {menuId: qty} } */
+TABLES.forEach(function(t){ t.session = null; });
+
+var ledger = [];           /* finished bills */
+var checkoutTableId = null;
+var checkoutPays = {};     /* per-share payment choices in the checkout modal */
+var lastReceipt = null;
+
+/* =============== Helpers =============== */
+function rs(n){ return '₹' + Math.round(n).toLocaleString('en-IN'); }
+function pad(n){ return (n<10?'0':'')+n; }
+function fmtClock(sec){
+  var h = Math.floor(sec/3600), m = Math.floor((sec%3600)/60), s = sec%60;
+  if (h>0) return pad(h)+':'+pad(m)+':'+pad(s);
+  return pad(m)+':'+pad(s);
+}
+function fmtTime(ts){
+  var d = new Date(ts);
+  var h = d.getHours(), ap = h>=12 ? 'PM':'AM'; h = h%12; if (h===0) h=12;
+  return h+':'+pad(d.getMinutes())+' '+ap;
+}
+/* Billed time = play time only. Each frame runs from its start until a
+   + Frame tap freezes it; the gap while the next frame is racked up is
+   paused time and is never counted. frames[] holds finished frame seconds,
+   frameStartTs marks the frame currently in play (null while paused). */
+function currentFrameSec(t){
+  var s = t.session;
+  if (!s || s.paused || !s.frameStartTs) return 0;
+  return Math.max(0, Math.floor((Date.now()-s.frameStartTs)/1000));
+}
+function elapsedSec(t){
+  var s = t.session;
+  if (!s) return 0;
+  var done = (s.frames||[]).reduce(function(a,x){ return a+x; },0);
+  return done + currentFrameSec(t);
+}
+function frameBreakdown(t){
+  /* per-frame seconds for the bill: finished frames + the live one, if any */
+  var s = t.session;
+  if (!s) return [];
+  var out = (s.frames||[]).slice();
+  if (!s.paused && s.frameStartTs) out.push(currentFrameSec(t));
+  return out;
+}
+function fmtDur(sec){
+  var m = Math.floor(sec/60), s = sec%60;
+  if (m===0) return s+' sec';
+  if (s===0) return m+' min';
+  return m+' min '+s+' sec';
+}
+function billedMinutes(t){ return Math.max(1, Math.ceil(elapsedSec(t)/60)); }
+function tableCharge(t){ return billedMinutes(t) * t.rate; }
+function foodLines(t){
+  var out = [];
+  if (!t.session) return out;
+  Object.keys(t.session.food).forEach(function(id){
+    var q = t.session.food[id]; if (q<=0) return;
+    var m = menuItem(id); if (!m) return;
+    out.push({ id:id, name:m.name, price:m.price, qty:q, amt:m.price*q });
+  });
+  return out;
+}
+function foodTotal(t){ return foodLines(t).reduce(function(a,l){ return a+l.amt; },0); }
+function grandTotal(t){ return tableCharge(t) + foodTotal(t); }
+/* Frame split — loser pays: a player's share of the TABLE bill is set by the
+   frames they LOST (the frames the other player won). Cafeteria is never split. */
+function splitShares(t){
+  var s = t.session;
+  if (!s || !s.p2) return null;
+  var total = (s.f1||0) + (s.f2||0);
+  if (total <= 0) return null;
+  var tc = tableCharge(t);
+  var s1 = Math.round(tc * s.f2 / total);   /* Player 1 lost f2 frames */
+  return { s1:s1, s2:tc - s1, total:total };
+}
+function splitText(t){
+  var s = t.session;
+  var sp = splitShares(t);
+  if (!sp) return 'No frames finished yet — tap <strong>+ Frame</strong> when a player wins one and the timer pauses while the next frame is set up. Only frame play time is billed. The table bill then splits by frames lost: whoever loses more frames pays more.';
+  return '<strong>'+esc(s.p1)+' won '+s.f1+' · '+esc(s.p2)+' won '+s.f2+'</strong> — ' +
+    esc(s.p1)+' lost '+s.f2+', pays <strong>'+rs(sp.s1)+'</strong> · ' +
+    esc(s.p2)+' lost '+s.f1+', pays <strong>'+rs(sp.s2)+'</strong> of the table bill. Billed time is frame play time only — paused setup time never counts.';
+}
+function frameTimesHtml(t){
+  var s = t.session;
+  if (!s) return '';
+  var parts = [];
+  (s.frames||[]).forEach(function(sec,i){
+    parts.push('<span class="ft">Frame '+(i+1)+': '+fmtClock(sec)+'</span>');
+  });
+  if (!s.paused && s.frameStartTs) parts.push('<span class="ft cur">Frame '+((s.frames||[]).length+1)+' · live <span data-framecur="'+t.id+'">'+fmtClock(currentFrameSec(t))+'</span></span>');
+  if (s.paused && (s.frames||[]).length) parts.push('<span class="ft cur">⏸ Paused — setup time not billed</span>');
+  return parts.join('');
+}
+function playerLabel(s){ return s.p2 ? (s.p1 + ' vs ' + s.p2) : s.p1; }
+function esc(str){
+  return String(str).replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+var toastTimer = null;
+function toast(msg){
+  var el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ el.classList.remove('show'); }, 2600);
+}
+
+/* =============== Views =============== */
+function showView(v){
+  document.getElementById('viewTables').classList.toggle('hidden', v!=='tables');
+  document.getElementById('viewBook').classList.toggle('hidden', v!=='book');
+  document.getElementById('viewStudents').classList.toggle('hidden', v!=='students');
+  document.getElementById('viewMenu').classList.toggle('hidden', v!=='menu');
+  document.getElementById('tabTables').setAttribute('aria-selected', v==='tables');
+  document.getElementById('tabBook').setAttribute('aria-selected', v==='book');
+  document.getElementById('tabStudents').setAttribute('aria-selected', v==='students');
+  document.getElementById('tabMenu').setAttribute('aria-selected', v==='menu');
+  if (v==='book') renderBook();
+  if (v==='students') renderStudents();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* =============== Tables rendering =============== */
+function renderTables(){
+  var grid = document.getElementById('tableGrid');
+  var html = '';
+  TABLES.forEach(function(t){
+    html += t.session ? runningCard(t) : freeCard(t);
+  });
+  grid.innerHTML = html;
+  renderStats();
+}
+function freeCard(t){
+  return '' +
+  '<article class="card" id="card-'+t.id+'">' +
+    '<div class="card-head">' +
+      '<div><div class="tname">'+t.name+'</div><div class="ttype">'+t.kind+' · '+t.detail+'</div></div>' +
+      '<span class="status free">Free</span>' +
+      '<div class="rate-badge">'+rs(t.rate)+'/min<small>'+rs(t.rate*60)+' / HOUR</small></div>' +
+    '</div>' +
+    '<div class="card-body">' +
+      '<div class="pinputs">' +
+        '<div><label class="flabel" for="p1-'+t.id+'">Player 1</label><input id="p1-'+t.id+'" type="text" placeholder="e.g. Rohit" autocomplete="off"></div>' +
+        '<div><label class="flabel" for="p2-'+t.id+'">Player 2</label><input id="p2-'+t.id+'" type="text" placeholder="e.g. Aman" autocomplete="off"></div>' +
+      '</div>' +
+      '<div class="free-note">Type the players\u2019 names and press Start — the timer and running bill show here while they play.</div>' +
+      '<button class="btn btn-start" onclick="startTable('+t.id+')">▶&ensp;Start timer</button>' +
+    '</div>' +
+  '</article>';
+}
+function runningCard(t){
+  var s = t.session;
+  var lines = foodLines(t);
+  var foodHtml = '';
+  if (lines.length === 0){
+    foodHtml = '<div class="food-empty">Nothing ordered yet — tap an item below and it joins this table\u2019s bill.</div>';
+  } else {
+    lines.forEach(function(l){
+      foodHtml += '<div class="food-line">' +
+        '<button class="qty-btn" aria-label="Remove one '+esc(l.name)+'" onclick="changeFood('+t.id+',\''+l.id+'\',-1)">−</button>' +
+        '<span class="fname">'+esc(l.name)+'</span><span class="fqty">× '+l.qty+' @ '+rs(l.price)+'</span>' +
+        '<span class="famt">'+rs(l.amt)+'</span>' +
+        '<button class="qty-btn" aria-label="Add one '+esc(l.name)+'" onclick="changeFood('+t.id+',\''+l.id+'\',1)">+</button>' +
+      '</div>';
+    });
+  }
+  var chips = MENU.map(function(m){
+    return '<button class="chip" onclick="changeFood('+t.id+',\''+m.id+'\',1)">'+esc(m.name)+'<span class="cp">'+rs(m.price)+'</span></button>';
+  }).join('');
+  return '' +
+  '<article class="card" id="card-'+t.id+'">' +
+    '<div class="card-head">' +
+      '<div><div class="tname">'+t.name+'</div><div class="ttype">'+t.kind+' · '+t.detail+'</div></div>' +
+      (s.paused
+        ? '<span class="status paused">⏸ Paused</span>'
+        : '<span class="status live"><span class="live-dot"></span>Playing</span>') +
+      '<div class="rate-badge">'+rs(t.rate)+'/min<small>'+rs(t.rate*60)+' / HOUR</small></div>' +
+    '</div>' +
+    '<div class="card-body">' +
+      '<div class="felt'+(s.paused ? ' is-paused' : '')+'">' +
+        '<div class="players">'+esc(s.p1)+(s.p2 ? '<span class="vs">VS</span>'+esc(s.p2) : '')+'</div>' +
+        '<div class="started">Started '+fmtTime(s.startTs)+' · '+(s.paused ? 'paused between frames — setup time is not billed' : 'billed on frame play time only, per started minute')+'</div>' +
+        '<div class="clockrow">' +
+          '<div class="clock"><small data-clocklab="'+t.id+'">'+(s.paused ? 'Paused · play time so far' : (s.p2 ? 'Frame '+((s.frames||[]).length+1)+' · play time' : 'Time played'))+'</small><span data-clock="'+t.id+'">'+fmtClock(elapsedSec(t))+'</span></div>' +
+          '<div class="runbill"><div class="lab">Table charge</div><div class="amt" data-charge="'+t.id+'">'+rs(tableCharge(t))+'</div></div>' +
+        '</div>' +
+      '</div>' +
+      (s.p2 ?
+      '<div class="frames">' +
+        '<h4>Frames won <span class="fhint">Loser pays · timer pauses between frames</span></h4>' +
+        '<div class="frame-row">' +
+          '<div class="frame-box"><div class="fp">'+esc(s.p1)+'</div><div class="fc">'+s.f1+'</div><div class="fl">frames won</div>' +
+            '<div class="frame-btns"><button class="frame-add" '+(s.paused ? 'disabled ' : '')+'onclick="addFrame('+t.id+',1,1)">+ Frame</button><button class="qty-btn" aria-label="Remove one frame from '+esc(s.p1)+'" onclick="addFrame('+t.id+',1,-1)">−</button></div></div>' +
+          '<div class="frame-vs">–</div>' +
+          '<div class="frame-box"><div class="fp">'+esc(s.p2)+'</div><div class="fc">'+s.f2+'</div><div class="fl">frames won</div>' +
+            '<div class="frame-btns"><button class="frame-add" '+(s.paused ? 'disabled ' : '')+'onclick="addFrame('+t.id+',2,1)">+ Frame</button><button class="qty-btn" aria-label="Remove one frame from '+esc(s.p2)+'" onclick="addFrame('+t.id+',2,-1)">−</button></div></div>' +
+        '</div>' +
+        '<div class="frame-times" data-frametimes="'+t.id+'">'+frameTimesHtml(t)+'</div>' +
+        (s.paused ?
+          '<div class="pause-banner">' +
+            '<div class="pb-t">⏸ Timer paused — Frame '+(s.frames.length)+' finished</div>' +
+            '<div class="pb-s">Take your time racking up — this setup time is <strong>not billed</strong>. Start the next frame when the break is ready, or finish here and take one total bill for all '+(s.frames.length)+' frame'+(s.frames.length===1?'':'s')+'.</div>' +
+            '<div class="pb-btns">' +
+              '<button class="btn btn-start" onclick="nextFrame('+t.id+')">▶&ensp;Start Frame '+((s.frames.length)+1)+'</button>' +
+              '<button class="btn btn-end" onclick="openCheckout('+t.id+')">End &amp; Bill</button>' +
+            '</div>' +
+          '</div>' : '') +
+        '<div class="split-note" data-splitnote="'+t.id+'">'+splitText(t)+'</div>' +
+      '</div>' : '') +
+      '<div class="food-sec">' +
+        '<h4>Canteen on this table <span class="ftotal" data-foodtotal="'+t.id+'">'+rs(foodTotal(t))+'</span></h4>' +
+        foodHtml +
+        '<div class="menu-chips">'+chips+'</div>' +
+      '</div>' +
+      '<div class="bill-strip"><span class="bl">Running total</span><span class="bd" data-billdetail="'+t.id+'"></span><span class="ba" data-grand="'+t.id+'">'+rs(grandTotal(t))+'</span></div>' +
+      '<button class="btn btn-end" onclick="openCheckout('+t.id+')">End &amp; Bill</button>' +
+    '</div>' +
+  '</article>';
+}
+
+/* Live tick — update clocks/charges in place without re-rendering inputs */
+function tick(){
+  TABLES.forEach(function(t){
+    if (!t.session) return;
+    var c = document.querySelector('[data-clock="'+t.id+'"]');
+    if (!c) return;
+    c.textContent = fmtClock(elapsedSec(t));
+    var ch = document.querySelector('[data-charge="'+t.id+'"]');
+    if (ch) ch.textContent = rs(tableCharge(t));
+    var g = document.querySelector('[data-grand="'+t.id+'"]');
+    if (g) g.textContent = rs(grandTotal(t));
+    var d = document.querySelector('[data-billdetail="'+t.id+'"]');
+    if (d) d.textContent = billedMinutes(t)+' min · table '+rs(tableCharge(t))+' + food '+rs(foodTotal(t));
+    var sn = document.querySelector('[data-splitnote="'+t.id+'"]');
+    if (sn) sn.innerHTML = splitText(t);
+    var ft = document.querySelector('[data-frametimes="'+t.id+'"]');
+    if (ft) ft.innerHTML = frameTimesHtml(t);
+    var lab = document.querySelector('[data-clocklab="'+t.id+'"]');
+    if (lab) lab.textContent = t.session.paused ? 'Paused · play time so far' : (t.session.p2 ? 'Frame '+((t.session.frames||[]).length+1)+' · play time' : 'Time played');
+  });
+}
+setInterval(tick, 500);
+
+/* =============== Actions =============== */
+function startTable(id){
+  var t = TABLES[id-1];
+  var p1 = document.getElementById('p1-'+id).value.trim();
+  var p2 = document.getElementById('p2-'+id).value.trim();
+  if (!p1){ toast('Add Player 1\u2019s name first — that\u2019s whose name the bill goes under.'); document.getElementById('p1-'+id).focus(); return; }
+  var now = Date.now();
+  t.session = { p1:p1, p2:p2, startTs:now, food:{}, f1:0, f2:0, frames:[], frameStartTs:now, paused:false };
+  renderTables(); tick();
+  toast(t.name+' started — '+playerLabel(t.session)+'. Timer is running.');
+}
+function addFrame(id, player, delta){
+  var t = TABLES[id-1];
+  var s = t.session;
+  if (!s) return;
+  if (delta > 0){
+    if (s.paused) return; /* already between frames — start the next one first */
+    /* Frame finished: freeze its play time, then pause. The time spent
+       racking up the next frame is not billed. */
+    s.frames.push(currentFrameSec(t));
+    s.frameStartTs = null;
+    s.paused = true;
+    if (player===1) s.f1 = (s.f1||0) + 1; else s.f2 = (s.f2||0) + 1;
+    renderTables(); tick();
+    toast('Frame '+(s.frames.length)+' to '+(player===1 ? s.p1 : s.p2)+' — timer paused. Setup time is not billed.');
+    return;
+  }
+  /* Correction (−): drop the score, and drop the matching frame time too.
+     If the table is sitting paused because of that frame, resume play so
+     the frame can be replayed / re-won. */
+  if (player===1) s.f1 = Math.max(0, (s.f1||0) - 1);
+  else s.f2 = Math.max(0, (s.f2||0) - 1);
+  var total = (s.f1||0) + (s.f2||0);
+  var wasPaused = s.paused;
+  while (s.frames.length > total) s.frames.pop();
+  if (wasPaused && s.frames.length === total){
+    s.paused = false;
+    s.frameStartTs = Date.now();
+  }
+  renderTables(); tick();
+}
+function nextFrame(id){
+  var t = TABLES[id-1];
+  var s = t.session;
+  if (!s || !s.paused) return;
+  s.paused = false;
+  s.frameStartTs = Date.now();
+  renderTables(); tick();
+  toast('Frame '+(s.frames.length+1)+' started — timer running.');
+}
+function changeFood(id, menuId, delta){
+  var t = TABLES[id-1];
+  if (!t.session) return;
+  var q = (t.session.food[menuId]||0) + delta;
+  if (q<=0) delete t.session.food[menuId]; else t.session.food[menuId] = q;
+  renderTables(); tick();
+}
+
+/* =============== Checkout =============== */
+function billRows(t, mins, tCharge, lines, fTotal, total){
+  var s = t.session;
+  var sp = splitShares(t);
+  var rows = '';
+  var fb = frameBreakdown(t);
+  /* 1 — Table bill, split by frames lost when frames were played.
+     Billed minutes are frame play time only — pauses between frames excluded. */
+  rows += '<tr><td><strong>Table bill</strong><div class="dim">'+mins+' min play time × '+rs(t.rate)+'/min · '+fmtTime(s.startTs)+' – '+fmtTime(Date.now())+' · setup pauses not billed</div></td><td class="r">'+rs(tCharge)+'</td></tr>';
+  if (fb.length){
+    fb.forEach(function(sec,i){
+      rows += '<tr><td style="padding-left:16px">Frame '+(i+1)+'<div class="dim">Play time '+fmtDur(sec)+'</div></td><td class="r">'+fmtClock(sec)+'</td></tr>';
+    });
+    rows += '<tr><td style="padding-left:16px"><strong>Total play time</strong><div class="dim">'+fb.length+' frame'+(fb.length===1?'':'s')+' · billed as '+mins+' min — time paused between frames is not counted</div></td><td class="r">'+fmtClock(fb.reduce(function(a,x){ return a+x; },0))+'</td></tr>';
+  }
+  if (sp){
+    rows += '<tr><td style="padding-left:16px">'+esc(s.p1)+' — table share<div class="dim">Won '+s.f1+' frame'+(s.f1===1?'':'s')+' · lost '+s.f2+' of '+sp.total+' — pays '+s.f2+'/'+sp.total+'</div></td><td class="r">'+rs(sp.s1)+'</td></tr>';
+    rows += '<tr><td style="padding-left:16px">'+esc(s.p2)+' — table share<div class="dim">Won '+s.f2+' frame'+(s.f2===1?'':'s')+' · lost '+s.f1+' of '+sp.total+' — pays '+s.f1+'/'+sp.total+'</div></td><td class="r">'+rs(sp.s2)+'</td></tr>';
+  }
+  /* 2 — Cafeteria bill: one common total, never split, never tagged to a player */
+  if (lines.length){
+    rows += '<tr><td><strong>Cafeteria bill</strong><div class="dim">Common for the table — kept separate</div></td><td class="r">'+rs(fTotal)+'</td></tr>';
+    lines.forEach(function(l){
+      rows += '<tr><td style="padding-left:16px">'+esc(l.name)+'<div class="dim">'+l.qty+' × '+rs(l.price)+'</div></td><td class="r">'+rs(l.amt)+'</td></tr>';
+    });
+  }
+  /* 3 — Grand total */
+  rows += '<tr class="grand"><td>Grand total<div class="dim" style="font-weight:600">Table '+rs(tCharge)+(lines.length ? ' + Cafeteria '+rs(fTotal) : '')+'</div></td><td class="r">'+rs(total)+'</td></tr>';
+  return rows;
+}
+function payGroupHtml(key, label, amt){
+  return '<div class="pay-group"><div class="pg-label"><span>'+label+'</span><span class="pg-amt">'+rs(amt)+'</span></div>' +
+    '<div class="pay-opts" data-paygroup="'+key+'">' +
+      '<button class="pay-opt" data-pay="cash" onclick="selectPay(\''+key+'\',\'cash\')">Cash<small>Paid in cash</small></button>' +
+      '<button class="pay-opt" data-pay="upi" onclick="selectPay(\''+key+'\',\'upi\')">UPI-Scanner<small>Scanned the QR</small></button>' +
+      '<button class="pay-opt" data-pay="pending" onclick="selectPay(\''+key+'\',\'pending\')">Pending<small>Will pay later</small></button>' +
+    '</div></div>';
+}
+function openCheckout(id){
+  var t = TABLES[id-1];
+  if (!t.session) return;
+  checkoutTableId = id;
+  checkoutPays = {};
+  var sp = splitShares(t);
+  document.getElementById('coSub').textContent = t.name+' · '+playerLabel(t.session)+' · play time '+fmtClock(elapsedSec(t))+' (pauses between frames not billed)'+(sp ? ' · frames '+t.session.f1+'–'+t.session.f2 : '');
+  document.getElementById('coBody').innerHTML = billRows(t, billedMinutes(t), tableCharge(t), foodLines(t), foodTotal(t), grandTotal(t));
+  document.getElementById('keepPlayingBtn').textContent = t.session.paused ? 'Back to table (paused)' : 'Keep playing';
+  var html = '<div style="font-weight:800;font-size:13px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);margin-top:16px">How was it paid?</div>';
+  if (sp){
+    checkoutPays.p1 = 'cash'; checkoutPays.p2 = 'cash';
+    html += payGroupHtml('p1', esc(t.session.p1)+' — table share', sp.s1);
+    html += payGroupHtml('p2', esc(t.session.p2)+' — table share', sp.s2);
+    if (foodTotal(t) > 0){ checkoutPays.food = 'cash'; html += payGroupHtml('food', 'Cafeteria — common bill', foodTotal(t)); }
+  } else {
+    checkoutPays.all = 'cash';
+    html += payGroupHtml('all', 'Grand total', grandTotal(t));
+  }
+  document.getElementById('payArea').innerHTML = html;
+  Object.keys(checkoutPays).forEach(function(k){ selectPay(k, checkoutPays[k]); });
+  document.getElementById('confirmBillBtn').textContent = 'Save bill & free table';
+  document.getElementById('checkoutOverlay').classList.add('open');
+}
+function selectPay(key, p){
+  checkoutPays[key] = p;
+  var group = document.querySelector('[data-paygroup="'+key+'"]');
+  if (!group) return;
+  group.querySelectorAll('.pay-opt').forEach(function(o){
+    o.classList.remove('sel-cash','sel-upi','sel-pending');
+    if (o.getAttribute('data-pay')===p) o.classList.add('sel-'+p);
+  });
+}
+function closeCheckout(){ document.getElementById('checkoutOverlay').classList.remove('open'); checkoutTableId = null; }
+function confirmBill(){
+  if (checkoutTableId===null) return;
+  var t = TABLES[checkoutTableId-1];
+  if (!t.session) return;
+  var s = t.session;
+  var sp = splitShares(t);
+  var components = [];
+  if (sp){
+    components.push({ label:s.p1+' — table share', who:s.p1, amt:sp.s1, pay:checkoutPays.p1 || 'cash' });
+    components.push({ label:s.p2+' — table share', who:s.p2, amt:sp.s2, pay:checkoutPays.p2 || 'cash' });
+    if (foodTotal(t) > 0) components.push({ label:'Cafeteria — common', who:'Cafeteria', amt:foodTotal(t), pay:checkoutPays.food || 'cash' });
+  } else {
+    components.push({ label:'Grand total', who:s.p1, amt:grandTotal(t), pay:checkoutPays.all || 'cash' });
+  }
+  var billHtml = document.getElementById('coBody').innerHTML;
+  var entry = {
+    tableId:t.id, tableName:t.name, kind:t.kind,
+    players: playerLabel(s), p1:s.p1, p2:s.p2,
+    startTs:s.startTs, endTs:Date.now(),
+    minutes: billedMinutes(t), rate:t.rate,
+    frameSecs: frameBreakdown(t), playSec: elapsedSec(t),
+    tableCharge: tableCharge(t),
+    lines: foodLines(t), foodTotal: foodTotal(t),
+    total: grandTotal(t),
+    f1: s.f1||0, f2: s.f2||0,
+    split: sp ? { s1:sp.s1, s2:sp.s2 } : null,
+    components: components
+  };
+  ledger.push(entry);
+  lastReceipt = entry;
+  t.session = null;
+  closeCheckout();
+  renderTables();
+  document.getElementById('receiptSub').textContent = entry.tableName+' · '+entry.players+' · '+entry.minutes+' min'+(entry.split ? ' · frames '+entry.f1+'–'+entry.f2 : '');
+  document.getElementById('receiptBody').innerHTML = billHtml +
+    components.map(function(c){ return '<tr><td class="dim" style="border-bottom:none">'+esc(c.label)+'</td><td class="r" style="border-bottom:none">'+rs(c.amt)+' · '+payLabel(c.pay)+'</td></tr>'; }).join('');
+  document.getElementById('receiptOverlay').classList.add('open');
+}
+function closeReceipt(){
+  document.getElementById('receiptOverlay').classList.remove('open');
+  showView('book');
+}
+
+/* =============== Stats + Day book =============== */
+function entryComponents(e){
+  if (e.components && e.components.length) return e.components;
+  return [{ label:'Grand total', who:e.p1, amt:e.total, pay:e.pay || 'cash' }];
+}
+function totals(){
+  var cash=0, upi=0, pending=0;
+  ledger.forEach(function(e){
+    entryComponents(e).forEach(function(c){
+      if (c.pay==='cash') cash+=c.amt; else if (c.pay==='upi') upi+=c.amt; else pending+=c.amt;
+    });
+  });
+  return { cash:cash, upi:upi, pending:pending, all:cash+upi+pending };
+}
+function renderStats(){
+  var live = TABLES.filter(function(t){ return !!t.session; }).length;
+  var tt = totals();
+  document.getElementById('statLive').textContent = live+' / 6';
+  document.getElementById('statLiveSub').textContent = live===0 ? 'All tables free' : (6-live)+' free · '+live+' playing';
+  document.getElementById('statBilled').textContent = rs(tt.all);
+  document.getElementById('statSessions').textContent = ledger.length+(ledger.length===1?' session':' sessions')+' finished';
+  document.getElementById('statCollected').textContent = rs(tt.cash+tt.upi);
+  document.getElementById('statPending').textContent = rs(tt.pending);
+  var pendNames = [];
+  ledger.forEach(function(e){
+    entryComponents(e).forEach(function(c){ if (c.pay==='pending') pendNames.push(c.who); });
+  });
+  document.getElementById('statPendingSub').textContent = pendNames.length ? ('Owed by: '+pendNames.join(', ')) : 'Nobody owes anything';
+  document.getElementById('bookCount').textContent = ledger.length;
+}
+function payLabel(p){ return p==='cash' ? 'Cash' : p==='upi' ? 'UPI-Scanner' : 'Pending'; }
+function renderBook(){
+  var tt = totals();
+  document.getElementById('bookSessions').textContent = ledger.length;
+  document.getElementById('bookCash').textContent = rs(tt.cash);
+  document.getElementById('bookUpi').textContent = rs(tt.upi);
+  document.getElementById('bookPending').textContent = rs(tt.pending);
+  document.getElementById('dayTotal').textContent = rs(tt.all);
+  document.getElementById('dayTotalBreak').textContent = 'Cash '+rs(tt.cash)+' + UPI-Scanner '+rs(tt.upi)+' + Pending '+rs(tt.pending)+' — always adds up';
+  document.getElementById('ledgerEmpty').style.display = ledger.length ? 'none' : 'block';
+  var html = '';
+  ledger.slice().reverse().forEach(function(e){
+    var foodTxt = e.lines.length ? ' · cafeteria '+rs(e.foodTotal)+' common ('+e.lines.map(function(l){ return esc(l.name)+' ×'+l.qty; }).join(', ')+')' : '';
+    var frameTxt = e.split ? ' · frames '+e.f1+'–'+e.f2+' · '+esc(e.p1)+' pays '+rs(e.split.s1)+', '+esc(e.p2)+' pays '+rs(e.split.s2)+' of table bill' : '';
+    var fbTxt = (e.frameSecs && e.frameSecs.length > 1) ? ' · '+e.frameSecs.map(function(sec,i){ return 'Frame '+(i+1)+' '+fmtClock(sec); }).join(', ')+' — play time only, pauses excluded' : '';
+    var comps = entryComponents(e);
+    var pills = comps.map(function(c){
+      var lbl = comps.length > 1 ? esc(c.who)+': '+payLabel(c.pay) : payLabel(c.pay);
+      return '<span class="pay '+c.pay+'">'+lbl+'</span>';
+    }).join(' ');
+    html += '<div class="ledger-row">' +
+      '<div><div class="ltab">'+e.tableName+'</div><div class="lt">'+fmtTime(e.startTs)+' – '+fmtTime(e.endTs)+'</div></div>' +
+      '<div><div class="lp">'+esc(e.players)+'</div><div class="ld">'+e.minutes+' min play time @ '+rs(e.rate)+'/min · table '+rs(e.tableCharge)+foodTxt+frameTxt+fbTxt+'</div>' +
+      '<div style="display:flex;gap:5px;flex-wrap:wrap">'+pills+'</div></div>' +
+      '<div class="lamt">'+rs(e.total)+'</div>' +
+    '</div>';
+  });
+  document.getElementById('ledgerRows').innerHTML = html;
+  renderStats();
+}
+
+/* =============== Students / Coaching — SAMPLE DATA ONLY (demo) =============== */
+/* Fictional sample students so the owner can see the layout. No real
+   student data. Dates are fixed to this demo's "today" (8 Nov 2026) so
+   "learning since" reads clearly in the pitch. */
+var STUDENTS = [
+  { name:'Aarav Sharma', joined:'15 Aug 2026', joinedTs: new Date(2026,7,15).getTime(), learning:'2 months 24 days', fee:5000, status:'paid',    sessions:34, coach:'Rahul Verma', nextDue:'15 Dec 2026', batch:'Evening · 5–6 PM' },
+  { name:'Kabir Singh',  joined:'20 Jun 2026', joinedTs: new Date(2026,5,20).getTime(), learning:'4 months 19 days', fee:6000, status:'paid',    sessions:58, coach:'Rahul Verma', nextDue:'20 Nov 2026', batch:'Evening · 4–5 PM' },
+  { name:'Vihaan Gupta', joined:'02 Sep 2026', joinedTs: new Date(2026,8,2).getTime(),  learning:'2 months 6 days',  fee:5000, status:'pending', sessions:26, coach:'Rahul Verma', nextDue:'02 Nov 2026', batch:'Morning · 11 AM–12 PM' },
+  { name:'Arjun Mehta',  joined:'10 Oct 2026', joinedTs: new Date(2026,9,10).getTime(), learning:'29 days',          fee:4500, status:'pending', sessions:11, coach:'Imran Khan',  nextDue:'10 Nov 2026', batch:'Evening · 5–6 PM' }
+];
+function studentInitials(name){
+  return name.split(' ').map(function(w){ return w.charAt(0); }).join('').slice(0,2).toUpperCase();
+}
+function renderStudents(){
+  var collected = 0, pending = 0, sessionsTotal = 0, paidCount = 0, pendingCount = 0;
+  STUDENTS.forEach(function(s){
+    sessionsTotal += s.sessions;
+    if (s.status==='paid'){ collected += s.fee; paidCount++; } else { pending += s.fee; pendingCount++; }
+  });
+  document.getElementById('stuTotal').textContent = STUDENTS.length;
+  document.getElementById('studentCount').textContent = STUDENTS.length;
+  document.getElementById('stuCollected').textContent = rs(collected);
+  document.getElementById('stuCollectedSub').textContent = paidCount + (paidCount===1 ? ' student paid' : ' students paid');
+  document.getElementById('stuPending').textContent = rs(pending);
+  document.getElementById('stuPendingSub').textContent = pendingCount + (pendingCount===1 ? ' student pending' : ' students pending');
+  document.getElementById('stuSessions').textContent = sessionsTotal;
+  document.getElementById('studentGrid').innerHTML = STUDENTS.map(function(s){
+    var isPending = s.status==='pending';
+    return '<article class="student-card">' +
+      '<div class="student-head">' +
+        '<div class="student-avatar" aria-hidden="true">'+studentInitials(s.name)+'</div>' +
+        '<div><div class="student-name">'+esc(s.name)+'</div><div class="student-sub">'+esc(s.batch)+' · Coach: '+esc(s.coach)+'</div></div>' +
+        '<span class="fee-status '+(isPending ? 'pending' : 'paid')+'">'+(isPending ? '● Fee pending' : '✓ Fee paid')+'</span>' +
+      '</div>' +
+      '<div class="learning-box">' +
+        '<div><div class="lb-k">Learning since</div><div class="lb-v">'+esc(s.learning)+'</div><div class="lb-s">Joined '+esc(s.joined)+'</div></div>' +
+        '<div class="lb-sessions"><div class="n">'+s.sessions+'</div><div class="l">Sessions attended</div></div>' +
+      '</div>' +
+      '<div class="student-rows">' +
+        '<div class="sr"><div class="k">Monthly coaching fee</div><div class="v mono">'+rs(s.fee)+' / month</div></div>' +
+        '<div class="sr"><div class="k">Fee status · November</div><div class="v">'+(isPending ? 'Pending — not yet paid' : 'Paid')+'</div></div>' +
+        '<div class="sr"><div class="k">Coach</div><div class="v">'+esc(s.coach)+'</div></div>' +
+        '<div class="sr"><div class="k">'+(isPending ? 'Fee was due' : 'Next fee due')+'</div><div class="v mono'+(isPending ? ' due-pending' : '')+'">'+esc(s.nextDue)+(isPending ? ' · overdue' : '')+'</div></div>' +
+        '<div class="sr"><div class="k">Joining date</div><div class="v mono">'+esc(s.joined)+'</div></div>' +
+        '<div class="sr"><div class="k">Batch / timing</div><div class="v">'+esc(s.batch)+'</div></div>' +
+      '</div>' +
+    '</article>';
+  }).join('');
+}
+
+/* =============== Menu view =============== */
+function renderMenu(){
+  document.getElementById('menuGrid').innerHTML = MENU.map(function(m){
+    return '<div class="menu-item"><div><div class="mn">'+esc(m.name)+'</div><div class="mc">'+m.cat+'</div></div><div class="mp">'+rs(m.price)+'</div></div>';
+  }).join('');
+}
+
+/* =============== Init =============== */
+renderTables();
+renderMenu();
+renderStudents();
+tick();
+</script>
+</body>
+</html>
