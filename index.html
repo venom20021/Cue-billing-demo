@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="color-scheme" content="light dark" />
 <link rel="icon" href="data:," />
-<title>Cue Club — Snooker & Pool Billing Demo</title>
+<title>Cue Club — Snooker & Pool · Book, Play, Counter & Admin Demo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,600;6..72,700&family=Public+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
@@ -107,7 +107,24 @@
   }
   .demo-note-in{max-width:1120px;margin:0 auto;padding:9px 16px;font-size:13.5px;font-weight:600;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
   .demo-note strong{font-weight:800}
-  @media (prefers-color-scheme: dark){ .demo-note{color:var(--amber)} }
+
+  /* ---------- Role switcher ---------- */
+  .rolebar{background:var(--surface);border-bottom:1px solid var(--line)}
+  .rolebar-in{max-width:1120px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .rolebar .rb-label{font-size:12px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3)}
+  .roleseg{display:flex;background:var(--surface-2);border:1.5px solid var(--line-strong);border-radius:999px;padding:3px;gap:2px;flex-wrap:wrap}
+  .roleseg button{
+    border:none;background:transparent;border-radius:999px;padding:8px 16px;
+    font-weight:800;font-size:14px;color:var(--ink-2);display:inline-flex;align-items:center;gap:7px;
+  }
+  .roleseg button[aria-pressed="true"]{background:var(--baize-deep);color:#fff}
+  .roleseg .rbadge{
+    background:var(--red);color:#fff;font-size:11px;font-weight:800;min-width:19px;height:19px;
+    border-radius:999px;display:none;align-items:center;justify-content:center;padding:0 5px;
+  }
+  .roleseg .rbadge.show{display:inline-flex}
+  .rolebar .rb-note{margin-left:auto;font-size:13px;color:var(--ink-2)}
+  @media (max-width:720px){ .rolebar .rb-note{margin-left:0} }
 
   /* ---------- Stats ---------- */
   .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0 4px}
@@ -138,6 +155,136 @@
     margin-left:auto;align-self:center;font-size:13px;color:var(--ink-2);max-width:420px;
   }
   @media (max-width:720px){ .try-hint{margin-left:0} }
+
+  /* ---------- Section heads ---------- */
+  .sec-head{margin:30px 0 6px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .sec-head h2{margin:0;font-family:"Newsreader",Georgia,serif;font-size:27px;font-weight:700;line-height:1.1}
+  .sec-head .sh-note{font-size:13.5px;color:var(--ink-2)}
+  .section-note{font-size:13.5px;color:var(--ink-2);margin:0 0 14px}
+
+  /* ---------- Customer hero + booking ---------- */
+  .hero{
+    margin-top:20px;background:linear-gradient(160deg,var(--baize),var(--baize-deep));
+    border-radius:18px;color:var(--baize-ink);padding:26px 24px;box-shadow:var(--shadow);
+    border:1px solid rgba(0,0,0,.25);
+  }
+  .hero h2{margin:0;font-family:"Newsreader",Georgia,serif;font-size:32px;font-weight:700;line-height:1.12;color:#fff;max-width:640px}
+  .hero p{margin:9px 0 0;font-size:15.5px;color:#d7ecd9;max-width:640px;line-height:1.55}
+  .hero .hero-btns{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+  .hero .btn{width:auto;padding:13px 22px}
+  .btn-wa{background:#1faa55;color:#fff}
+  .btn-wa:hover{filter:brightness(.94)}
+  .form-card{
+    background:var(--surface);border:1px solid var(--line);border-radius:18px;
+    box-shadow:var(--shadow);padding:20px;margin-top:16px;
+  }
+  .form-card h3{margin:0 0 4px;font-family:"Newsreader",Georgia,serif;font-size:23px;font-weight:700}
+  .form-card .fc-sub{font-size:14px;color:var(--ink-2);margin-bottom:16px}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:620px){ .form-grid{grid-template-columns:1fr} }
+  .field label{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:5px}
+  .field input,.field select{
+    width:100%;padding:11px 12px;border:1.5px solid var(--line-strong);border-radius:10px;
+    background:var(--surface-2);font-size:15.5px;font-weight:600;
+  }
+  .field input:focus,.field select:focus{outline:2px solid var(--brass);outline-offset:1px;border-color:var(--brass)}
+  .estimate-bar{
+    display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;
+    background:var(--brass-soft);border-radius:10px;padding:11px 14px;margin-top:14px;
+  }
+  .estimate-bar .el{font-size:12px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--amber)}
+  .estimate-bar .ea{font-family:"IBM Plex Mono",monospace;font-size:21px;font-weight:700;font-variant-numeric:tabular-nums}
+  .estimate-bar .ed{font-size:12.5px;color:var(--ink-2)}
+  .confirm-panel{
+    border:1.5px solid var(--green-ok);background:var(--green-soft);border-radius:14px;
+    padding:16px 18px;margin-top:16px;
+  }
+  .confirm-panel h4{margin:0 0 4px;font-size:17px;font-weight:800}
+  .confirm-panel p{margin:4px 0;font-size:14.5px;color:var(--ink-2);line-height:1.55}
+  .confirm-panel p strong{color:var(--ink)}
+  .confirm-panel .cp-btns{display:flex;gap:9px;margin-top:12px;flex-wrap:wrap}
+  .confirm-panel .cp-btns .btn{width:auto;padding:11px 18px;font-size:14.5px}
+
+  /* ---------- Availability board (customer) ---------- */
+  .avail-board{
+    background:var(--surface);border:1px solid var(--line);border-radius:18px;
+    box-shadow:var(--shadow);padding:18px 20px;margin-top:4px;
+  }
+  .avail-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:4px}
+  .avail-head h3{margin:0;font-family:"Newsreader",Georgia,serif;font-size:22px;font-weight:700}
+  .avail-head .avail-date{font-family:"IBM Plex Mono",monospace;font-weight:700;font-size:14px;color:var(--baize)}
+  @media (prefers-color-scheme: dark){ .avail-head .avail-date{color:#7fd79b} }
+  .avail-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--ink-2);font-weight:600;margin:8px 0 14px}
+  .avail-legend .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:0}
+  .dot-free{background:var(--green-ok)} .dot-booked{background:var(--blue-ink)} .dot-live{background:var(--red)}
+  .avail-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  @media (max-width:820px){ .avail-grid{grid-template-columns:repeat(2,1fr)} }
+  @media (max-width:480px){ .avail-grid{grid-template-columns:1fr} }
+  .avail-card{border:1.5px solid var(--line);border-radius:12px;padding:12px 13px;background:var(--surface-2)}
+  .avail-card.is-selected{border-color:var(--brass);box-shadow:0 0 0 1px var(--brass)}
+  .avail-card .av-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+  .avail-card .av-name{font-weight:800;font-size:15.5px;line-height:1.2}
+  .avail-card .av-sub{font-size:12px;color:var(--ink-2);font-weight:600}
+  .avail-rows{margin-top:9px;display:flex;flex-direction:column;gap:6px}
+  .av-row{font-size:13px;line-height:1.4;border-radius:8px;padding:7px 9px;font-weight:600}
+  .av-row.booked{background:var(--blue-soft);color:var(--blue-ink)}
+  .av-row.live{background:var(--red-soft);color:var(--red)}
+  .av-row.freeall{background:var(--green-soft);color:var(--green-ok)}
+  @media (prefers-color-scheme: dark){ .av-row.live{color:#ff9a86} .av-row.freeall{color:#7fd79b} }
+  .av-row .av-till{font-family:"IBM Plex Mono",monospace;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .av-row .av-who{display:block;font-weight:600;font-size:12px;opacity:.85}
+  .avail-foot{font-size:12.5px;color:var(--ink-2);margin-top:12px;line-height:1.5}
+  .slot-status{
+    border-radius:10px;padding:11px 14px;margin-top:12px;font-size:14px;line-height:1.5;font-weight:600;
+    display:flex;gap:9px;align-items:flex-start;
+  }
+  .slot-status.ok{background:var(--green-soft);color:var(--green-ok)}
+  .slot-status.bad{background:var(--red-soft);color:var(--red)}
+  .slot-status.warn{background:var(--amber-soft);color:var(--amber)}
+  @media (prefers-color-scheme: dark){ .slot-status.ok{color:#7fd79b} .slot-status.bad{color:#ff9a86} }
+  .slot-status strong{font-weight:800}
+  /* My Bookings sheet */
+  .sheet-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:18px 20px}
+  .sheet-summary{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+  .sheet-chip{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:9px 13px;font-size:13.5px;font-weight:700}
+  .sheet-chip strong{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+  .sheet-chip.next{border-color:var(--brass);background:var(--brass-soft);color:var(--amber)}
+  @media (prefers-color-scheme: dark){ .sheet-chip.next{color:#eec25e} }
+
+  /* ---------- Amenities / shop / services ---------- */
+  .amen-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  @media (max-width:820px){ .amen-grid{grid-template-columns:repeat(2,1fr)} }
+  @media (max-width:480px){ .amen-grid{grid-template-columns:1fr} }
+  .amen-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:15px 16px;box-shadow:var(--shadow)}
+  .amen-card .an{font-family:"Newsreader",Georgia,serif;font-weight:700;font-size:19px;line-height:1.15}
+  .amen-card .ad{font-size:12.5px;color:var(--ink-2);font-weight:600;margin-top:2px}
+  .amen-card .ar{font-family:"IBM Plex Mono",monospace;font-weight:700;font-size:15px;color:var(--baize);margin-top:8px}
+  @media (prefers-color-scheme: dark){ .amen-card .ar{color:#7fd79b} }
+  .amen-card .ar small{display:block;font-family:"Public Sans",sans-serif;font-weight:600;font-size:11px;color:var(--ink-3);letter-spacing:.06em}
+  .amen-card .ahead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+  .amen-feats{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+  .amen-feats span{border:1.5px solid var(--line-strong);background:var(--surface-2);border-radius:999px;padding:6px 12px;font-size:13px;font-weight:700}
+  .prod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  @media (max-width:820px){ .prod-grid{grid-template-columns:repeat(2,1fr)} }
+  @media (max-width:480px){ .prod-grid{grid-template-columns:1fr} }
+  .prod-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:15px 16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:4px}
+  .prod-card .pn{font-weight:800;font-size:16px;line-height:1.25}
+  .prod-card .pd{font-size:13px;color:var(--ink-2);line-height:1.45}
+  .prod-card .prow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px}
+  .prod-card .pp{font-family:"IBM Plex Mono",monospace;font-weight:700;font-size:18px;color:var(--baize);font-variant-numeric:tabular-nums}
+  @media (prefers-color-scheme: dark){ .prod-card .pp{color:#7fd79b} }
+  .btn-small{width:auto;padding:9px 16px;font-size:14px;border-radius:10px}
+  .svc-list{display:flex;flex-direction:column;gap:10px}
+  .svc-row{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:14px 16px;box-shadow:var(--shadow);display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  }
+  .svc-row .sn{font-weight:800;font-size:15.5px}
+  .svc-row .sd{font-size:13px;color:var(--ink-2)}
+  .svc-row .sp{margin-left:auto;font-family:"IBM Plex Mono",monospace;font-weight:700;font-size:17px;color:var(--baize);font-variant-numeric:tabular-nums;white-space:nowrap}
+  @media (prefers-color-scheme: dark){ .svc-row .sp{color:#7fd79b} }
+  .order-as{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:14px}
+  .order-as .field{flex:1;min-width:200px;max-width:340px}
 
   /* ---------- Table cards ---------- */
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
@@ -208,29 +355,6 @@
   .btn-brass{background:var(--brass);color:#221a05}
   .btn:active{transform:translateY(1px)}
 
-  /* food on card */
-  .food-sec{border-top:1px solid var(--line);padding-top:11px}
-  .food-sec h4{margin:0 0 8px;font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);display:flex;justify-content:space-between;align-items:baseline}
-  .food-sec h4 .ftotal{font-family:"IBM Plex Mono",monospace;color:var(--ink);font-size:14px;letter-spacing:0;text-transform:none}
-  .food-line{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px dashed var(--line);font-size:14.5px}
-  .food-line:last-of-type{border-bottom:none}
-  .food-line .fname{font-weight:600}
-  .food-line .fqty{color:var(--ink-2);font-size:13px}
-  .food-line .famt{margin-left:auto;font-family:"IBM Plex Mono",monospace;font-weight:600;font-variant-numeric:tabular-nums}
-  .qty-btn{
-    width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line-strong);
-    background:var(--surface);font-weight:800;line-height:1;font-size:15px;flex:none;
-    display:flex;align-items:center;justify-content:center;
-  }
-  .food-empty{font-size:13.5px;color:var(--ink-3)}
-  .menu-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
-  .chip{
-    border:1.5px solid var(--line-strong);background:var(--surface-2);border-radius:999px;
-    padding:7px 12px;font-size:13.5px;font-weight:700;
-  }
-  .chip .cp{font-family:"IBM Plex Mono",monospace;font-weight:600;color:var(--baize);font-size:12.5px;margin-left:4px}
-  @media (prefers-color-scheme: dark){ .chip .cp{color:#7fd79b} }
-  .chip:hover{border-color:var(--brass)}
   .bill-strip{
     display:flex;justify-content:space-between;align-items:baseline;gap:10px;
     background:var(--brass-soft);border-radius:10px;padding:10px 13px;
@@ -264,12 +388,44 @@
   .pause-banner .pb-btns{display:grid;grid-template-columns:1.3fr 1fr;gap:8px;margin-top:11px}
   .pause-banner .pb-btns .btn{padding:11px 10px;font-size:14.5px}
   .felt.is-paused{filter:saturate(.55)}
+  .qty-btn{
+    width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line-strong);
+    background:var(--surface);font-weight:800;line-height:1;font-size:15px;flex:none;
+    display:flex;align-items:center;justify-content:center;
+  }
 
   /* per-share payment groups in checkout */
   .pay-group{margin-top:14px}
   .pay-group .pg-label{font-weight:800;font-size:14.5px;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
   .pay-group .pg-label .pg-amt{font-family:"IBM Plex Mono",monospace;font-weight:700;font-variant-numeric:tabular-nums}
   .pay-group .pay-opts{margin:8px 0 0}
+
+  /* ---------- Bookings & orders ---------- */
+  .bk-list{display:flex;flex-direction:column;gap:10px}
+  .bk-card{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:14px 16px;display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap;
+  }
+  .bk-card.is-cancelled{opacity:.55}
+  .bk-main{flex:1;min-width:220px}
+  .bk-name{font-weight:800;font-size:16.5px;line-height:1.25}
+  .bk-meta{font-size:13.5px;color:var(--ink-2);margin-top:2px;line-height:1.5}
+  .bk-meta strong{color:var(--ink)}
+  .bk-side{text-align:right;display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+  .bk-when{font-family:"IBM Plex Mono",monospace;font-weight:700;font-size:15px;font-variant-numeric:tabular-nums}
+  .bk-btns{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+  .bk-btns .btn{width:auto;padding:9px 14px;font-size:13.5px;border-radius:9px}
+  .bstatus{
+    display:inline-block;font-size:11px;font-weight:800;letter-spacing:.08em;
+    text-transform:uppercase;padding:3px 9px;border-radius:999px;white-space:nowrap;
+  }
+  .bstatus.booked{background:var(--blue-soft);color:var(--blue-ink)}
+  .bstatus.started{background:var(--green-soft);color:var(--green-ok)}
+  .bstatus.cancelled{background:var(--red-soft);color:var(--red)}
+  .bstatus.pending{background:var(--amber-soft);color:var(--amber)}
+  .bstatus.done{background:var(--green-soft);color:var(--green-ok)}
+  @media (prefers-color-scheme: dark){ .bstatus.started,.bstatus.done{color:#7fd79b} .bstatus.cancelled{color:#ff9a86} }
+  .sample-badge{display:inline-block;background:var(--brass-soft);color:var(--amber);border:1px solid var(--brass);font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;padding:3px 8px;border-radius:999px;margin-left:8px;vertical-align:2px}
 
   /* ---------- Day book ---------- */
   .book-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
@@ -304,6 +460,20 @@
   .day-total-bar .dl{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#cfe3d2}
   .day-total-bar .da{font-family:"IBM Plex Mono",monospace;font-size:27px;font-weight:700;color:var(--brass-bright);font-variant-numeric:tabular-nums}
 
+  /* ---------- Earnings table (admin overview) ---------- */
+  .earn-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+  .earn-table{width:100%;border-collapse:collapse;font-size:15px}
+  .earn-table th{
+    text-align:left;font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--ink-3);padding:12px 16px 8px;border-bottom:1px solid var(--line);
+  }
+  .earn-table th.r,.earn-table td.r{text-align:right}
+  .earn-table td{padding:11px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+  .earn-table td.amt{font-family:"IBM Plex Mono",monospace;font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
+  .earn-table tr:last-child td{border-bottom:none}
+  .earn-table tr.total-row td{border-top:2px solid var(--line-strong);font-weight:800;background:var(--surface-2)}
+  .earn-table .today-tag{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--amber);margin-left:7px}
+
   /* ---------- Students / Coaching ---------- */
   .students-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
   @media (max-width:720px){ .students-summary{grid-template-columns:repeat(2,1fr)} }
@@ -332,22 +502,16 @@
   .student-rows .sr .v.mono{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
   .student-rows .sr .v.due-pending{color:var(--red)}
   @media (prefers-color-scheme: dark){ .student-rows .sr .v.due-pending{color:#ff9a86} }
-  .sample-badge{display:inline-block;background:var(--brass-soft);color:var(--amber);border:1px solid var(--brass);font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;padding:4px 9px;border-radius:999px;margin-left:8px;vertical-align:2px}
 
-  /* ---------- Menu view ---------- */
-  .menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-  @media (max-width:820px){ .menu-grid{grid-template-columns:repeat(2,1fr)} }
-  @media (max-width:480px){ .menu-grid{grid-template-columns:1fr} }
-  .menu-item{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:15px 16px;box-shadow:var(--shadow);display:flex;align-items:center;gap:12px}
-  .menu-item .mn{font-weight:700;font-size:16px}
-  .menu-item .mc{font-size:12.5px;color:var(--ink-3);font-weight:600;letter-spacing:.05em;text-transform:uppercase}
-  .menu-item .mp{margin-left:auto;font-family:"IBM Plex Mono",monospace;font-weight:700;font-size:18px;color:var(--baize);font-variant-numeric:tabular-nums}
-  @media (prefers-color-scheme: dark){ .menu-item .mp{color:#7fd79b} }
-  .section-note{font-size:13.5px;color:var(--ink-2);margin:0 0 14px}
+  /* ---------- Settings ---------- */
+  .settings-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:20px}
+  .settings-card h3{margin:0 0 4px;font-family:"Newsreader",Georgia,serif;font-size:22px;font-weight:700}
+  .settings-card .sc-sub{font-size:14px;color:var(--ink-2);margin-bottom:16px}
+  .settings-card .btn{max-width:280px}
 
   /* ---------- Roadmap / coming soon ---------- */
   .roadmap{
-    margin-top:22px;border:1.5px dashed var(--brass);border-radius:18px;
+    margin-top:30px;border:1.5px dashed var(--brass);border-radius:18px;
     background:var(--surface-2);padding:18px 20px;display:flex;gap:16px;align-items:flex-start;
   }
   @media (max-width:560px){ .roadmap{flex-direction:column;gap:10px} }
@@ -419,116 +583,298 @@
     <div class="ball" aria-hidden="true"><span>8</span></div>
     <div class="brand">
       <h1>Cue Club</h1>
-      <p>Snooker &amp; Pool · Counter Billing</p>
+      <p>Snooker &amp; Pool · Book · Play · Counter</p>
     </div>
     <div class="demo-pill">Demo version</div>
   </div>
 </header>
+
+<div class="rolebar">
+  <div class="rolebar-in">
+    <span class="rb-label">View as</span>
+    <div class="roleseg" role="group" aria-label="Choose who is viewing">
+      <button id="roleBtnCustomer" aria-pressed="true" onclick="setRole('customer')">Customer</button>
+      <button id="roleBtnSupervisor" aria-pressed="false" onclick="setRole('supervisor')">Supervisor <span class="rbadge" id="supBadge">0</span></button>
+      <button id="roleBtnAdmin" aria-pressed="false" onclick="setRole('admin')">Admin</button>
+    </div>
+    <span class="rb-note" id="roleNote">What players see — book a table before coming.</span>
+  </div>
+</div>
+
 <div class="demo-note" role="note">
   <div class="demo-note-in">
     <span>⚠</span>
-    <span><strong>This is a try-out demo — nothing is saved.</strong> Start a table, add food, finish a bill: it all resets the moment you reload or close this page.</span>
+    <span><strong>This is a try-out demo — nothing is saved.</strong> Book a table as a Customer, then switch to Supervisor: the booking is already waiting at the counter. Everything resets on reload.</span>
   </div>
 </div>
 
 <div class="wrap">
 
-  <!-- Stats -->
-  <section class="stats" aria-label="Today at a glance">
-    <div class="stat live">
-      <div class="k">Tables live now</div>
-      <div class="v" id="statLive">0 / 6</div>
-      <div class="s" id="statLiveSub">All tables free</div>
+  <!-- ================= CUSTOMER VIEW ================= -->
+  <section id="viewCustomer">
+    <div class="hero">
+      <h2>Book your table before you come.</h2>
+      <p>Pick a table, date and time — your table is held for you, and the counter staff see your booking the moment you confirm it. Walk-ins are welcome too; booking just means no waiting.</p>
+      <div class="hero-btns">
+        <button class="btn btn-brass" onclick="document.getElementById('bookNowSec').scrollIntoView({behavior:'smooth'})">Book Now</button>
+        <button class="btn btn-ghost" onclick="document.getElementById('myBookingsSec').scrollIntoView({behavior:'smooth'})">My Bookings</button>
+        <button class="btn btn-ghost" onclick="document.getElementById('amenitiesSec').scrollIntoView({behavior:'smooth'})">See the tables</button>
+      </div>
     </div>
-    <div class="stat">
-      <div class="k">Billed today</div>
-      <div class="v" id="statBilled">₹0</div>
-      <div class="s" id="statSessions">0 sessions finished</div>
+
+    <div id="bookNowSec">
+      <div class="sec-head"><h2>Book Now</h2><span class="sh-note">Takes under a minute — pay at the club, nothing to pay online.</span></div>
+
+      <div class="avail-board" id="availBoard" aria-label="Table availability">
+        <div class="avail-head">
+          <h3>Table availability</h3>
+          <span class="avail-date" id="availDateLabel">—</span>
+        </div>
+        <p class="section-note" style="margin:0">Check this before you book — it shows every table for the date picked below: which are <strong>free</strong>, which are <strong>already booked and for what slot</strong>, and <strong>booked till what time</strong>. Change the date in the form and this board updates with it.</p>
+        <div class="avail-legend">
+          <span><span class="dot dot-free"></span>Free — no bookings</span>
+          <span><span class="dot dot-booked"></span>Booked — slot &amp; till-time shown</span>
+          <span><span class="dot dot-live"></span>Playing right now</span>
+        </div>
+        <div class="avail-grid" id="availGrid"></div>
+        <p class="avail-foot">A table can take more than one booking in a day — only the exact slots listed are taken; everything around them is free to book. If a table is playing right now, it's a walk-in game with no fixed end time — the counter starts your booked slot on time regardless.</p>
+      </div>
+
+      <div class="form-card">
+        <h3>Reserve a table</h3>
+        <div class="fc-sub">The moment you confirm, your booking lands on the supervisor's screen at the counter — they will keep your table ready.</div>
+        <div class="form-grid">
+          <div class="field"><label for="bkName">Your name</label><input id="bkName" type="text" placeholder="e.g. Rohit Sharma" autocomplete="off"></div>
+          <div class="field"><label for="bkPhone">Phone (WhatsApp)</label><input id="bkPhone" type="tel" placeholder="e.g. 98765 43210" autocomplete="off"></div>
+          <div class="field"><label for="bkTable">Table</label><select id="bkTable" onchange="updEstimate()"></select></div>
+          <div class="field"><label for="bkPlayers">Players</label>
+            <select id="bkPlayers"><option value="1">1 player</option><option value="2" selected>2 players</option><option value="3">3 players</option><option value="4">4 players</option></select>
+          </div>
+          <div class="field"><label for="bkDate">Date</label><input id="bkDate" type="date" onchange="updEstimate()"></div>
+          <div class="field"><label for="bkTime">Start time</label><select id="bkTime" onchange="updEstimate()"></select></div>
+          <div class="field"><label for="bkDur">Duration</label>
+            <select id="bkDur" onchange="updEstimate()"><option value="1">1 hour</option><option value="2" selected>2 hours</option><option value="3">3 hours</option><option value="4">4 hours</option></select>
+          </div>
+          <div class="field"><label for="bkNote">Note for the counter (optional)</label><input id="bkNote" type="text" placeholder="e.g. Need a cue for a friend" autocomplete="off"></div>
+        </div>
+        <div class="estimate-bar">
+          <span class="el">Estimated table charge</span>
+          <span class="ed" id="estDetail">—</span>
+          <span class="ea" id="estAmt">₹0</span>
+        </div>
+        <div class="slot-status ok" id="slotStatus" role="status">Pick a table, date and time — availability for that slot shows here.</div>
+        <p class="section-note" style="margin:12px 0 14px">Final billing is always by actual play time at the club's per-minute rate — the estimate is just so you know what to expect. Free cancellation up to 30 minutes before your slot.</p>
+        <button class="btn btn-start" onclick="createBooking()">Confirm booking — send it to the counter</button>
+        <div id="bookingConfirm"></div>
+      </div>
+
+      <div class="sec-head" id="myBookingsSec"><h2>My Bookings</h2><span class="sh-note">Your own sheet — every booking you make lands here.</span></div>
+      <div class="sheet-card">
+        <div class="sheet-summary" id="myBookingsSummary"></div>
+        <div class="bk-list" id="myBookings"></div>
+        <p class="avail-foot" style="margin-bottom:0">Each booking shows its full slot — start time and <strong>booked till</strong> time — so you always know when your table is yours until. Arrive a few minutes early; the counter can see the same booking on their screen. In the full version this sheet is tied to your phone number, so your bookings follow you on any device.</p>
+      </div>
     </div>
-    <div class="stat">
-      <div class="k">Collected</div>
-      <div class="v" id="statCollected">₹0</div>
-      <div class="s">Cash + UPI-Scanner</div>
+
+    <div id="amenitiesSec">
+      <div class="sec-head"><h2>Amenities</h2><span class="sh-note">What the club runs on — every table bookable above.</span></div>
+      <div class="amen-grid" id="amenGrid"></div>
+      <div class="amen-feats" aria-label="Club facilities">
+        <span>Tournament-grade cloth</span><span>Professional table lighting</span><span>Cue sets provided</span><span>Air-conditioned hall</span><span>Comfortable seating</span><span>Coaching batches — morning &amp; evening</span>
+      </div>
     </div>
-    <div class="stat pending">
-      <div class="k">Pending</div>
-      <div class="v" id="statPending">₹0</div>
-      <div class="s" id="statPendingSub">Nobody owes anything</div>
+
+    <div id="shopSec">
+      <div class="sec-head"><h2>Shop</h2><span class="sh-note">Cues &amp; accessories, straight from the club.</span></div>
+      <div class="form-card" style="margin-top:0">
+        <span class="rm-tag" style="display:inline-block;background:var(--brass);color:#221a05;font-weight:800;font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:999px;margin-bottom:8px">Coming in the next version</span>
+        <h3>Buy your gear here, soon</h3>
+        <div class="fc-sub" style="margin-bottom:0">Cues, cue cases, tips, chalk and gloves will be listed here with prices — order from home and collect at the counter, or get it set up on your table when you arrive. The catalogue is being finalised with the club.</div>
+      </div>
+    </div>
+
+    <div id="servicesSec">
+      <div class="sec-head"><h2>Services</h2><span class="sh-note">Cue care by the club's own bench.</span></div>
+      <div class="form-card" style="margin-top:0">
+        <span class="rm-tag" style="display:inline-block;background:var(--brass);color:#221a05;font-weight:800;font-size:11px;letter-spacing:.12em;text-transform:uppercase;padding:4px 10px;border-radius:999px;margin-bottom:8px">Coming in the next version</span>
+        <h3>Cue repair &amp; services, bookable soon</h3>
+        <div class="fc-sub" style="margin-bottom:0">Tip replacement, ferrule work, shaft cleaning and re-wraps will be bookable here with upfront prices — drop your cue at the counter and pick it up playing-ready. Details are being worked out with the club.</div>
+      </div>
     </div>
   </section>
 
-  <!-- Tabs -->
-  <nav class="tabs" aria-label="Views">
-    <button class="tab" id="tabTables" aria-selected="true" onclick="showView('tables')">Tables</button>
-    <button class="tab" id="tabBook" aria-selected="false" onclick="showView('book')">Day Book <span class="count" id="bookCount">0</span></button>
-    <button class="tab" id="tabStudents" aria-selected="false" onclick="showView('students')">Students / Coaching <span class="count" id="studentCount">4</span></button>
-    <button class="tab" id="tabMenu" aria-selected="false" onclick="showView('menu')">Canteen Menu</button>
-    <span class="try-hint">Try it: start Table 1, tap “+ Frame” when a frame is won — the timer pauses while the next frame is set up (setup time is never billed), then tap Start Next Frame. After 3–4 frames, End &amp; Bill shows every frame’s time and one total. Also tap <strong>Students / Coaching</strong> to see student fees &amp; learning history.</span>
-  </nav>
+  <!-- ================= SUPERVISOR VIEW ================= -->
+  <section id="viewSupervisor" class="hidden">
+    <section class="stats" aria-label="Supervisor — today and this week" style="margin-top:18px">
+      <div class="stat">
+        <div class="k">Today's earning</div>
+        <div class="v" id="supToday">₹0</div>
+        <div class="s" id="supTodaySub">Nothing billed yet</div>
+      </div>
+      <div class="stat">
+        <div class="k">This week's earning</div>
+        <div class="v" id="supWeek">₹0</div>
+        <div class="s">Last 7 days, today included</div>
+      </div>
+      <div class="stat live">
+        <div class="k">Tables live now</div>
+        <div class="v" id="supLive">0 / 6</div>
+        <div class="s" id="supLiveSub">All tables free</div>
+      </div>
+      <div class="stat">
+        <div class="k">Bookings waiting</div>
+        <div class="v" id="supWaiting">0</div>
+        <div class="s">Players yet to arrive</div>
+      </div>
+    </section>
 
-  <!-- Tables view -->
-  <section id="viewTables">
+    <nav class="tabs" aria-label="Supervisor views">
+      <button class="tab" id="supTabTables" aria-selected="true" onclick="showSupTab('tables')">Current Tables</button>
+      <button class="tab" id="supTabBookings" aria-selected="false" onclick="showSupTab('bookings')">Bookings <span class="count" id="supBookCount">0</span></button>
+      <span class="try-hint">You run the floor: start and pause frames here as games finish. Bookings from the website land in the Bookings tab the moment a player confirms.</span>
+    </nav>
+
+    <section id="supTablesSec"><div id="supTablesSlot"></div></section>
+    <section id="supBookingsSec" class="hidden">
+      <p class="section-note">Every booking made on the website shows here instantly. When the player arrives, tap <strong>Start table</strong> — the timer starts under their name. Full booking history and all records sit with Admin.</p>
+      <div class="bk-list bookings-list"></div>
+    </section>
+    <p class="section-note" style="margin-top:16px">Supervisors see today's earning and this week's earning only — monthly totals, the full Day Book and settings are Admin's.</p>
+  </section>
+
+  <!-- ================= ADMIN VIEW ================= -->
+  <section id="viewAdmin" class="hidden">
+    <section class="stats" aria-label="Admin — all earnings" style="margin-top:18px">
+      <div class="stat">
+        <div class="k">Today</div>
+        <div class="v" id="admToday">₹0</div>
+        <div class="s" id="admTodaySub">0 sessions finished</div>
+      </div>
+      <div class="stat">
+        <div class="k">Last 7 days</div>
+        <div class="v" id="admWeek">₹0</div>
+        <div class="s">Today included</div>
+      </div>
+      <div class="stat">
+        <div class="k">All recorded</div>
+        <div class="v" id="admAll">₹0</div>
+        <div class="s">Every day on record</div>
+      </div>
+      <div class="stat pending">
+        <div class="k">Pending to collect</div>
+        <div class="v" id="admPending">₹0</div>
+        <div class="s" id="admPendingSub">Nobody owes anything</div>
+      </div>
+    </section>
+
+    <nav class="tabs" aria-label="Admin views">
+      <button class="tab" id="admTabOverview" aria-selected="true" onclick="showAdmTab('overview')">Overview</button>
+      <button class="tab" id="admTabTables" aria-selected="false" onclick="showAdmTab('tables')">Tables</button>
+      <button class="tab" id="admTabBookings" aria-selected="false" onclick="showAdmTab('bookings')">Bookings <span class="count" id="admBookCount">0</span></button>
+      <button class="tab" id="admTabBook" aria-selected="false" onclick="showAdmTab('book')">Day Book <span class="count" id="bookCount">0</span></button>
+      <button class="tab" id="admTabStudents" aria-selected="false" onclick="showAdmTab('students')">Students / Coaching <span class="count" id="studentCount">4</span></button>
+      <button class="tab" id="admTabSettings" aria-selected="false" onclick="showAdmTab('settings')">Settings</button>
+      <span class="try-hint">Admin sees everything: every day's earnings, all bookings, the full Day Book, students — and controls the rates.</span>
+    </nav>
+
+    <section id="admOverviewSec">
+      <div class="sec-head" style="margin-top:6px"><h2>Earnings by day</h2><span class="sh-note">Today updates live as bills close.</span></div>
+      <div class="earn-card">
+        <table class="earn-table">
+          <thead><tr><th>Day</th><th class="r">Sessions</th><th class="r">Earning</th></tr></thead>
+          <tbody id="earnBody"></tbody>
+        </table>
+      </div>
+      <p class="section-note" style="margin-top:12px">Figures for the past days are sample numbers in this demo, so the owner can see the shape of the report — in the full version every day fills in from real bills.</p>
+    </section>
+
+    <section id="admTablesSec" class="hidden"><div id="admTablesSlot"></div></section>
+
+    <section id="admBookingsSec" class="hidden">
+      <p class="section-note">All bookings from the website — what players booked, when, and whether they have arrived. Admin can start a table or cancel any booking.</p>
+      <div class="bk-list bookings-list"></div>
+    </section>
+
+    <section id="admBookSec" class="hidden">
+      <div class="book-summary">
+        <div class="stat"><div class="k">Sessions</div><div class="v" id="bookSessions">0</div><div class="s">Finished today</div></div>
+        <div class="stat"><div class="k">Cash</div><div class="v" id="bookCash">₹0</div><div class="s">In the drawer</div></div>
+        <div class="stat"><div class="k">UPI-Scanner</div><div class="v" id="bookUpi">₹0</div><div class="s">QR payments</div></div>
+        <div class="stat pending"><div class="k">Pending</div><div class="v" id="bookPending">₹0</div><div class="s">To collect later</div></div>
+      </div>
+      <div class="ledger-card" id="ledgerCard">
+        <div class="empty" id="ledgerEmpty">
+          <div class="big">No bills yet today</div>
+          <div>Finish a table with End &amp; Bill and its entry lands here automatically — names, timings and payment status, all added up.</div>
+        </div>
+        <div id="ledgerRows"></div>
+      </div>
+      <div class="day-total-bar">
+        <div>
+          <div class="dl">Day-end total</div>
+          <div style="font-size:13px;color:#cfe3d2" id="dayTotalBreak">Cash ₹0 + UPI ₹0 + Pending ₹0</div>
+        </div>
+        <div class="da" id="dayTotal">₹0</div>
+      </div>
+    </section>
+
+    <section id="admStudentsSec" class="hidden">
+      <p class="section-note">Coaching students at a glance — who joined when, how long they have been learning, their monthly fee, whether this month is paid or pending, and how many sessions they have attended. <strong>Sample data for this demo only</strong> — in the full version the owner adds real students and marks fees as they come in.</p>
+      <div class="students-summary">
+        <div class="stat"><div class="k">Active students</div><div class="v" id="stuTotal">4</div><div class="s">Currently learning</div></div>
+        <div class="stat"><div class="k">Fees collected · Nov</div><div class="v" id="stuCollected">₹0</div><div class="s" id="stuCollectedSub">This month</div></div>
+        <div class="stat pending"><div class="k">Fees pending · Nov</div><div class="v" id="stuPending">₹0</div><div class="s" id="stuPendingSub">To collect</div></div>
+        <div class="stat"><div class="k">Sessions attended</div><div class="v" id="stuSessions">0</div><div class="s">All students, total</div></div>
+      </div>
+      <div class="student-grid" id="studentGrid"></div>
+      <p class="section-note" style="margin:14px 0 0">In the full version: tap a student to see full fee history month by month, mark a fee paid in one tap, and see joining anniversaries — e.g. “learning for 6 months” — automatically, no manual counting.</p>
+    </section>
+
+    <section id="admSettingsSec" class="hidden">
+      <div class="settings-card">
+        <h3>Table rates</h3>
+        <div class="sc-sub">What players pay per minute of play time. Changes apply to tables that are free right away; a table mid-game keeps the rate it started with.</div>
+        <div class="form-grid">
+          <div class="field"><label for="setSnooker">Snooker — ₹ per minute</label><input id="setSnooker" type="number" min="1" step="1" value="4"></div>
+          <div class="field"><label for="setPool">Pool — ₹ per minute</label><input id="setPool" type="number" min="1" step="1" value="2"></div>
+        </div>
+        <div style="margin-top:16px"><button class="btn btn-start" onclick="applyRates()">Save rates</button></div>
+      </div>
+      <div class="settings-card" style="margin-top:14px">
+        <h3>Booking notifications</h3>
+        <div class="sc-sub">New bookings appear in the Supervisor's Bookings list the moment a player confirms — no setup needed. In the full version, the club can also get every booking as a <strong>WhatsApp message</strong> to the counter's number, the moment it is made — that hookup is part of the live build.</div>
+      </div>
+      <div class="settings-card" style="margin-top:14px">
+        <h3>Who sees what</h3>
+        <div class="sc-sub" style="margin-bottom:0">
+          <strong>Customer</strong> — the public website: Book Now, Amenities, Shop, Services.<br>
+          <strong>Supervisor</strong> — current tables and frame control, bookings, and only today's + this week's earnings.<br>
+          <strong>Admin (owner)</strong> — everything: all earnings and history, the full Day Book, students, bookings and these settings. In the full version, Supervisor and Admin each sign in with their own PIN.
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <!-- Shared tables mount — the live counter grid, shown to Supervisor and Admin -->
+  <div id="tablesMount" class="hidden">
     <div class="grid" id="tableGrid"></div>
-  </section>
+  </div>
 
-  <!-- Day book view -->
-  <section id="viewBook" class="hidden">
-    <div class="book-summary">
-      <div class="stat"><div class="k">Sessions</div><div class="v" id="bookSessions">0</div><div class="s">Finished today</div></div>
-      <div class="stat"><div class="k">Cash</div><div class="v" id="bookCash">₹0</div><div class="s">In the drawer</div></div>
-      <div class="stat"><div class="k">UPI-Scanner</div><div class="v" id="bookUpi">₹0</div><div class="s">QR payments</div></div>
-      <div class="stat pending"><div class="k">Pending</div><div class="v" id="bookPending">₹0</div><div class="s">To collect later</div></div>
-    </div>
-    <div class="ledger-card" id="ledgerCard">
-      <div class="empty" id="ledgerEmpty">
-        <div class="big">No bills yet today</div>
-        <div>Finish a table with End &amp; Bill and its entry lands here automatically — names, timings, food and payment status, all added up.</div>
-      </div>
-      <div id="ledgerRows"></div>
-    </div>
-    <div class="day-total-bar">
-      <div>
-        <div class="dl">Day-end total</div>
-        <div style="font-size:13px;color:#cfe3d2" id="dayTotalBreak">Cash ₹0 + UPI ₹0 + Pending ₹0</div>
-      </div>
-      <div class="da" id="dayTotal">₹0</div>
-    </div>
-  </section>
-
-  <!-- Students / Coaching view -->
-  <section id="viewStudents" class="hidden">
-    <p class="section-note">Coaching students at a glance — who joined when, how long they have been learning, their monthly fee, whether this month is paid or pending, and how many sessions they have attended. <strong>Sample data for this demo only</strong> — in the full version the owner adds real students and marks fees as they come in.</p>
-    <div class="students-summary">
-      <div class="stat"><div class="k">Active students</div><div class="v" id="stuTotal">4</div><div class="s">Currently learning</div></div>
-      <div class="stat"><div class="k">Fees collected · Nov</div><div class="v" id="stuCollected">₹0</div><div class="s" id="stuCollectedSub">This month</div></div>
-      <div class="stat pending"><div class="k">Fees pending · Nov</div><div class="v" id="stuPending">₹0</div><div class="s" id="stuPendingSub">To collect</div></div>
-      <div class="stat"><div class="k">Sessions attended</div><div class="v" id="stuSessions">0</div><div class="s">All students, total</div></div>
-    </div>
-    <div class="student-grid" id="studentGrid"></div>
-    <p class="section-note" style="margin:14px 0 0">In the full version: tap a student to see full fee history month by month, mark a fee paid in one tap, and see joining anniversaries — e.g. “learning for 6 months” — automatically, no manual counting.</p>
-  </section>
-
-  <!-- Menu view -->
-  <section id="viewMenu" class="hidden">
-    <p class="section-note">Sample canteen menu for this demo. While a table is running, tap any item on that table's card and it joins the same bill — table time and food stay as separate lines, one total at checkout.</p>
-    <div class="menu-grid" id="menuGrid"></div>
-  </section>
-
-  <!-- Roadmap teaser — future feature, NOT part of this V1 demo -->
-  <aside class="roadmap" aria-label="Coming in a future version">
+  <!-- Roadmap teaser — future features, NOT part of this demo -->
+  <aside class="roadmap" aria-label="Coming in future versions">
     <div class="qr-ic" aria-hidden="true">
       <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3z"/><path d="M21 14v.01M14 21h.01M21 21v.01M17.5 21h.01"/></svg>
     </div>
     <div>
-      <span class="rm-tag">Coming in V2 / V3 · Roadmap</span>
-      <h3>Coming Soon — Scan &amp; Play</h3>
-      <p>A <strong>QR code at each table</strong>. Scan it, start your frame — the <strong>table light and heater switch on automatically</strong> and your timer starts. End a frame and the timer pauses and asks <strong>Play More or End</strong> — no counter visit needed.</p>
-      <p class="rm-note">Not part of this demo — this is a future upgrade on the roadmap, not a V1 feature.</p>
+      <span class="rm-tag">Roadmap · Next versions</span>
+      <h3>Coming next — Shop, Services &amp; Scan &amp; Play</h3>
+      <p><strong>Shop &amp; Services</strong> open up: buy cues and gear from the website, book <strong>cue repair</strong> at a listed price. Then <strong>Scan &amp; Play</strong> — a QR code at each table starts the frame, the timer, and the <strong>table light and heater</strong> automatically.</p>
+      <p class="rm-note">Not part of this demo — these are the next upgrades on the roadmap.</p>
     </div>
   </aside>
 
   <footer>
-    <span>Cue Club — billing demo · 4 snooker tables @ ₹4/min · 2 pool tables @ ₹2/min · billed per started minute</span>
+    <span id="footRates">Cue Club — 4 snooker tables @ ₹4/min · 2 pool tables @ ₹2/min · billed per started minute of play time</span>
     <span>Demo data only — resets on reload</span>
   </footer>
 </div>
@@ -555,7 +901,7 @@
     <div class="sub" id="receiptSub"></div>
     <table class="bill-table" style="text-align:left"><tbody id="receiptBody"></tbody></table>
     <div style="margin-top:18px">
-      <button class="btn btn-start" onclick="closeReceipt()">Done — back to tables</button>
+      <button class="btn btn-start" onclick="closeReceipt()">Done</button>
     </div>
   </div>
 </div>
@@ -564,17 +910,7 @@
 
 <script>
 /* =============== Demo state — in memory only, resets on reload =============== */
-var MENU = [
-  { id:'chai',    name:'Masala Chai',    price:20, cat:'Drinks' },
-  { id:'coffee',  name:'Filter Coffee',  price:30, cat:'Drinks' },
-  { id:'cold',    name:'Cold Drink',     price:40, cat:'Drinks' },
-  { id:'water',   name:'Mineral Water',  price:20, cat:'Drinks' },
-  { id:'maggi',   name:'Masala Maggi',   price:70, cat:'Snacks' },
-  { id:'sandwich',name:'Veg Sandwich',   price:60, cat:'Snacks' },
-  { id:'fries',   name:'French Fries',   price:80, cat:'Snacks' },
-  { id:'biscuit', name:'Biscuits',       price:10, cat:'Snacks' }
-];
-function menuItem(id){ for (var i=0;i<MENU.length;i++) if (MENU[i].id===id) return MENU[i]; return null; }
+var RATES = { snooker:4, pool:2 };
 
 var TABLES = [
   { id:1, name:'Table 1', kind:'Snooker', detail:'Sharma S1 Pro', rate:4 },
@@ -584,13 +920,26 @@ var TABLES = [
   { id:5, name:'Pool 1',  kind:'Pool',    detail:'Pool table',    rate:2 },
   { id:6, name:'Pool 2',  kind:'Pool',    detail:'Pool table',    rate:2 }
 ];
-/* session: { p1, p2, startTs, food: {menuId: qty} } */
+/* session: { p1, p2, startTs, frames:[secs], frameStartTs, paused, f1, f2 } */
 TABLES.forEach(function(t){ t.session = null; });
 
-var ledger = [];           /* finished bills */
+var ledger = [];           /* finished bills (today) */
+var bookings = [];         /* website bookings */
+var bookingSeq = 0;
 var checkoutTableId = null;
 var checkoutPays = {};     /* per-share payment choices in the checkout modal */
 var lastReceipt = null;
+
+/* Sample past days — so day/week earnings reports have a shape in the demo.
+   Today is always live, from real bills closed in this session. */
+var HISTORY = [
+  { label:'Sun 8 Nov',  sessions:14, total:9840 },
+  { label:'Sat 7 Nov',  sessions:17, total:11260 },
+  { label:'Fri 6 Nov',  sessions:12, total:7430 },
+  { label:'Thu 5 Nov',  sessions:11, total:6980 },
+  { label:'Wed 4 Nov',  sessions:9,  total:5610 },
+  { label:'Tue 3 Nov',  sessions:10, total:6240 }
+];
 
 /* =============== Helpers =============== */
 function rs(n){ return '₹' + Math.round(n).toLocaleString('en-IN'); }
@@ -604,6 +953,19 @@ function fmtTime(ts){
   var d = new Date(ts);
   var h = d.getHours(), ap = h>=12 ? 'PM':'AM'; h = h%12; if (h===0) h=12;
   return h+':'+pad(d.getMinutes())+' '+ap;
+}
+function todayStr(){
+  var d = new Date();
+  return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+}
+function prettyDate(str){
+  var p = str.split('-');
+  var d = new Date(+p[0], +p[1]-1, +p[2]);
+  var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var label = days[d.getDay()]+' '+d.getDate()+' '+months[d.getMonth()];
+  if (str === todayStr()) label += ' · Today';
+  return label;
 }
 /* Billed time = play time only. Each frame runs from its start until a
    + Frame tap freezes it; the gap while the next frame is racked up is
@@ -621,7 +983,6 @@ function elapsedSec(t){
   return done + currentFrameSec(t);
 }
 function frameBreakdown(t){
-  /* per-frame seconds for the bill: finished frames + the live one, if any */
   var s = t.session;
   if (!s) return [];
   var out = (s.frames||[]).slice();
@@ -636,20 +997,9 @@ function fmtDur(sec){
 }
 function billedMinutes(t){ return Math.max(1, Math.ceil(elapsedSec(t)/60)); }
 function tableCharge(t){ return billedMinutes(t) * t.rate; }
-function foodLines(t){
-  var out = [];
-  if (!t.session) return out;
-  Object.keys(t.session.food).forEach(function(id){
-    var q = t.session.food[id]; if (q<=0) return;
-    var m = menuItem(id); if (!m) return;
-    out.push({ id:id, name:m.name, price:m.price, qty:q, amt:m.price*q });
-  });
-  return out;
-}
-function foodTotal(t){ return foodLines(t).reduce(function(a,l){ return a+l.amt; },0); }
-function grandTotal(t){ return tableCharge(t) + foodTotal(t); }
-/* Frame split — loser pays: a player's share of the TABLE bill is set by the
-   frames they LOST (the frames the other player won). Cafeteria is never split. */
+function grandTotal(t){ return tableCharge(t); }
+/* Frame split — loser pays: a player's share of the table bill is set by the
+   frames they LOST (the frames the other player won). */
 function splitShares(t){
   var s = t.session;
   if (!s || !s.p2) return null;
@@ -689,21 +1039,71 @@ function toast(msg){
   var el = document.getElementById('toast');
   el.textContent = msg; el.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(function(){ el.classList.remove('show'); }, 2600);
+  toastTimer = setTimeout(function(){ el.classList.remove('show'); }, 2800);
 }
 
-/* =============== Views =============== */
-function showView(v){
-  document.getElementById('viewTables').classList.toggle('hidden', v!=='tables');
-  document.getElementById('viewBook').classList.toggle('hidden', v!=='book');
-  document.getElementById('viewStudents').classList.toggle('hidden', v!=='students');
-  document.getElementById('viewMenu').classList.toggle('hidden', v!=='menu');
-  document.getElementById('tabTables').setAttribute('aria-selected', v==='tables');
-  document.getElementById('tabBook').setAttribute('aria-selected', v==='book');
-  document.getElementById('tabStudents').setAttribute('aria-selected', v==='students');
-  document.getElementById('tabMenu').setAttribute('aria-selected', v==='menu');
+/* =============== Roles & tabs =============== */
+var role = 'customer';
+var supTab = 'tables';
+var admTab = 'overview';
+var ROLE_NOTES = {
+  customer: 'What players see — book a table before coming.',
+  supervisor: 'The counter view — tables, bookings, today + this week only.',
+  admin: 'The owner\u2019s view — full control, all data.'
+};
+function placeTables(){
+  var mount = document.getElementById('tablesMount');
+  var slotId = null;
+  if (role==='supervisor' && supTab==='tables') slotId = 'supTablesSlot';
+  if (role==='admin' && admTab==='tables') slotId = 'admTablesSlot';
+  if (slotId){
+    document.getElementById(slotId).appendChild(mount);
+    mount.classList.remove('hidden');
+  } else {
+    mount.classList.add('hidden');
+    if (mount.parentNode) mount.parentNode.removeChild(mount);
+    document.querySelector('.wrap').appendChild(mount);
+  }
+}
+function setRole(r){
+  role = r;
+  document.getElementById('viewCustomer').classList.toggle('hidden', r!=='customer');
+  document.getElementById('viewSupervisor').classList.toggle('hidden', r!=='supervisor');
+  document.getElementById('viewAdmin').classList.toggle('hidden', r!=='admin');
+  document.getElementById('roleBtnCustomer').setAttribute('aria-pressed', r==='customer');
+  document.getElementById('roleBtnSupervisor').setAttribute('aria-pressed', r==='supervisor');
+  document.getElementById('roleBtnAdmin').setAttribute('aria-pressed', r==='admin');
+  document.getElementById('roleNote').textContent = ROLE_NOTES[r];
+  placeTables();
+  if (r==='customer') renderCustomer();
+  renderStats();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+function showSupTab(v){
+  supTab = v;
+  document.getElementById('supTablesSec').classList.toggle('hidden', v!=='tables');
+  document.getElementById('supBookingsSec').classList.toggle('hidden', v!=='bookings');
+  document.getElementById('supTabTables').setAttribute('aria-selected', v==='tables');
+  document.getElementById('supTabBookings').setAttribute('aria-selected', v==='bookings');
+  placeTables();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+function showAdmTab(v){
+  admTab = v;
+  var secs = { overview:'admOverviewSec', tables:'admTablesSec', bookings:'admBookingsSec', book:'admBookSec', students:'admStudentsSec', settings:'admSettingsSec' };
+  Object.keys(secs).forEach(function(k){
+    document.getElementById(secs[k]).classList.toggle('hidden', k!==v);
+  });
+  document.getElementById('admTabOverview').setAttribute('aria-selected', v==='overview');
+  document.getElementById('admTabTables').setAttribute('aria-selected', v==='tables');
+  document.getElementById('admTabBookings').setAttribute('aria-selected', v==='bookings');
+  document.getElementById('admTabBook').setAttribute('aria-selected', v==='book');
+  document.getElementById('admTabStudents').setAttribute('aria-selected', v==='students');
+  document.getElementById('admTabSettings').setAttribute('aria-selected', v==='settings');
+  placeTables();
   if (v==='book') renderBook();
   if (v==='students') renderStudents();
+  if (v==='overview') renderEarnings();
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
@@ -737,23 +1137,6 @@ function freeCard(t){
 }
 function runningCard(t){
   var s = t.session;
-  var lines = foodLines(t);
-  var foodHtml = '';
-  if (lines.length === 0){
-    foodHtml = '<div class="food-empty">Nothing ordered yet — tap an item below and it joins this table\u2019s bill.</div>';
-  } else {
-    lines.forEach(function(l){
-      foodHtml += '<div class="food-line">' +
-        '<button class="qty-btn" aria-label="Remove one '+esc(l.name)+'" onclick="changeFood('+t.id+',\''+l.id+'\',-1)">−</button>' +
-        '<span class="fname">'+esc(l.name)+'</span><span class="fqty">× '+l.qty+' @ '+rs(l.price)+'</span>' +
-        '<span class="famt">'+rs(l.amt)+'</span>' +
-        '<button class="qty-btn" aria-label="Add one '+esc(l.name)+'" onclick="changeFood('+t.id+',\''+l.id+'\',1)">+</button>' +
-      '</div>';
-    });
-  }
-  var chips = MENU.map(function(m){
-    return '<button class="chip" onclick="changeFood('+t.id+',\''+m.id+'\',1)">'+esc(m.name)+'<span class="cp">'+rs(m.price)+'</span></button>';
-  }).join('');
   return '' +
   '<article class="card" id="card-'+t.id+'">' +
     '<div class="card-head">' +
@@ -794,11 +1177,6 @@ function runningCard(t){
           '</div>' : '') +
         '<div class="split-note" data-splitnote="'+t.id+'">'+splitText(t)+'</div>' +
       '</div>' : '') +
-      '<div class="food-sec">' +
-        '<h4>Canteen on this table <span class="ftotal" data-foodtotal="'+t.id+'">'+rs(foodTotal(t))+'</span></h4>' +
-        foodHtml +
-        '<div class="menu-chips">'+chips+'</div>' +
-      '</div>' +
       '<div class="bill-strip"><span class="bl">Running total</span><span class="bd" data-billdetail="'+t.id+'"></span><span class="ba" data-grand="'+t.id+'">'+rs(grandTotal(t))+'</span></div>' +
       '<button class="btn btn-end" onclick="openCheckout('+t.id+')">End &amp; Bill</button>' +
     '</div>' +
@@ -817,7 +1195,7 @@ function tick(){
     var g = document.querySelector('[data-grand="'+t.id+'"]');
     if (g) g.textContent = rs(grandTotal(t));
     var d = document.querySelector('[data-billdetail="'+t.id+'"]');
-    if (d) d.textContent = billedMinutes(t)+' min · table '+rs(tableCharge(t))+' + food '+rs(foodTotal(t));
+    if (d) d.textContent = billedMinutes(t)+' min play time · '+rs(t.rate)+'/min';
     var sn = document.querySelector('[data-splitnote="'+t.id+'"]');
     if (sn) sn.innerHTML = splitText(t);
     var ft = document.querySelector('[data-frametimes="'+t.id+'"]');
@@ -828,15 +1206,19 @@ function tick(){
 }
 setInterval(tick, 500);
 
-/* =============== Actions =============== */
+/* =============== Table actions =============== */
+function beginSession(t, p1, p2){
+  var now = Date.now();
+  t.session = { p1:p1, p2:p2 || '', startTs:now, f1:0, f2:0, frames:[], frameStartTs:now, paused:false };
+}
 function startTable(id){
   var t = TABLES[id-1];
   var p1 = document.getElementById('p1-'+id).value.trim();
   var p2 = document.getElementById('p2-'+id).value.trim();
   if (!p1){ toast('Add Player 1\u2019s name first — that\u2019s whose name the bill goes under.'); document.getElementById('p1-'+id).focus(); return; }
-  var now = Date.now();
-  t.session = { p1:p1, p2:p2, startTs:now, food:{}, f1:0, f2:0, frames:[], frameStartTs:now, paused:false };
+  beginSession(t, p1, p2);
   renderTables(); tick();
+  if (role==='customer') renderCustomer();
   toast(t.name+' started — '+playerLabel(t.session)+'. Timer is running.');
 }
 function addFrame(id, player, delta){
@@ -844,9 +1226,7 @@ function addFrame(id, player, delta){
   var s = t.session;
   if (!s) return;
   if (delta > 0){
-    if (s.paused) return; /* already between frames — start the next one first */
-    /* Frame finished: freeze its play time, then pause. The time spent
-       racking up the next frame is not billed. */
+    if (s.paused) return;
     s.frames.push(currentFrameSec(t));
     s.frameStartTs = null;
     s.paused = true;
@@ -855,9 +1235,6 @@ function addFrame(id, player, delta){
     toast('Frame '+(s.frames.length)+' to '+(player===1 ? s.p1 : s.p2)+' — timer paused. Setup time is not billed.');
     return;
   }
-  /* Correction (−): drop the score, and drop the matching frame time too.
-     If the table is sitting paused because of that frame, resume play so
-     the frame can be replayed / re-won. */
   if (player===1) s.f1 = Math.max(0, (s.f1||0) - 1);
   else s.f2 = Math.max(0, (s.f2||0) - 1);
   var total = (s.f1||0) + (s.f2||0);
@@ -878,22 +1255,13 @@ function nextFrame(id){
   renderTables(); tick();
   toast('Frame '+(s.frames.length+1)+' started — timer running.');
 }
-function changeFood(id, menuId, delta){
-  var t = TABLES[id-1];
-  if (!t.session) return;
-  var q = (t.session.food[menuId]||0) + delta;
-  if (q<=0) delete t.session.food[menuId]; else t.session.food[menuId] = q;
-  renderTables(); tick();
-}
 
 /* =============== Checkout =============== */
-function billRows(t, mins, tCharge, lines, fTotal, total){
+function billRows(t, mins, tCharge, total){
   var s = t.session;
   var sp = splitShares(t);
   var rows = '';
   var fb = frameBreakdown(t);
-  /* 1 — Table bill, split by frames lost when frames were played.
-     Billed minutes are frame play time only — pauses between frames excluded. */
   rows += '<tr><td><strong>Table bill</strong><div class="dim">'+mins+' min play time × '+rs(t.rate)+'/min · '+fmtTime(s.startTs)+' – '+fmtTime(Date.now())+' · setup pauses not billed</div></td><td class="r">'+rs(tCharge)+'</td></tr>';
   if (fb.length){
     fb.forEach(function(sec,i){
@@ -905,15 +1273,7 @@ function billRows(t, mins, tCharge, lines, fTotal, total){
     rows += '<tr><td style="padding-left:16px">'+esc(s.p1)+' — table share<div class="dim">Won '+s.f1+' frame'+(s.f1===1?'':'s')+' · lost '+s.f2+' of '+sp.total+' — pays '+s.f2+'/'+sp.total+'</div></td><td class="r">'+rs(sp.s1)+'</td></tr>';
     rows += '<tr><td style="padding-left:16px">'+esc(s.p2)+' — table share<div class="dim">Won '+s.f2+' frame'+(s.f2===1?'':'s')+' · lost '+s.f1+' of '+sp.total+' — pays '+s.f1+'/'+sp.total+'</div></td><td class="r">'+rs(sp.s2)+'</td></tr>';
   }
-  /* 2 — Cafeteria bill: one common total, never split, never tagged to a player */
-  if (lines.length){
-    rows += '<tr><td><strong>Cafeteria bill</strong><div class="dim">Common for the table — kept separate</div></td><td class="r">'+rs(fTotal)+'</td></tr>';
-    lines.forEach(function(l){
-      rows += '<tr><td style="padding-left:16px">'+esc(l.name)+'<div class="dim">'+l.qty+' × '+rs(l.price)+'</div></td><td class="r">'+rs(l.amt)+'</td></tr>';
-    });
-  }
-  /* 3 — Grand total */
-  rows += '<tr class="grand"><td>Grand total<div class="dim" style="font-weight:600">Table '+rs(tCharge)+(lines.length ? ' + Cafeteria '+rs(fTotal) : '')+'</div></td><td class="r">'+rs(total)+'</td></tr>';
+  rows += '<tr class="grand"><td>Grand total</td><td class="r">'+rs(total)+'</td></tr>';
   return rows;
 }
 function payGroupHtml(key, label, amt){
@@ -931,14 +1291,13 @@ function openCheckout(id){
   checkoutPays = {};
   var sp = splitShares(t);
   document.getElementById('coSub').textContent = t.name+' · '+playerLabel(t.session)+' · play time '+fmtClock(elapsedSec(t))+' (pauses between frames not billed)'+(sp ? ' · frames '+t.session.f1+'–'+t.session.f2 : '');
-  document.getElementById('coBody').innerHTML = billRows(t, billedMinutes(t), tableCharge(t), foodLines(t), foodTotal(t), grandTotal(t));
+  document.getElementById('coBody').innerHTML = billRows(t, billedMinutes(t), tableCharge(t), grandTotal(t));
   document.getElementById('keepPlayingBtn').textContent = t.session.paused ? 'Back to table (paused)' : 'Keep playing';
   var html = '<div style="font-weight:800;font-size:13px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);margin-top:16px">How was it paid?</div>';
   if (sp){
     checkoutPays.p1 = 'cash'; checkoutPays.p2 = 'cash';
     html += payGroupHtml('p1', esc(t.session.p1)+' — table share', sp.s1);
     html += payGroupHtml('p2', esc(t.session.p2)+' — table share', sp.s2);
-    if (foodTotal(t) > 0){ checkoutPays.food = 'cash'; html += payGroupHtml('food', 'Cafeteria — common bill', foodTotal(t)); }
   } else {
     checkoutPays.all = 'cash';
     html += payGroupHtml('all', 'Grand total', grandTotal(t));
@@ -968,7 +1327,6 @@ function confirmBill(){
   if (sp){
     components.push({ label:s.p1+' — table share', who:s.p1, amt:sp.s1, pay:checkoutPays.p1 || 'cash' });
     components.push({ label:s.p2+' — table share', who:s.p2, amt:sp.s2, pay:checkoutPays.p2 || 'cash' });
-    if (foodTotal(t) > 0) components.push({ label:'Cafeteria — common', who:'Cafeteria', amt:foodTotal(t), pay:checkoutPays.food || 'cash' });
   } else {
     components.push({ label:'Grand total', who:s.p1, amt:grandTotal(t), pay:checkoutPays.all || 'cash' });
   }
@@ -980,7 +1338,6 @@ function confirmBill(){
     minutes: billedMinutes(t), rate:t.rate,
     frameSecs: frameBreakdown(t), playSec: elapsedSec(t),
     tableCharge: tableCharge(t),
-    lines: foodLines(t), foodTotal: foodTotal(t),
     total: grandTotal(t),
     f1: s.f1||0, f2: s.f2||0,
     split: sp ? { s1:sp.s1, s2:sp.s2 } : null,
@@ -991,6 +1348,7 @@ function confirmBill(){
   t.session = null;
   closeCheckout();
   renderTables();
+  renderEarnings();
   document.getElementById('receiptSub').textContent = entry.tableName+' · '+entry.players+' · '+entry.minutes+' min'+(entry.split ? ' · frames '+entry.f1+'–'+entry.f2 : '');
   document.getElementById('receiptBody').innerHTML = billHtml +
     components.map(function(c){ return '<tr><td class="dim" style="border-bottom:none">'+esc(c.label)+'</td><td class="r" style="border-bottom:none">'+rs(c.amt)+' · '+payLabel(c.pay)+'</td></tr>'; }).join('');
@@ -998,10 +1356,11 @@ function confirmBill(){
 }
 function closeReceipt(){
   document.getElementById('receiptOverlay').classList.remove('open');
-  showView('book');
+  if (role==='admin') showAdmTab('book');
+  else if (role==='supervisor') showSupTab('tables');
 }
 
-/* =============== Stats + Day book =============== */
+/* =============== Earnings, stats, Day Book =============== */
 function entryComponents(e){
   if (e.components && e.components.length) return e.components;
   return [{ label:'Grand total', who:e.p1, amt:e.total, pay:e.pay || 'cash' }];
@@ -1015,23 +1374,50 @@ function totals(){
   });
   return { cash:cash, upi:upi, pending:pending, all:cash+upi+pending };
 }
+function historyTotal(){ return HISTORY.reduce(function(a,d){ return a+d.total; },0); }
+function weekTotal(){ return historyTotal() + totals().all; }
+function waitingBookings(){ return bookings.filter(function(b){ return b.status==='booked'; }).length; }
+
 function renderStats(){
   var live = TABLES.filter(function(t){ return !!t.session; }).length;
   var tt = totals();
-  document.getElementById('statLive').textContent = live+' / 6';
-  document.getElementById('statLiveSub').textContent = live===0 ? 'All tables free' : (6-live)+' free · '+live+' playing';
-  document.getElementById('statBilled').textContent = rs(tt.all);
-  document.getElementById('statSessions').textContent = ledger.length+(ledger.length===1?' session':' sessions')+' finished';
-  document.getElementById('statCollected').textContent = rs(tt.cash+tt.upi);
-  document.getElementById('statPending').textContent = rs(tt.pending);
+  var waiting = waitingBookings();
+  /* Supervisor — today + week only */
+  document.getElementById('supToday').textContent = rs(tt.all);
+  document.getElementById('supTodaySub').textContent = ledger.length===0 ? 'Nothing billed yet' :
+    'Collected '+rs(tt.cash+tt.upi)+(tt.pending ? ' · '+rs(tt.pending)+' pending' : '')+' · '+ledger.length+(ledger.length===1?' session':' sessions');
+  document.getElementById('supWeek').textContent = rs(weekTotal());
+  document.getElementById('supLive').textContent = live+' / 6';
+  document.getElementById('supLiveSub').textContent = live===0 ? 'All tables free' : (6-live)+' free · '+live+' playing';
+  document.getElementById('supWaiting').textContent = waiting;
+  document.getElementById('supBookCount').textContent = waiting;
+  /* Admin — everything */
+  document.getElementById('admToday').textContent = rs(tt.all);
+  document.getElementById('admTodaySub').textContent = ledger.length+(ledger.length===1?' session':' sessions')+' finished';
+  document.getElementById('admWeek').textContent = rs(weekTotal());
+  document.getElementById('admAll').textContent = rs(weekTotal());
+  document.getElementById('admPending').textContent = rs(tt.pending);
   var pendNames = [];
   ledger.forEach(function(e){
     entryComponents(e).forEach(function(c){ if (c.pay==='pending') pendNames.push(c.who); });
   });
-  document.getElementById('statPendingSub').textContent = pendNames.length ? ('Owed by: '+pendNames.join(', ')) : 'Nobody owes anything';
+  document.getElementById('admPendingSub').textContent = pendNames.length ? ('Owed by: '+pendNames.join(', ')) : 'Nobody owes anything';
   document.getElementById('bookCount').textContent = ledger.length;
+  document.getElementById('admBookCount').textContent = waiting;
+  var badge = document.getElementById('supBadge');
+  badge.textContent = waiting;
+  badge.classList.toggle('show', waiting>0);
 }
 function payLabel(p){ return p==='cash' ? 'Cash' : p==='upi' ? 'UPI-Scanner' : 'Pending'; }
+function renderEarnings(){
+  var tt = totals();
+  var rows = '<tr><td><strong>Mon 9 Nov</strong><span class="today-tag">Today · live</span></td><td class="r">'+ledger.length+'</td><td class="amt">'+rs(tt.all)+'</td></tr>';
+  HISTORY.forEach(function(d){
+    rows += '<tr><td>'+d.label+'</td><td class="r">'+d.sessions+'</td><td class="amt">'+rs(d.total)+'</td></tr>';
+  });
+  rows += '<tr class="total-row"><td>Last 7 days — total</td><td class="r">'+(ledger.length + HISTORY.reduce(function(a,d){ return a+d.sessions; },0))+'</td><td class="amt">'+rs(weekTotal())+'</td></tr>';
+  document.getElementById('earnBody').innerHTML = rows;
+}
 function renderBook(){
   var tt = totals();
   document.getElementById('bookSessions').textContent = ledger.length;
@@ -1043,8 +1429,7 @@ function renderBook(){
   document.getElementById('ledgerEmpty').style.display = ledger.length ? 'none' : 'block';
   var html = '';
   ledger.slice().reverse().forEach(function(e){
-    var foodTxt = e.lines.length ? ' · cafeteria '+rs(e.foodTotal)+' common ('+e.lines.map(function(l){ return esc(l.name)+' ×'+l.qty; }).join(', ')+')' : '';
-    var frameTxt = e.split ? ' · frames '+e.f1+'–'+e.f2+' · '+esc(e.p1)+' pays '+rs(e.split.s1)+', '+esc(e.p2)+' pays '+rs(e.split.s2)+' of table bill' : '';
+    var frameTxt = e.split ? ' · frames '+e.f1+'–'+e.f2+' · '+esc(e.p1)+' pays '+rs(e.split.s1)+', '+esc(e.p2)+' pays '+rs(e.split.s2)+' of the table bill' : '';
     var fbTxt = (e.frameSecs && e.frameSecs.length > 1) ? ' · '+e.frameSecs.map(function(sec,i){ return 'Frame '+(i+1)+' '+fmtClock(sec); }).join(', ')+' — play time only, pauses excluded' : '';
     var comps = entryComponents(e);
     var pills = comps.map(function(c){
@@ -1053,7 +1438,7 @@ function renderBook(){
     }).join(' ');
     html += '<div class="ledger-row">' +
       '<div><div class="ltab">'+e.tableName+'</div><div class="lt">'+fmtTime(e.startTs)+' – '+fmtTime(e.endTs)+'</div></div>' +
-      '<div><div class="lp">'+esc(e.players)+'</div><div class="ld">'+e.minutes+' min play time @ '+rs(e.rate)+'/min · table '+rs(e.tableCharge)+foodTxt+frameTxt+fbTxt+'</div>' +
+      '<div><div class="lp">'+esc(e.players)+'</div><div class="ld">'+e.minutes+' min play time @ '+rs(e.rate)+'/min · table '+rs(e.tableCharge)+frameTxt+fbTxt+'</div>' +
       '<div style="display:flex;gap:5px;flex-wrap:wrap">'+pills+'</div></div>' +
       '<div class="lamt">'+rs(e.total)+'</div>' +
     '</div>';
@@ -1062,15 +1447,271 @@ function renderBook(){
   renderStats();
 }
 
+/* =============== Bookings =============== */
+var SLOTS = [];
+(function(){
+  for (var h=10; h<=21; h++){
+    var ap = h>=12 ? 'PM' : 'AM'; var hh = h%12; if (hh===0) hh = 12;
+    SLOTS.push(hh+':00 '+ap);
+    if (h<21) SLOTS.push(hh+':30 '+ap);
+  }
+})();
+/* --- Slot maths: bookings carry a start label ("6:00 PM") + duration in
+   hours, so the "booked till" time is always start + duration. --- */
+function parseSlotToMin(timeStr){
+  var m = String(timeStr).match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+  if (!m) return null;
+  var h = (+m[1]) % 12;
+  if (/PM/i.test(m[3])) h += 12;
+  return h*60 + (+m[2]);
+}
+function minToSlot(mins){
+  var h24 = Math.floor(mins/60) % 24, mm = mins % 60;
+  var ap = h24 >= 12 ? 'PM' : 'AM'; var h = h24 % 12; if (h===0) h = 12;
+  return h+':'+pad(mm)+' '+ap;
+}
+function bookingEndMin(b){ var s = parseSlotToMin(b.time); return s === null ? null : s + b.dur*60; }
+function bookingRange(b){
+  var e = bookingEndMin(b);
+  return e === null ? esc(b.time) : esc(b.time)+' – '+minToSlot(e);
+}
+function bookingsFor(tableId, date){
+  return bookings.filter(function(b){
+    return b.status!=='cancelled' && b.tableId===tableId && b.date===date;
+  }).slice().sort(function(a,b){ return (parseSlotToMin(a.time)||0) - (parseSlotToMin(b.time)||0); });
+}
+/* Overlap-aware: a new slot clashes if it starts before an existing booking
+   ends AND ends after that booking starts — not just on an exact match. */
+function slotConflict(tableId, date, time, dur){
+  var s = parseSlotToMin(time); if (s === null) return null;
+  var e = s + dur*60;
+  var hit = null;
+  bookingsFor(tableId, date).forEach(function(b){
+    if (hit) return;
+    var bs = parseSlotToMin(b.time), be = bookingEndMin(b);
+    if (bs !== null && s < be && bs < e) hit = b;
+  });
+  return hit;
+}
+function slotTaken(tableId, date, time){
+  return !!slotConflict(tableId, date, time, 1);
+}
+function renderAvailability(){
+  var grid = document.getElementById('availGrid');
+  if (!grid) return;
+  var dateEl = document.getElementById('bkDate');
+  var date = (dateEl && dateEl.value) || todayStr();
+  var isToday = date === todayStr();
+  document.getElementById('availDateLabel').textContent = '· ' + prettyDate(date);
+  var selEl = document.getElementById('bkTable');
+  var selId = selEl ? +selEl.value : 0;
+  grid.innerHTML = TABLES.map(function(t){
+    var dayBookings = bookingsFor(t.id, date);
+    var rows = '';
+    if (isToday && t.session){
+      rows += '<div class="av-row live">● Playing right now<span class="av-who">Started '+fmtTime(t.session.startTs)+' · walk-in game, no fixed end time</span></div>';
+    }
+    dayBookings.forEach(function(b){
+      var end = bookingEndMin(b);
+      rows += '<div class="av-row booked">Booked <span class="av-till">'+bookingRange(b)+'</span>' +
+        '<span class="av-who">Booked till <strong>'+(end===null ? '—' : minToSlot(end))+'</strong> · '+b.players+' player'+(b.players==='1'?'':'s')+' · '+b.dur+' hr'+(b.dur>1?'s':'')+(b.status==='started' ? ' · playing now' : '')+'</span></div>';
+    });
+    if (!dayBookings.length && !(isToday && t.session)){
+      rows += '<div class="av-row freeall">✓ Free all day — no bookings yet for this date</div>';
+    } else if (dayBookings.length){
+      rows += '<div class="av-row freeall">✓ All other slots free — book any time outside the slot'+(dayBookings.length>1?'s':'')+' above</div>';
+    }
+    var badge = dayBookings.length
+      ? '<span class="bstatus booked">'+dayBookings.length+' booking'+(dayBookings.length>1?'s':'')+'</span>'
+      : (isToday && t.session ? '<span class="status live"><span class="live-dot"></span>In play</span>' : '<span class="status free">Free</span>');
+    return '<div class="avail-card'+(t.id===selId ? ' is-selected' : '')+'">' +
+      '<div class="av-head"><div><div class="av-name">'+t.name+'</div><div class="av-sub">'+t.kind+' · '+t.detail+' · '+rs(t.rate)+'/min</div></div>'+badge+'</div>' +
+      '<div class="avail-rows">'+rows+'</div>' +
+    '</div>';
+  }).join('');
+}
+function renderSlotStatus(){
+  var el = document.getElementById('slotStatus');
+  if (!el) return;
+  var tid = +document.getElementById('bkTable').value;
+  var t = TABLES[tid-1];
+  var date = document.getElementById('bkDate').value || todayStr();
+  var time = document.getElementById('bkTime').value;
+  var dur = +document.getElementById('bkDur').value;
+  var end = minToSlot((parseSlotToMin(time)||0) + dur*60);
+  var hit = slotConflict(tid, date, time, dur);
+  if (hit){
+    el.className = 'slot-status bad';
+    el.innerHTML = '✕ <span><strong>'+esc(t.name)+' is already booked at that time</strong> — '+bookingRange(hit)+', booked till <strong>'+minToSlot(bookingEndMin(hit))+'</strong> on '+prettyDate(date)+'. Pick a time after '+minToSlot(bookingEndMin(hit))+' or choose another table — the board above shows every taken slot.</span>';
+    return;
+  }
+  if (date === todayStr() && t.session){
+    el.className = 'slot-status warn';
+    el.innerHTML = '◐ <span><strong>'+esc(t.name)+' is playing right now</strong> (walk-in game, no fixed end) — but <strong>'+esc(time)+' – '+end+'</strong> on '+prettyDate(date)+' is free to book, and the counter will have the table ready for your slot.</span>';
+    return;
+  }
+  el.className = 'slot-status ok';
+  el.innerHTML = '✓ <span><strong>'+esc(t.name)+' is free for '+esc(time)+' – '+end+'</strong> on '+prettyDate(date)+' — no booking clashes with this slot. Confirm below and it is held for you till '+end+'.</span>';
+}
+function updEstimate(){
+  var tid = +document.getElementById('bkTable').value;
+  var t = TABLES[tid-1];
+  var dur = +document.getElementById('bkDur').value;
+  var est = t.rate * 60 * dur;
+  document.getElementById('estAmt').textContent = rs(est);
+  document.getElementById('estDetail').textContent = t.name+' · '+t.kind+' · '+rs(t.rate)+'/min × '+(dur*60)+' min';
+  renderAvailability();
+  renderSlotStatus();
+}
+function createBooking(){
+  var name = document.getElementById('bkName').value.trim();
+  var phone = document.getElementById('bkPhone').value.trim();
+  var tid = +document.getElementById('bkTable').value;
+  var t = TABLES[tid-1];
+  var players = document.getElementById('bkPlayers').value;
+  var date = document.getElementById('bkDate').value || todayStr();
+  var time = document.getElementById('bkTime').value;
+  var dur = +document.getElementById('bkDur').value;
+  var note = document.getElementById('bkNote').value.trim();
+  if (!name){ toast('Add your name — the booking goes under it.'); document.getElementById('bkName').focus(); return; }
+  if (!phone){ toast('Add your phone number — the counter may need to reach you.'); document.getElementById('bkPhone').focus(); return; }
+  var conflict = slotConflict(tid, date, time, dur);
+  if (conflict){
+    toast(t.name+' is already booked '+bookingRange(conflict)+' on '+prettyDate(date)+' — booked till '+minToSlot(bookingEndMin(conflict))+'. Pick a time after that, or another table.');
+    renderSlotStatus();
+    document.getElementById('availBoard').scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+  bookingSeq++;
+  var b = { id:bookingSeq, name:name, phone:phone, tableId:tid, players:players, date:date, time:time, dur:dur, note:note, status:'booked', sample:false, createdTs:Date.now() };
+  bookings.unshift(b);
+  renderBookings();
+  renderStats();
+  var waMsg = 'New booking at Cue Club — '+b.name+' booked '+t.name+' ('+t.kind+') on '+prettyDate(date)+' at '+time+' for '+dur+' hr'+(dur>1?'s':'')+', '+players+' player'+(players==='1'?'':'s')+'. Phone: '+phone+(note ? '. Note: '+note : '');
+  var waHref = 'https://wa.me/?text=' + encodeURIComponent(waMsg);
+  document.getElementById('bookingConfirm').innerHTML =
+    '<div class="confirm-panel">' +
+      '<h4>✓ Booking confirmed — '+esc(t.name)+' is held for you</h4>' +
+      '<p><strong>'+esc(name)+'</strong> · '+prettyDate(date)+' · <strong>'+time+' – '+minToSlot((parseSlotToMin(time)||0)+dur*60)+'</strong> (booked till '+minToSlot((parseSlotToMin(time)||0)+dur*60)+') · '+dur+' hr'+(dur>1?'s':'')+' · '+players+' player'+(players==='1'?'':'s')+' · est. '+rs(t.rate*60*dur)+'</p>' +
+      '<p>It is also saved in <strong>My Bookings</strong> below — your own sheet with all your bookings and their till-times.</p>' +
+      '<p>Your booking is <strong>already on the supervisor\u2019s screen</strong> at the counter — they will keep '+esc(t.name)+' ready. You can also forward it to the club on WhatsApp:</p>' +
+      '<div class="cp-btns">' +
+        '<a class="btn btn-wa" href="'+waHref+'" target="_blank" rel="noopener">Send booking on WhatsApp</a>' +
+        '<button class="btn btn-ghost" onclick="setRole(\'supervisor\');showSupTab(\'bookings\')">See it at the counter →</button>' +
+      '</div>' +
+    '</div>';
+  toast('Booking confirmed — it is already showing on the supervisor\u2019s screen.');
+  document.getElementById('bookingConfirm').scrollIntoView({behavior:'smooth', block:'center'});
+}
+function bookingCard(b, mine){
+  var t = TABLES[b.tableId-1];
+  var statusHtml = b.status==='booked' ? '<span class="bstatus booked">Booked · waiting</span>'
+    : b.status==='started' ? '<span class="bstatus started">Playing now</span>'
+    : '<span class="bstatus cancelled">Cancelled</span>';
+  var btns = '';
+  if (!mine && b.status==='booked'){
+    btns = '<div class="bk-btns">' +
+      '<button class="btn btn-start" onclick="startBooking('+b.id+')">▶ Start table</button>' +
+      '<button class="btn btn-ghost" onclick="cancelBooking('+b.id+')">Cancel</button>' +
+    '</div>';
+  }
+  if (mine && b.status==='booked'){
+    btns = '<div class="bk-btns"><button class="btn btn-ghost" onclick="cancelBooking('+b.id+')">Cancel booking</button></div>';
+  }
+  return '<div class="bk-card'+(b.status==='cancelled' ? ' is-cancelled' : '')+'">' +
+    '<div class="bk-main">' +
+      '<div class="bk-name">'+esc(b.name)+(b.sample ? '<span class="sample-badge">Sample</span>' : '')+'</div>' +
+      '<div class="bk-meta"><strong>'+t.name+'</strong> · '+t.kind+' ('+t.detail+') · '+b.players+' player'+(b.players==='1'?'':'s')+' · '+b.dur+' hr'+(b.dur>1?'s':'')+' · est. '+rs(t.rate*60*b.dur)+'<br>' +
+      'Phone: '+esc(b.phone)+(b.note ? ' · Note: '+esc(b.note) : '')+'</div>' +
+    '</div>' +
+    '<div class="bk-side">' +
+      '<div class="bk-when">'+prettyDate(b.date)+'<br>'+bookingRange(b)+'</div>' +
+      '<div style="font-size:12.5px;color:var(--ink-2);font-weight:600">Booked till '+(bookingEndMin(b)===null ? '—' : minToSlot(bookingEndMin(b)))+'</div>' +
+      statusHtml + btns +
+    '</div>' +
+  '</div>';
+}
+function renderBookings(){
+  var staffHtml = bookings.length
+    ? bookings.map(function(b){ return bookingCard(b, false); }).join('')
+    : '<div class="bk-card"><div class="bk-main"><div class="bk-name">No bookings yet</div><div class="bk-meta">When a player books from the website, it appears here the moment they confirm.</div></div></div>';
+  document.querySelectorAll('.bookings-list').forEach(function(el){ el.innerHTML = staffHtml; });
+  /* My Bookings — the customer's own sheet: only their bookings, soonest first */
+  var mine = bookings.filter(function(b){ return !b.sample; }).slice().sort(function(a,b){
+    if (a.date !== b.date) return a.date < b.date ? -1 : 1;
+    return (parseSlotToMin(a.time)||0) - (parseSlotToMin(b.time)||0);
+  });
+  var upcoming = mine.filter(function(b){ return b.status==='booked'; });
+  var summaryEl = document.getElementById('myBookingsSummary');
+  if (summaryEl){
+    if (!mine.length){
+      summaryEl.innerHTML = '<span class="sheet-chip">No bookings on your sheet yet — book above and it appears here instantly.</span>';
+    } else {
+      var next = upcoming[0];
+      var totalEst = upcoming.reduce(function(a,b){ var t = TABLES[b.tableId-1]; return a + t.rate*60*b.dur; }, 0);
+      summaryEl.innerHTML =
+        '<span class="sheet-chip"><strong>'+upcoming.length+'</strong> upcoming booking'+(upcoming.length===1?'':'s')+'</span>' +
+        (next ? '<span class="sheet-chip next">Next: '+esc(TABLES[next.tableId-1].name)+' · '+prettyDate(next.date)+' · '+bookingRange(next)+' (till '+minToSlot(bookingEndMin(next))+')</span>' : '') +
+        (totalEst ? '<span class="sheet-chip">Est. total <strong>'+rs(totalEst)+'</strong> · pay at the club</span>' : '');
+    }
+  }
+  document.getElementById('myBookings').innerHTML = mine.length
+    ? mine.map(function(b){ return bookingCard(b, true); }).join('')
+    : '<div class="bk-card"><div class="bk-main"><div class="bk-name">Your sheet is empty</div><div class="bk-meta">Confirm a booking above and it lands here — table, date, slot and booked-till time, all in one place.</div></div></div>';
+  renderAvailability();
+}
+function startBooking(id){
+  var b = null;
+  bookings.forEach(function(x){ if (x.id===id) b = x; });
+  if (!b || b.status!=='booked') return;
+  var t = TABLES[b.tableId-1];
+  if (t.session){ toast(t.name+' is busy right now — finish that game first, or seat them at a free table.'); return; }
+  b.status = 'started';
+  beginSession(t, b.name, b.players==='1' ? '' : 'Guest');
+  renderBookings(); renderTables(); tick(); renderStats();
+  if (role==='supervisor') showSupTab('tables');
+  if (role==='admin') showAdmTab('tables');
+  toast(b.name+' has arrived — '+t.name+' started under their booking.');
+}
+function cancelBooking(id){
+  bookings.forEach(function(x){ if (x.id===id) x.status = 'cancelled'; });
+  renderBookings(); renderStats(); updEstimate();
+  toast('Booking cancelled — that slot is free again on the availability board.');
+}
+
+/* =============== Customer view =============== */
+function renderCustomer(){
+  renderAvailability();
+  document.getElementById('amenGrid').innerHTML = TABLES.map(function(t){
+    var st = !t.session ? '<span class="status free">Free</span>'
+      : t.session.paused ? '<span class="status paused">⏸ Paused</span>'
+      : '<span class="status live"><span class="live-dot"></span>In play</span>';
+    return '<div class="amen-card">' +
+      '<div class="ahead"><div><div class="an">'+t.name+'</div><div class="ad">'+t.kind+' · '+t.detail+'</div></div>'+st+'</div>' +
+      '<div class="ar">'+rs(t.rate)+'/min<small>'+rs(t.rate*60)+' PER HOUR</small></div>' +
+    '</div>';
+  }).join('');
+}
+
+/* =============== Admin settings =============== */
+function applyRates(){
+  var s = Math.max(1, Math.round(+document.getElementById('setSnooker').value || RATES.snooker));
+  var p = Math.max(1, Math.round(+document.getElementById('setPool').value || RATES.pool));
+  RATES.snooker = s; RATES.pool = p;
+  TABLES.forEach(function(t){
+    if (!t.session) t.rate = (t.kind==='Snooker' ? s : p);
+  });
+  document.getElementById('footRates').textContent = 'Cue Club — 4 snooker tables @ '+rs(s)+'/min · 2 pool tables @ '+rs(p)+'/min · billed per started minute of play time';
+  renderTables(); renderCustomer(); updEstimate();
+  toast('Rates saved — snooker '+rs(s)+'/min, pool '+rs(p)+'/min on free tables.');
+}
+
 /* =============== Students / Coaching — SAMPLE DATA ONLY (demo) =============== */
-/* Fictional sample students so the owner can see the layout. No real
-   student data. Dates are fixed to this demo's "today" (8 Nov 2026) so
-   "learning since" reads clearly in the pitch. */
 var STUDENTS = [
-  { name:'Aarav Sharma', joined:'15 Aug 2026', joinedTs: new Date(2026,7,15).getTime(), learning:'2 months 24 days', fee:5000, status:'paid',    sessions:34, coach:'Rahul Verma', nextDue:'15 Dec 2026', batch:'Evening · 5–6 PM' },
-  { name:'Kabir Singh',  joined:'20 Jun 2026', joinedTs: new Date(2026,5,20).getTime(), learning:'4 months 19 days', fee:6000, status:'paid',    sessions:58, coach:'Rahul Verma', nextDue:'20 Nov 2026', batch:'Evening · 4–5 PM' },
-  { name:'Vihaan Gupta', joined:'02 Sep 2026', joinedTs: new Date(2026,8,2).getTime(),  learning:'2 months 6 days',  fee:5000, status:'pending', sessions:26, coach:'Rahul Verma', nextDue:'02 Nov 2026', batch:'Morning · 11 AM–12 PM' },
-  { name:'Arjun Mehta',  joined:'10 Oct 2026', joinedTs: new Date(2026,9,10).getTime(), learning:'29 days',          fee:4500, status:'pending', sessions:11, coach:'Imran Khan',  nextDue:'10 Nov 2026', batch:'Evening · 5–6 PM' }
+  { name:'Aarav Sharma', joined:'15 Aug 2026', learning:'2 months 24 days', fee:5000, status:'paid',    sessions:34, coach:'Rahul Verma', nextDue:'15 Dec 2026', batch:'Evening · 5–6 PM' },
+  { name:'Kabir Singh',  joined:'20 Jun 2026', learning:'4 months 19 days', fee:6000, status:'paid',    sessions:58, coach:'Rahul Verma', nextDue:'20 Nov 2026', batch:'Evening · 4–5 PM' },
+  { name:'Vihaan Gupta', joined:'02 Sep 2026', learning:'2 months 6 days',  fee:5000, status:'pending', sessions:26, coach:'Rahul Verma', nextDue:'02 Nov 2026', batch:'Morning · 11 AM–12 PM' },
+  { name:'Arjun Mehta',  joined:'10 Oct 2026', learning:'29 days',          fee:4500, status:'pending', sessions:11, coach:'Imran Khan',  nextDue:'10 Nov 2026', batch:'Evening · 5–6 PM' }
 ];
 function studentInitials(name){
   return name.split(' ').map(function(w){ return w.charAt(0); }).join('').slice(0,2).toUpperCase();
@@ -1112,18 +1753,32 @@ function renderStudents(){
   }).join('');
 }
 
-/* =============== Menu view =============== */
-function renderMenu(){
-  document.getElementById('menuGrid').innerHTML = MENU.map(function(m){
-    return '<div class="menu-item"><div><div class="mn">'+esc(m.name)+'</div><div class="mc">'+m.cat+'</div></div><div class="mp">'+rs(m.price)+'</div></div>';
-  }).join('');
-}
-
 /* =============== Init =============== */
-renderTables();
-renderMenu();
-renderStudents();
-tick();
+(function init(){
+  /* Booking form options */
+  document.getElementById('bkTable').innerHTML = TABLES.map(function(t){
+    return '<option value="'+t.id+'">'+t.name+' — '+t.kind+' ('+t.detail+') · '+rs(t.rate)+'/min</option>';
+  }).join('');
+  document.getElementById('bkTime').innerHTML = SLOTS.map(function(s){
+    return '<option value="'+s+'"'+(s==='6:00 PM' ? ' selected' : '')+'>'+s+'</option>';
+  }).join('');
+  var dateEl = document.getElementById('bkDate');
+  dateEl.value = todayStr();
+  dateEl.min = todayStr();
+  updEstimate();
+  /* Sample bookings so the counter view shows how bookings land */
+  bookingSeq++;
+  bookings.push({ id:bookingSeq, name:'Rohit Sharma', phone:'98110 22334', tableId:2, players:'2', date:todayStr(), time:'6:00 PM', dur:2, note:'', status:'booked', sample:true, createdTs:Date.now() });
+  bookingSeq++;
+  bookings.push({ id:bookingSeq, name:'Aman Gupta', phone:'99360 48120', tableId:5, players:'4', date:todayStr(), time:'7:30 PM', dur:1, note:'First visit — needs pool cues', status:'booked', sample:true, createdTs:Date.now() });
+  renderTables();
+  renderBookings();
+  renderEarnings();
+  renderStudents();
+  renderCustomer();
+  renderStats();
+  tick();
+})();
 </script>
 </body>
 </html>
