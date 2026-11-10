@@ -574,6 +574,29 @@
   }
   .toast.show{transform:translateX(-50%) translateY(0)}
   .hidden{display:none !important}
+
+  /* ---------- Customer profiles (phone-keyed) ---------- */
+  .phone-hint{font-size:13.5px;line-height:1.55;margin-top:8px;background:var(--blue-soft);color:var(--blue-ink);border-radius:10px;padding:10px 12px;font-weight:600}
+  .phone-hint strong{font-weight:800}
+  .save-row{display:flex;gap:11px;align-items:flex-start;background:var(--surface-2);border:1.5px dashed var(--line-strong);border-radius:12px;padding:13px 15px;margin-top:14px}
+  .save-row input{width:21px;height:21px;accent-color:var(--baize);flex:none;margin-top:1px;cursor:pointer}
+  .save-row label{font-size:14.5px;line-height:1.5;cursor:pointer}
+  .save-row label span{color:var(--ink-2);font-size:13.5px}
+  .lookup-row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:6px}
+  .lookup-row .field{flex:1;min-width:220px}
+  .lookup-row .btn{width:auto;padding:12px 20px}
+  .modeseg{display:flex;background:var(--surface-2);border:1.5px solid var(--line-strong);border-radius:999px;padding:3px;gap:2px}
+  .modeseg button{border:none;background:transparent;border-radius:999px;padding:7px 10px;font-weight:800;font-size:13.5px;color:var(--ink-2);flex:1}
+  .modeseg button.on{background:var(--baize-deep);color:#fff}
+  .prof-head{display:flex;align-items:center;gap:13px;flex-wrap:wrap}
+  .prof-head .pmeta{font-size:13px;color:var(--ink-2);font-weight:600;margin-top:2px}
+  .prof-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0 4px}
+  @media (max-width:620px){ .prof-stats{grid-template-columns:repeat(2,1fr)} }
+  .prof-h{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin:18px 0 4px}
+  .hist-row{display:flex;justify-content:space-between;gap:12px;padding:10px 2px;border-bottom:1px dashed var(--line);font-size:14.5px;flex-wrap:wrap;align-items:flex-start}
+  .hist-row:last-child{border-bottom:none}
+  .hist-row .hd{color:var(--ink-2);font-size:13px;margin-top:1px}
+  .hist-row .ha{font-family:"IBM Plex Mono",monospace;font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
 </style>
 </head>
 <body>
@@ -617,7 +640,7 @@
       <p>Pick a table, date and time — your table is held for you, and the counter staff see your booking the moment you confirm it. Walk-ins are welcome too; booking just means no waiting.</p>
       <div class="hero-btns">
         <button class="btn btn-brass" onclick="document.getElementById('bookNowSec').scrollIntoView({behavior:'smooth'})">Book Now</button>
-        <button class="btn btn-ghost" onclick="document.getElementById('myBookingsSec').scrollIntoView({behavior:'smooth'})">My Bookings</button>
+        <button class="btn btn-ghost" onclick="document.getElementById('myBookingsSec').scrollIntoView({behavior:'smooth'})">My Record</button>
         <button class="btn btn-ghost" onclick="document.getElementById('amenitiesSec').scrollIntoView({behavior:'smooth'})">See the tables</button>
       </div>
     </div>
@@ -645,7 +668,7 @@
         <div class="fc-sub">The moment you confirm, your booking lands on the supervisor's screen at the counter — they will keep your table ready.</div>
         <div class="form-grid">
           <div class="field"><label for="bkName">Your name</label><input id="bkName" type="text" placeholder="e.g. Rohit Sharma" autocomplete="off"></div>
-          <div class="field"><label for="bkPhone">Phone (WhatsApp)</label><input id="bkPhone" type="tel" placeholder="e.g. 98765 43210" autocomplete="off"></div>
+          <div class="field"><label for="bkPhone">Phone (WhatsApp)</label><input id="bkPhone" type="tel" placeholder="e.g. 98765 43210" autocomplete="off" oninput="bkPhoneChanged()"><div class="phone-hint hidden" id="bkProfileHint"></div></div>
           <div class="field"><label for="bkTable">Table</label><select id="bkTable" onchange="updEstimate()"></select></div>
           <div class="field"><label for="bkPlayers">Players</label>
             <select id="bkPlayers"><option value="1">1 player</option><option value="2" selected>2 players</option><option value="3">3 players</option><option value="4">4 players</option></select>
@@ -656,6 +679,10 @@
             <select id="bkDur" onchange="updEstimate()"><option value="1">1 hour</option><option value="2" selected>2 hours</option><option value="3">3 hours</option><option value="4">4 hours</option></select>
           </div>
           <div class="field"><label for="bkNote">Note for the counter (optional)</label><input id="bkNote" type="text" placeholder="e.g. Need a cue for a friend" autocomplete="off"></div>
+        </div>
+        <div class="save-row" id="bkSaveRow">
+          <input type="checkbox" id="bkSave">
+          <label for="bkSave"><strong>Save my details for next time?</strong><br><span>Tick this and the club keeps a record under your number — visits, frames won/lost, minutes played, total spent and any pending dues — so next time the counter pulls it up the moment you give your number. No login, no password, no app. Leave it unticked and nothing is saved beyond this one booking.</span></label>
         </div>
         <div class="estimate-bar">
           <span class="el">Estimated table charge</span>
@@ -668,11 +695,15 @@
         <div id="bookingConfirm"></div>
       </div>
 
-      <div class="sec-head" id="myBookingsSec"><h2>My Bookings</h2><span class="sh-note">Your own sheet — every booking you make lands here.</span></div>
+      <div class="sec-head" id="myBookingsSec"><h2>My Record &amp; Bookings</h2><span class="sh-note">Your phone number is your key — no login, no password.</span></div>
       <div class="sheet-card">
-        <div class="sheet-summary" id="myBookingsSummary"></div>
-        <div class="bk-list" id="myBookings"></div>
-        <p class="avail-foot" style="margin-bottom:0">Each booking shows its full slot — start time and <strong>booked till</strong> time — so you always know when your table is yours until. Arrive a few minutes early; the counter can see the same booking on their screen. In the full version this sheet is tied to your phone number, so your bookings follow you on any device.</p>
+        <div class="lookup-row">
+          <div class="field"><label for="myPhone">Your mobile number</label><input id="myPhone" type="tel" placeholder="e.g. 98765 43210" autocomplete="off"></div>
+          <button class="btn btn-start" onclick="lookupMyRecord()">Show my record</button>
+        </div>
+        <p class="section-note" style="margin:2px 0 12px">Enter the number you booked or played with. If you saved your details, your full record opens — visits, frames won/lost, minutes played, total spent, last visit and pending dues — along with every booking under that number. Demo tip: try <strong>98110 22334</strong> (a sample regular with a saved record) or <strong>99360 48120</strong> (a first-time booker with no record saved).</p>
+        <div id="myRecordResult"></div>
+        <p class="avail-foot" style="margin-bottom:0">Privacy: your record opens only with your own number, and your name and number never appear anywhere public — the availability board above shows booked slots and times only, never who booked them. Guest players who never save their details have no record at all.</p>
       </div>
     </div>
 
@@ -773,6 +804,7 @@
       <button class="tab" id="admTabBookings" aria-selected="false" onclick="showAdmTab('bookings')">Bookings <span class="count" id="admBookCount">0</span></button>
       <button class="tab" id="admTabBook" aria-selected="false" onclick="showAdmTab('book')">Day Book <span class="count" id="bookCount">0</span></button>
       <button class="tab" id="admTabStudents" aria-selected="false" onclick="showAdmTab('students')">Students / Coaching <span class="count" id="studentCount">4</span></button>
+      <button class="tab" id="admTabCustomers" aria-selected="false" onclick="showAdmTab('customers')">Customers <span class="count" id="customerCount">2</span></button>
       <button class="tab" id="admTabSettings" aria-selected="false" onclick="showAdmTab('settings')">Settings</button>
       <span class="try-hint">Admin sees everything: every day's earnings, all bookings, the full Day Book, students — and controls the rates.</span>
     </nav>
@@ -830,6 +862,18 @@
       <p class="section-note" style="margin:14px 0 0">In the full version: tap a student to see full fee history month by month, mark a fee paid in one tap, and see joining anniversaries — e.g. “learning for 6 months” — automatically, no manual counting.</p>
     </section>
 
+    <section id="admCustomersSec" class="hidden">
+      <p class="section-note">Regular players, keyed by mobile number — no login portal, no app. A profile is created only when a player opts in ("Save my details") while booking, or the counter starts them as a Saved player; every booking and session under that number then lands on their record automatically. <strong>Guest walk-ins are never saved</strong> — they are billed and gone. Two sample regulars are pre-loaded so the record shape is visible.</p>
+      <div class="students-summary">
+        <div class="stat"><div class="k">Saved customers</div><div class="v" id="custTotal">0</div><div class="s">Profiles on record</div></div>
+        <div class="stat"><div class="k">Visits by regulars</div><div class="v" id="custVisits">0</div><div class="s">Sessions played</div></div>
+        <div class="stat"><div class="k">Spent by regulars</div><div class="v" id="custSpent">₹0</div><div class="s">All time, on record</div></div>
+        <div class="stat pending"><div class="k">Pending dues</div><div class="v" id="custPending">₹0</div><div class="s" id="custPendingSub">Nobody owes anything</div></div>
+      </div>
+      <div class="student-grid" id="customerGrid"></div>
+      <p class="section-note" style="margin:14px 0 0">A customer's name and number are visible only to staff — never on the public availability board or anywhere another customer can see.</p>
+    </section>
+
     <section id="admSettingsSec" class="hidden">
       <div class="settings-card">
         <h3>Table rates</h3>
@@ -849,7 +893,8 @@
         <div class="sc-sub" style="margin-bottom:0">
           <strong>Customer</strong> — the public website: Book Now, Amenities, Shop, Services.<br>
           <strong>Supervisor</strong> — current tables and frame control, bookings, and only today's + this week's earnings.<br>
-          <strong>Admin (owner)</strong> — everything: all earnings and history, the full Day Book, students, bookings and these settings. In the full version, Supervisor and Admin each sign in with their own PIN.
+          <strong>Admin (owner)</strong> — everything: all earnings and history, the full Day Book, students, bookings and these settings. In the full version, Supervisor and Admin each sign in with their own PIN.<br>
+          <strong>Customer profiles</strong> — regulars are saved by mobile number only when they opt in; guests are never saved. A customer's name and number never appear on the public availability board.
         </div>
       </div>
     </section>
@@ -906,6 +951,16 @@
   </div>
 </div>
 
+<!-- Customer profile modal (Admin) -->
+<div class="overlay" id="profileOverlay" role="dialog" aria-modal="true">
+  <div class="modal" style="max-width:640px">
+    <div id="profileModalBody"></div>
+    <div style="margin-top:16px">
+      <button class="btn btn-ghost" onclick="closeProfile()">Close</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast" role="status"></div>
 
 <script>
@@ -926,6 +981,39 @@ TABLES.forEach(function(t){ t.session = null; });
 var ledger = [];           /* finished bills (today) */
 var bookings = [];         /* website bookings */
 var bookingSeq = 0;
+var startModes = {};       /* per-table counter start mode: 'guest' | 'saved' */
+var myBookPhone = null;    /* phone key the customer used for My Record */
+
+/* =============== Customer profiles — keyed by mobile number ===============
+   No login portal: the phone number IS the identity. A profile exists only
+   for players who opted in; guests are never stored here. Two sample
+   regulars are pre-loaded so the record shape is visible in the demo. */
+var CUSTOMERS = {
+  '9811022334': { name:'Rohit Sharma', phone:'98110 22334', firstVisit:'Aug 2026', visits:6, framesWon:14, framesLost:9, minutes:412, spent:1240, pending:480, lastVisit:'Sat 7 Nov', sample:true, history:[
+    { when:'Sat 7 Nov', table:'Table 2', detail:'vs Aman Gupta · frames 3–2 won', minutes:96, amount:154, pay:'upi' },
+    { when:'Fri 6 Nov', table:'Table 3', detail:'Solo practice', minutes:120, amount:480, pay:'pending' },
+    { when:'Wed 4 Nov', table:'Table 1', detail:'vs Imran Sheikh · frames 2–3 lost', minutes:74, amount:178, pay:'cash' }
+  ]},
+  '9004511223': { name:'Imran Sheikh', phone:'90045 11223', firstVisit:'Oct 2026', visits:3, framesWon:5, framesLost:7, minutes:188, spent:560, pending:0, lastVisit:'Thu 5 Nov', sample:true, history:[
+    { when:'Thu 5 Nov', table:'Table 4', detail:'vs Kabir Singh · frames 2–1 won', minutes:68, amount:91, pay:'cash' },
+    { when:'Wed 4 Nov', table:'Table 1', detail:'vs Rohit Sharma · frames 3–2 won', minutes:74, amount:118, pay:'upi' }
+  ]}
+};
+function normPhone(p){ return String(p || '').replace(/\D/g,'').slice(-10); }
+function getProfile(phone){
+  var k = normPhone(phone);
+  return k.length >= 10 ? (CUSTOMERS[k] || null) : null;
+}
+function ensureProfile(name, phone){
+  var k = normPhone(phone);
+  if (k.length < 10) return null;
+  if (!CUSTOMERS[k]){
+    CUSTOMERS[k] = { name:name || 'Player', phone:phone, firstVisit:'Today', visits:0, framesWon:0, framesLost:0, minutes:0, spent:0, pending:0, lastVisit:'—', sample:false, history:[] };
+  } else if (name){
+    CUSTOMERS[k].name = name;
+  }
+  return CUSTOMERS[k];
+}
 var checkoutTableId = null;
 var checkoutPays = {};     /* per-share payment choices in the checkout modal */
 var lastReceipt = null;
@@ -1090,7 +1178,7 @@ function showSupTab(v){
 }
 function showAdmTab(v){
   admTab = v;
-  var secs = { overview:'admOverviewSec', tables:'admTablesSec', bookings:'admBookingsSec', book:'admBookSec', students:'admStudentsSec', settings:'admSettingsSec' };
+  var secs = { overview:'admOverviewSec', tables:'admTablesSec', bookings:'admBookingsSec', book:'admBookSec', students:'admStudentsSec', customers:'admCustomersSec', settings:'admSettingsSec' };
   Object.keys(secs).forEach(function(k){
     document.getElementById(secs[k]).classList.toggle('hidden', k!==v);
   });
@@ -1099,10 +1187,12 @@ function showAdmTab(v){
   document.getElementById('admTabBookings').setAttribute('aria-selected', v==='bookings');
   document.getElementById('admTabBook').setAttribute('aria-selected', v==='book');
   document.getElementById('admTabStudents').setAttribute('aria-selected', v==='students');
+  document.getElementById('admTabCustomers').setAttribute('aria-selected', v==='customers');
   document.getElementById('admTabSettings').setAttribute('aria-selected', v==='settings');
   placeTables();
   if (v==='book') renderBook();
   if (v==='students') renderStudents();
+  if (v==='customers') renderCustomers();
   if (v==='overview') renderEarnings();
   window.scrollTo({top:0, behavior:'smooth'});
 }
@@ -1118,6 +1208,7 @@ function renderTables(){
   renderStats();
 }
 function freeCard(t){
+  var mode = startModes[t.id] || 'guest';
   return '' +
   '<article class="card" id="card-'+t.id+'">' +
     '<div class="card-head">' +
@@ -1126,14 +1217,56 @@ function freeCard(t){
       '<div class="rate-badge">'+rs(t.rate)+'/min<small>'+rs(t.rate*60)+' / HOUR</small></div>' +
     '</div>' +
     '<div class="card-body">' +
+      '<div class="modeseg" role="group" aria-label="Player type for '+t.name+'">' +
+        '<button id="modeGuest-'+t.id+'" class="'+(mode==='guest' ? 'on' : '')+'" onclick="setStartMode('+t.id+',\'guest\')">Guest walk-in</button>' +
+        '<button id="modeSaved-'+t.id+'" class="'+(mode==='saved' ? 'on' : '')+'" onclick="setStartMode('+t.id+',\'saved\')">Saved player</button>' +
+      '</div>' +
       '<div class="pinputs">' +
         '<div><label class="flabel" for="p1-'+t.id+'">Player 1</label><input id="p1-'+t.id+'" type="text" placeholder="e.g. Rohit" autocomplete="off"></div>' +
         '<div><label class="flabel" for="p2-'+t.id+'">Player 2</label><input id="p2-'+t.id+'" type="text" placeholder="e.g. Aman" autocomplete="off"></div>' +
       '</div>' +
-      '<div class="free-note">Type the players\u2019 names and press Start — the timer and running bill show here while they play.</div>' +
+      '<div class="pinputs'+(mode==='saved' ? '' : ' hidden')+'" id="phones-'+t.id+'">' +
+        '<div><label class="flabel" for="ph1-'+t.id+'">Player 1 mobile — the key</label><input id="ph1-'+t.id+'" type="tel" placeholder="10-digit number" autocomplete="off" oninput="counterPhoneHint('+t.id+')"></div>' +
+        '<div><label class="flabel" for="ph2-'+t.id+'">Player 2 mobile (optional)</label><input id="ph2-'+t.id+'" type="tel" placeholder="Only if they save too" autocomplete="off"></div>' +
+      '</div>' +
+      '<div class="phone-hint hidden" id="phHint-'+t.id+'"></div>' +
+      '<div class="free-note" id="startNote-'+t.id+'">'+(mode==='saved'
+        ? 'Saved player — the number is the key. A number already on record pulls up their history below; a new number creates their profile when the timer starts, and this session is added to their record when the bill is saved.'
+        : 'Guest — just names for the bill, billed exactly as normal. Nothing is saved: no profile, no record. Best for one-off walk-ins who come once or twice.')+'</div>' +
       '<button class="btn btn-start" onclick="startTable('+t.id+')">▶&ensp;Start timer</button>' +
     '</div>' +
   '</article>';
+}
+function setStartMode(id, mode){
+  startModes[id] = mode;
+  var phones = document.getElementById('phones-'+id);
+  if (phones) phones.classList.toggle('hidden', mode!=='saved');
+  var g = document.getElementById('modeGuest-'+id), s = document.getElementById('modeSaved-'+id);
+  if (g) g.classList.toggle('on', mode==='guest');
+  if (s) s.classList.toggle('on', mode==='saved');
+  var note = document.getElementById('startNote-'+id);
+  if (note) note.textContent = mode==='saved'
+    ? 'Saved player — the number is the key. A number already on record pulls up their history below; a new number creates their profile when the timer starts, and this session is added to their record when the bill is saved.'
+    : 'Guest — just names for the bill, billed exactly as normal. Nothing is saved: no profile, no record. Best for one-off walk-ins who come once or twice.';
+  var hint = document.getElementById('phHint-'+id);
+  if (hint && mode!=='saved'){ hint.classList.add('hidden'); hint.innerHTML = ''; }
+  if (mode==='saved') counterPhoneHint(id);
+}
+function counterPhoneHint(id){
+  var hint = document.getElementById('phHint-'+id);
+  if (!hint) return;
+  var el = document.getElementById('ph1-'+id);
+  var key = normPhone(el ? el.value : '');
+  if (key.length < 10){ hint.classList.add('hidden'); hint.innerHTML = ''; return; }
+  var p = CUSTOMERS[key];
+  hint.classList.remove('hidden');
+  if (p){
+    hint.innerHTML = '✓ <strong>Saved record found — '+esc(p.name)+'.</strong> '+p.visits+' visits · frames '+p.framesWon+'W–'+p.framesLost+'L · '+p.minutes+' min played · '+rs(p.spent)+' spent · last visit '+esc(p.lastVisit)+(p.pending ? ' · <strong>'+rs(p.pending)+' pending</strong>' : '')+'. This session will be added to their record.';
+    var nm = document.getElementById('p1-'+id);
+    if (nm && !nm.value.trim()) nm.value = p.name;
+  } else {
+    hint.innerHTML = 'New number — no record yet. A profile will be created for this player when the timer starts, and this session becomes their first visit on record.';
+  }
 }
 function runningCard(t){
   var s = t.session;
@@ -1149,7 +1282,7 @@ function runningCard(t){
     '<div class="card-body">' +
       '<div class="felt'+(s.paused ? ' is-paused' : '')+'">' +
         '<div class="players">'+esc(s.p1)+(s.p2 ? '<span class="vs">VS</span>'+esc(s.p2) : '')+'</div>' +
-        '<div class="started">Started '+fmtTime(s.startTs)+' · '+(s.paused ? 'paused between frames — setup time is not billed' : 'billed on frame play time only, per started minute')+'</div>' +
+        '<div class="started">Started '+fmtTime(s.startTs)+' · '+(s.paused ? 'paused between frames — setup time is not billed' : 'billed on frame play time only, per started minute')+(s.profilePhone ? ' · saved player — record updates when the bill is saved' : ' · guest session — nothing saved')+'</div>' +
         '<div class="clockrow">' +
           '<div class="clock"><small data-clocklab="'+t.id+'">'+(s.paused ? 'Paused · play time so far' : (s.p2 ? 'Frame '+((s.frames||[]).length+1)+' · play time' : 'Time played'))+'</small><span data-clock="'+t.id+'">'+fmtClock(elapsedSec(t))+'</span></div>' +
           '<div class="runbill"><div class="lab">Table charge</div><div class="amt" data-charge="'+t.id+'">'+rs(tableCharge(t))+'</div></div>' +
@@ -1207,19 +1340,33 @@ function tick(){
 setInterval(tick, 500);
 
 /* =============== Table actions =============== */
-function beginSession(t, p1, p2){
+function beginSession(t, p1, p2, opts){
+  opts = opts || {};
   var now = Date.now();
-  t.session = { p1:p1, p2:p2 || '', startTs:now, f1:0, f2:0, frames:[], frameStartTs:now, paused:false };
+  t.session = { p1:p1, p2:p2 || '', startTs:now, f1:0, f2:0, frames:[], frameStartTs:now, paused:false,
+    profilePhone: opts.profilePhone || null, profilePhone2: opts.profilePhone2 || null, guest: !!opts.guest };
 }
 function startTable(id){
   var t = TABLES[id-1];
   var p1 = document.getElementById('p1-'+id).value.trim();
   var p2 = document.getElementById('p2-'+id).value.trim();
   if (!p1){ toast('Add Player 1\u2019s name first — that\u2019s whose name the bill goes under.'); document.getElementById('p1-'+id).focus(); return; }
-  beginSession(t, p1, p2);
+  var mode = startModes[id] || 'guest';
+  var opts = { guest: mode==='guest' };
+  if (mode==='saved'){
+    var ph1 = document.getElementById('ph1-'+id).value.trim();
+    var key1 = normPhone(ph1);
+    if (key1.length < 10){ toast('A saved player needs their 10-digit mobile number — or switch this table to Guest walk-in.'); document.getElementById('ph1-'+id).focus(); return; }
+    ensureProfile(p1, ph1);
+    opts.profilePhone = key1; opts.guest = false;
+    var ph2el = document.getElementById('ph2-'+id);
+    var key2 = normPhone(ph2el ? ph2el.value : '');
+    if (key2.length >= 10 && p2){ ensureProfile(p2, ph2el.value.trim()); opts.profilePhone2 = key2; }
+  }
+  beginSession(t, p1, p2, opts);
   renderTables(); tick();
   if (role==='customer') renderCustomer();
-  toast(t.name+' started — '+playerLabel(t.session)+'. Timer is running.');
+  toast(t.name+' started — '+playerLabel(t.session)+(opts.profilePhone ? '. Session is linked to their saved record.' : '. Guest session — nothing saved.'));
 }
 function addFrame(id, player, delta){
   var t = TABLES[id-1];
@@ -1316,6 +1463,25 @@ function selectPay(key, p){
     if (o.getAttribute('data-pay')===p) o.classList.add('sel-'+p);
   });
 }
+/* Add a finished session to a saved customer's record — visits, minutes,
+   their share of spend, frames won/lost, last visit and pending dues. */
+function recordVisit(key, who, shareAmt, won, lost, comp, entry){
+  var pr = CUSTOMERS[key];
+  if (!pr) return;
+  pr.visits += 1;
+  pr.minutes += entry.minutes;
+  pr.spent += shareAmt;
+  pr.framesWon += won || 0;
+  pr.framesLost += lost || 0;
+  pr.lastVisit = 'Today';
+  if (comp && comp.pay === 'pending') pr.pending += comp.amt;
+  var opp = entry.p2 ? (who === entry.p1 ? entry.p2 : entry.p1) : '';
+  pr.history.unshift({
+    when:'Today', table:entry.tableName,
+    detail:(opp ? 'vs '+opp : 'Solo play') + (entry.split ? ' · frames '+(won||0)+'–'+(lost||0)+' won' : ''),
+    minutes:entry.minutes, amount:shareAmt, pay: comp ? comp.pay : 'cash'
+  });
+}
 function closeCheckout(){ document.getElementById('checkoutOverlay').classList.remove('open'); checkoutTableId = null; }
 function confirmBill(){
   if (checkoutTableId===null) return;
@@ -1344,6 +1510,9 @@ function confirmBill(){
     components: components
   };
   ledger.push(entry);
+  /* Link the finished session to saved profiles, if this was a saved player */
+  if (s.profilePhone) recordVisit(s.profilePhone, s.p1, sp ? sp.s1 : entry.total, s.f1||0, s.f2||0, components[0], entry);
+  if (s.profilePhone2 && sp) recordVisit(s.profilePhone2, s.p2, sp.s2, s.f2||0, s.f1||0, components[1], entry);
   lastReceipt = entry;
   t.session = null;
   closeCheckout();
@@ -1563,6 +1732,25 @@ function updEstimate(){
   renderAvailability();
   renderSlotStatus();
 }
+/* As the customer types their number in the booking form, recognise a
+   returning regular: show their saved record and link automatically. */
+function bkPhoneChanged(){
+  var hint = document.getElementById('bkProfileHint');
+  var saveRow = document.getElementById('bkSaveRow');
+  if (!hint) return;
+  var key = normPhone(document.getElementById('bkPhone').value);
+  var p = key.length >= 10 ? CUSTOMERS[key] : null;
+  if (p){
+    hint.classList.remove('hidden');
+    hint.innerHTML = '✓ <strong>Welcome back, '+esc(p.name)+'.</strong> Saved record found for this number — '+p.visits+' visits · frames '+p.framesWon+'W–'+p.framesLost+'L · '+rs(p.spent)+' spent so far · last visit '+esc(p.lastVisit)+(p.pending ? ' · '+rs(p.pending)+' pending' : '')+'. This booking is added to your record automatically.';
+    if (saveRow) saveRow.classList.add('hidden');
+    var nm = document.getElementById('bkName');
+    if (nm && !nm.value.trim()) nm.value = p.name;
+  } else {
+    hint.classList.add('hidden'); hint.innerHTML = '';
+    if (saveRow) saveRow.classList.remove('hidden');
+  }
+}
 function createBooking(){
   var name = document.getElementById('bkName').value.trim();
   var phone = document.getElementById('bkPhone').value.trim();
@@ -1583,8 +1771,17 @@ function createBooking(){
     return;
   }
   bookingSeq++;
-  var b = { id:bookingSeq, name:name, phone:phone, tableId:tid, players:players, date:date, time:time, dur:dur, note:note, status:'booked', sample:false, createdTs:Date.now() };
+  /* Phone-key linking: an existing profile links automatically; a new
+     number creates a profile only if the player opted in to saving. */
+  var key = normPhone(phone);
+  var linkedKey = null;
+  if (key && CUSTOMERS[key]){ linkedKey = key; CUSTOMERS[key].name = name; }
+  else if (key && document.getElementById('bkSave').checked){ ensureProfile(name, phone); linkedKey = key; }
+  var b = { id:bookingSeq, name:name, phone:phone, tableId:tid, players:players, date:date, time:time, dur:dur, note:note, status:'booked', sample:false, createdTs:Date.now(), profilePhone:linkedKey };
   bookings.unshift(b);
+  myBookPhone = key || null;
+  var myPhoneEl = document.getElementById('myPhone');
+  if (myPhoneEl) myPhoneEl.value = phone;
   renderBookings();
   renderStats();
   var waMsg = 'New booking at Cue Club — '+b.name+' booked '+t.name+' ('+t.kind+') on '+prettyDate(date)+' at '+time+' for '+dur+' hr'+(dur>1?'s':'')+', '+players+' player'+(players==='1'?'':'s')+'. Phone: '+phone+(note ? '. Note: '+note : '');
@@ -1593,7 +1790,9 @@ function createBooking(){
     '<div class="confirm-panel">' +
       '<h4>✓ Booking confirmed — '+esc(t.name)+' is held for you</h4>' +
       '<p><strong>'+esc(name)+'</strong> · '+prettyDate(date)+' · <strong>'+time+' – '+minToSlot((parseSlotToMin(time)||0)+dur*60)+'</strong> (booked till '+minToSlot((parseSlotToMin(time)||0)+dur*60)+') · '+dur+' hr'+(dur>1?'s':'')+' · '+players+' player'+(players==='1'?'':'s')+' · est. '+rs(t.rate*60*dur)+'</p>' +
-      '<p>It is also saved in <strong>My Bookings</strong> below — your own sheet with all your bookings and their till-times.</p>' +
+      '<p>'+(linkedKey
+        ? 'It is on your sheet in <strong>My Record &amp; Bookings</strong> below — and because this number has a saved profile, the visit will be added to your record (visits, frames, minutes, spend) automatically.'
+        : 'It is on your sheet in <strong>My Record &amp; Bookings</strong> below — look it up any time with this same phone number.')+'</p>' +
       '<p>Your booking is <strong>already on the supervisor\u2019s screen</strong> at the counter — they will keep '+esc(t.name)+' ready. You can also forward it to the club on WhatsApp:</p>' +
       '<div class="cp-btns">' +
         '<a class="btn btn-wa" href="'+waHref+'" target="_blank" rel="noopener">Send booking on WhatsApp</a>' +
@@ -1636,28 +1835,7 @@ function renderBookings(){
     ? bookings.map(function(b){ return bookingCard(b, false); }).join('')
     : '<div class="bk-card"><div class="bk-main"><div class="bk-name">No bookings yet</div><div class="bk-meta">When a player books from the website, it appears here the moment they confirm.</div></div></div>';
   document.querySelectorAll('.bookings-list').forEach(function(el){ el.innerHTML = staffHtml; });
-  /* My Bookings — the customer's own sheet: only their bookings, soonest first */
-  var mine = bookings.filter(function(b){ return !b.sample; }).slice().sort(function(a,b){
-    if (a.date !== b.date) return a.date < b.date ? -1 : 1;
-    return (parseSlotToMin(a.time)||0) - (parseSlotToMin(b.time)||0);
-  });
-  var upcoming = mine.filter(function(b){ return b.status==='booked'; });
-  var summaryEl = document.getElementById('myBookingsSummary');
-  if (summaryEl){
-    if (!mine.length){
-      summaryEl.innerHTML = '<span class="sheet-chip">No bookings on your sheet yet — book above and it appears here instantly.</span>';
-    } else {
-      var next = upcoming[0];
-      var totalEst = upcoming.reduce(function(a,b){ var t = TABLES[b.tableId-1]; return a + t.rate*60*b.dur; }, 0);
-      summaryEl.innerHTML =
-        '<span class="sheet-chip"><strong>'+upcoming.length+'</strong> upcoming booking'+(upcoming.length===1?'':'s')+'</span>' +
-        (next ? '<span class="sheet-chip next">Next: '+esc(TABLES[next.tableId-1].name)+' · '+prettyDate(next.date)+' · '+bookingRange(next)+' (till '+minToSlot(bookingEndMin(next))+')</span>' : '') +
-        (totalEst ? '<span class="sheet-chip">Est. total <strong>'+rs(totalEst)+'</strong> · pay at the club</span>' : '');
-    }
-  }
-  document.getElementById('myBookings').innerHTML = mine.length
-    ? mine.map(function(b){ return bookingCard(b, true); }).join('')
-    : '<div class="bk-card"><div class="bk-main"><div class="bk-name">Your sheet is empty</div><div class="bk-meta">Confirm a booking above and it lands here — table, date, slot and booked-till time, all in one place.</div></div></div>';
+  renderMyRecord();
   renderAvailability();
 }
 function startBooking(id){
@@ -1667,7 +1845,7 @@ function startBooking(id){
   var t = TABLES[b.tableId-1];
   if (t.session){ toast(t.name+' is busy right now — finish that game first, or seat them at a free table.'); return; }
   b.status = 'started';
-  beginSession(t, b.name, b.players==='1' ? '' : 'Guest');
+  beginSession(t, b.name, b.players==='1' ? '' : 'Guest', { profilePhone: b.profilePhone || null, guest: !b.profilePhone });
   renderBookings(); renderTables(); tick(); renderStats();
   if (role==='supervisor') showSupTab('tables');
   if (role==='admin') showAdmTab('tables');
@@ -1678,6 +1856,112 @@ function cancelBooking(id){
   renderBookings(); renderStats(); updEstimate();
   toast('Booking cancelled — that slot is free again on the availability board.');
 }
+
+/* =============== Customer profile sheet & Admin customers =============== */
+function profileSheetHtml(p){
+  var hrs = Math.floor(p.minutes/60), mins = p.minutes % 60;
+  var timeTxt = hrs ? (hrs+' hr'+(mins ? ' '+mins+' min' : '')) : (p.minutes+' min');
+  var hist = p.history.length
+    ? p.history.map(function(h){
+        return '<div class="hist-row"><div><strong>'+esc(h.when)+'</strong> · '+esc(h.table)+'<div class="hd">'+esc(h.detail)+' · '+h.minutes+' min played</div></div>' +
+          '<div class="ha">'+rs(h.amount)+'<br><span class="pay '+h.pay+'">'+payLabel(h.pay)+'</span></div></div>';
+      }).join('')
+    : '<div class="hist-row"><div>No visits on record yet — the first billed session under this number lands here.</div></div>';
+  return '<div class="prof-head">' +
+      '<div class="student-avatar" aria-hidden="true">'+studentInitials(p.name)+'</div>' +
+      '<div><div class="student-name">'+esc(p.name)+(p.sample ? '<span class="sample-badge">Sample</span>' : '')+'</div>' +
+      '<div class="pmeta">📱 '+esc(p.phone)+' · playing at the club since '+esc(p.firstVisit)+'</div></div>' +
+    '</div>' +
+    '<div class="prof-stats">' +
+      '<div class="stat"><div class="k">Visits</div><div class="v">'+p.visits+'</div><div class="s">Sessions played</div></div>' +
+      '<div class="stat"><div class="k">Frames won – lost</div><div class="v">'+p.framesWon+' – '+p.framesLost+'</div><div class="s">Frame record</div></div>' +
+      '<div class="stat"><div class="k">Time played</div><div class="v" style="font-size:20px">'+timeTxt+'</div><div class="s">'+p.minutes+' minutes total</div></div>' +
+      '<div class="stat"><div class="k">Total spent</div><div class="v">'+rs(p.spent)+'</div><div class="s">All visits on record</div></div>' +
+      '<div class="stat'+(p.pending ? ' pending' : '')+'"><div class="k">Pending dues</div><div class="v">'+rs(p.pending)+'</div><div class="s">'+(p.pending ? 'To settle at the counter' : 'All clear')+'</div></div>' +
+      '<div class="stat"><div class="k">Last visit</div><div class="v" style="font-size:20px">'+esc(p.lastVisit)+'</div><div class="s">Most recent session</div></div>' +
+    '</div>' +
+    '<h4 class="prof-h">Visit &amp; spend history</h4>' + hist;
+}
+function lookupMyRecord(){
+  var el = document.getElementById('myPhone');
+  var key = normPhone(el.value);
+  if (key.length < 10){ toast('Enter the 10-digit mobile number you booked or played with.'); el.focus(); return; }
+  myBookPhone = key;
+  renderMyRecord();
+  document.getElementById('myRecordResult').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+function renderMyRecord(){
+  var box = document.getElementById('myRecordResult');
+  if (!box) return;
+  if (!myBookPhone){
+    box.innerHTML = '<div class="bk-card"><div class="bk-main"><div class="bk-name">Nothing looked up yet</div><div class="bk-meta">Type your number above and tap <strong>Show my record</strong> — your saved record and bookings open here. Booked above just now? Your sheet loads automatically.</div></div></div>';
+    return;
+  }
+  var p = CUSTOMERS[myBookPhone] || null;
+  var myBooks = bookings.filter(function(b){ return normPhone(b.phone) === myBookPhone; }).slice().sort(function(a,b){
+    if (a.date !== b.date) return a.date < b.date ? -1 : 1;
+    return (parseSlotToMin(a.time)||0) - (parseSlotToMin(b.time)||0);
+  });
+  var html = '';
+  if (p){
+    html += profileSheetHtml(p);
+  } else {
+    html += '<div class="bk-card"><div class="bk-main"><div class="bk-name">No saved record for this number</div><div class="bk-meta">This number has no profile — either every visit so far was a guest visit, or "Save my details" was not ticked when booking. Nothing is kept for guest players. Tick <strong>Save my details for next time?</strong> on your next booking and your record starts from that visit.</div></div></div>';
+  }
+  html += '<h4 class="prof-h">Bookings under this number</h4>';
+  html += myBooks.length
+    ? '<div class="bk-list">'+myBooks.map(function(b){ return bookingCard(b, true); }).join('')+'</div>'
+    : '<div class="bk-card"><div class="bk-main"><div class="bk-name">No bookings under this number</div><div class="bk-meta">Bookings you make with this number appear here — including the booked-till time for each slot.</div></div></div>';
+  box.innerHTML = html;
+}
+function renderCustomers(){
+  var keys = Object.keys(CUSTOMERS);
+  var visits = 0, spent = 0, pending = 0, owing = [];
+  keys.forEach(function(k){
+    var p = CUSTOMERS[k];
+    visits += p.visits; spent += p.spent; pending += p.pending;
+    if (p.pending) owing.push(p.name);
+  });
+  document.getElementById('custTotal').textContent = keys.length;
+  document.getElementById('customerCount').textContent = keys.length;
+  document.getElementById('custVisits').textContent = visits;
+  document.getElementById('custSpent').textContent = rs(spent);
+  document.getElementById('custPending').textContent = rs(pending);
+  document.getElementById('custPendingSub').textContent = owing.length ? ('Owed by: '+owing.join(', ')) : 'Nobody owes anything';
+  document.getElementById('customerGrid').innerHTML = keys.map(function(k){
+    var p = CUSTOMERS[k];
+    return '<article class="student-card">' +
+      '<div class="student-head">' +
+        '<div class="student-avatar" aria-hidden="true">'+studentInitials(p.name)+'</div>' +
+        '<div><div class="student-name">'+esc(p.name)+(p.sample ? '<span class="sample-badge">Sample</span>' : '')+'</div><div class="student-sub">📱 '+esc(p.phone)+' · since '+esc(p.firstVisit)+'</div></div>' +
+        (p.pending ? '<span class="fee-status pending">● '+rs(p.pending)+' due</span>' : '<span class="fee-status paid">✓ All clear</span>') +
+      '</div>' +
+      '<div class="student-rows">' +
+        '<div class="sr"><div class="k">Visits</div><div class="v">'+p.visits+' sessions</div></div>' +
+        '<div class="sr"><div class="k">Frames won – lost</div><div class="v">'+p.framesWon+' – '+p.framesLost+'</div></div>' +
+        '<div class="sr"><div class="k">Minutes played</div><div class="v mono">'+p.minutes+' min</div></div>' +
+        '<div class="sr"><div class="k">Total spent</div><div class="v mono">'+rs(p.spent)+'</div></div>' +
+        '<div class="sr"><div class="k">Pending dues</div><div class="v mono'+(p.pending ? ' due-pending' : '')+'">'+rs(p.pending)+'</div></div>' +
+        '<div class="sr"><div class="k">Last visit</div><div class="v">'+esc(p.lastVisit)+'</div></div>' +
+      '</div>' +
+      '<div style="margin-top:13px"><button class="btn btn-ghost btn-small" onclick="openProfile(\''+k+'\')">View full record</button></div>' +
+    '</article>';
+  }).join('');
+}
+function openProfile(key){
+  var p = CUSTOMERS[key];
+  if (!p) return;
+  var myBooks = bookings.filter(function(b){ return normPhone(b.phone) === key; });
+  document.getElementById('profileModalBody').innerHTML =
+    '<h2 style="font-family:Newsreader,Georgia,serif;margin:0 0 14px;font-size:25px">Customer record</h2>' +
+    profileSheetHtml(p) +
+    '<h4 class="prof-h">Bookings under this number</h4>' +
+    (myBooks.length
+      ? '<div class="bk-list">'+myBooks.map(function(b){ return bookingCard(b, false); }).join('')+'</div>'
+      : '<div style="font-size:14px;color:var(--ink-2)">No bookings under this number — this regular books at the counter or walks in.</div>');
+  document.getElementById('profileOverlay').classList.add('open');
+}
+function closeProfile(){ document.getElementById('profileOverlay').classList.remove('open'); }
 
 /* =============== Customer view =============== */
 function renderCustomer(){
@@ -1768,7 +2052,7 @@ function renderStudents(){
   updEstimate();
   /* Sample bookings so the counter view shows how bookings land */
   bookingSeq++;
-  bookings.push({ id:bookingSeq, name:'Rohit Sharma', phone:'98110 22334', tableId:2, players:'2', date:todayStr(), time:'6:00 PM', dur:2, note:'', status:'booked', sample:true, createdTs:Date.now() });
+  bookings.push({ id:bookingSeq, name:'Rohit Sharma', phone:'98110 22334', tableId:2, players:'2', date:todayStr(), time:'6:00 PM', dur:2, note:'', status:'booked', sample:true, createdTs:Date.now(), profilePhone:'9811022334' });
   bookingSeq++;
   bookings.push({ id:bookingSeq, name:'Aman Gupta', phone:'99360 48120', tableId:5, players:'4', date:todayStr(), time:'7:30 PM', dur:1, note:'First visit — needs pool cues', status:'booked', sample:true, createdTs:Date.now() });
   renderTables();
