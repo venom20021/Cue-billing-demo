@@ -97,7 +97,7 @@
   }
   .brand p{margin:3px 0 0;font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:#cfe3d2;font-weight:600}
   .demo-pill{
-    margin-left:auto;background:var(--brass);color:#221a05;font-weight:800;
+    background:var(--brass);color:#221a05;font-weight:800;
     font-size:12px;letter-spacing:.12em;text-transform:uppercase;
     padding:7px 12px;border-radius:999px;white-space:nowrap;
   }
@@ -107,24 +107,6 @@
   }
   .demo-note-in{max-width:1120px;margin:0 auto;padding:9px 16px;font-size:13.5px;font-weight:600;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
   .demo-note strong{font-weight:800}
-
-  /* ---------- Role switcher ---------- */
-  .rolebar{background:var(--surface);border-bottom:1px solid var(--line)}
-  .rolebar-in{max-width:1120px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-  .rolebar .rb-label{font-size:12px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3)}
-  .roleseg{display:flex;background:var(--surface-2);border:1.5px solid var(--line-strong);border-radius:999px;padding:3px;gap:2px;flex-wrap:wrap}
-  .roleseg button{
-    border:none;background:transparent;border-radius:999px;padding:8px 16px;
-    font-weight:800;font-size:14px;color:var(--ink-2);display:inline-flex;align-items:center;gap:7px;
-  }
-  .roleseg button[aria-pressed="true"]{background:var(--baize-deep);color:#fff}
-  .roleseg .rbadge{
-    background:var(--red);color:#fff;font-size:11px;font-weight:800;min-width:19px;height:19px;
-    border-radius:999px;display:none;align-items:center;justify-content:center;padding:0 5px;
-  }
-  .roleseg .rbadge.show{display:inline-flex}
-  .rolebar .rb-note{margin-left:auto;font-size:13px;color:var(--ink-2)}
-  @media (max-width:720px){ .rolebar .rb-note{margin-left:0} }
 
   /* ---------- Stats ---------- */
   .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0 4px}
@@ -597,6 +579,54 @@
   .hist-row:last-child{border-bottom:none}
   .hist-row .hd{color:var(--ink-2);font-size:13px;margin-top:1px}
   .hist-row .ha{font-family:"IBM Plex Mono",monospace;font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
+
+  /* ---------- Top navigation, login & hamburger menu ---------- */
+  .topbar{position:relative}
+  .mainnav{display:flex;gap:2px;align-items:center;margin-left:10px;flex-wrap:wrap}
+  .navlink{background:transparent;border:none;color:#d7ecd9;font-weight:700;font-size:14.5px;padding:9px 11px;border-radius:9px;display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+  .navlink:hover{background:rgba(255,255,255,.13);color:#fff}
+  .soon-tag{background:var(--brass);color:#221a05;font-size:10px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;padding:2px 7px;border-radius:999px;white-space:nowrap}
+  .top-actions{margin-left:auto;display:flex;align-items:center;gap:10px}
+  .session-chip{font-size:13px;font-weight:700;color:#eaf5ec;background:rgba(255,255,255,.12);padding:7px 12px;border-radius:999px;max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .btn-login{background:var(--brass);color:#221a05;border:none;font-weight:800;font-size:14.5px;padding:10px 20px;border-radius:10px;white-space:nowrap}
+  .btn-login:hover{background:var(--brass-bright)}
+  .btn-login.ghosty{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.5)}
+  .btn-login.ghosty:hover{background:rgba(255,255,255,.12)}
+  .burger{background:transparent;border:1.5px solid rgba(255,255,255,.5);border-radius:10px;width:44px;height:42px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:0;flex:none}
+  .burger span{display:block;width:20px;height:2.5px;background:#fff;border-radius:2px}
+  .burger:hover{background:rgba(255,255,255,.12)}
+  @media (max-width:1020px){ .mainnav{display:none} }
+  @media (max-width:720px){ .demo-pill{display:none} .session-chip{display:none} }
+  .mmenu{
+    position:absolute;right:12px;top:calc(100% + 8px);z-index:45;min-width:262px;
+    background:var(--surface);color:var(--ink);border:1px solid var(--line);
+    border-radius:14px;box-shadow:var(--shadow-lg);padding:8px;display:flex;flex-direction:column;
+  }
+  .mmenu button{background:transparent;border:none;text-align:left;font-weight:700;font-size:15px;padding:11px 12px;border-radius:9px;display:flex;align-items:center;gap:8px;color:var(--ink);width:100%}
+  .mmenu button:hover{background:var(--surface-2)}
+  .mmenu button .soon-tag{margin-left:auto}
+  .mmenu .mm-sep{border-top:1px solid var(--line);margin:6px 4px}
+  .mmenu .mm-head{font-size:11.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);padding:8px 12px 2px}
+
+  /* ---------- Login page ---------- */
+  .login-wrap{max-width:580px;margin:24px auto 0}
+  .login-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:24px 22px;margin-top:14px}
+  .login-card h2{margin:0;font-family:"Newsreader",Georgia,serif;font-size:29px;font-weight:700;line-height:1.1}
+  .login-q{font-size:19px;font-weight:800;margin:12px 0 4px}
+  .login-sub{font-size:14px;color:var(--ink-2);margin:0;line-height:1.55}
+  .login-choices{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0 18px}
+  @media (max-width:480px){ .login-choices{grid-template-columns:1fr} }
+  .choice{border:2px solid var(--line-strong);background:var(--surface-2);border-radius:14px;padding:15px 16px;text-align:left;font-weight:800;font-size:16.5px;color:var(--ink)}
+  .choice span{display:block;font-weight:600;font-size:13px;color:var(--ink-2);margin-top:4px;line-height:1.45}
+  .choice.on{border-color:var(--baize);background:var(--green-soft)}
+  .login-form .field{margin-bottom:12px}
+  .login-form .btn{margin-top:4px}
+  .login-err{background:var(--red-soft);color:var(--red);border-radius:10px;padding:10px 13px;font-size:14px;font-weight:700;margin-bottom:12px;line-height:1.45}
+  .login-demo{background:var(--brass-soft);color:var(--amber);border-radius:10px;padding:12px 14px;font-size:13.5px;line-height:1.55;margin-top:18px}
+  .login-note{font-size:13.5px;color:var(--ink-2);line-height:1.55;margin:14px 0 0}
+  .login-note strong{color:var(--ink)}
+  .signed-note{font-size:13.5px;font-weight:700;color:var(--ink-2);margin:16px 0 0}
+  .signed-note strong{color:var(--ink)}
 </style>
 </head>
 <body>
@@ -608,26 +638,41 @@
       <h1>Cue Club</h1>
       <p>Snooker &amp; Pool · Book · Play · Counter</p>
     </div>
-    <div class="demo-pill">Demo version</div>
+    <nav class="mainnav" aria-label="Main navigation">
+      <button class="navlink" onclick="navGo('home')">Home</button>
+      <button class="navlink" onclick="navGo('book')">Book Now</button>
+      <button class="navlink" onclick="navGo('amenities')">Amenities</button>
+      <button class="navlink" onclick="navGo('record')">My Record</button>
+      <button class="navlink" onclick="navGo('services')">Services</button>
+      <button class="navlink" onclick="navGo('shop')">Shop <span class="soon-tag">Coming Soon</span></button>
+    </nav>
+    <div class="top-actions">
+      <span class="session-chip hidden" id="sessionChip"></span>
+      <div class="demo-pill">Demo version</div>
+      <button class="btn-login" id="loginBtn" onclick="openLogin()">Login</button>
+      <button class="btn-login ghosty hidden" id="logoutBtn" onclick="logout()">Log out</button>
+      <button class="burger" id="burgerBtn" aria-label="Open menu" aria-expanded="false" aria-haspopup="true" onclick="toggleMenu(event)"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+  <div class="mmenu hidden" id="mmenu" role="menu" aria-label="Menu">
+    <button onclick="navGo('home')">Home</button>
+    <button onclick="navGo('book')">Book Now</button>
+    <button onclick="navGo('amenities')">Amenities</button>
+    <button onclick="navGo('record')">My Record &amp; Bookings</button>
+    <button onclick="navGo('services')">Services</button>
+    <button onclick="navGo('shop')">Shop <span class="soon-tag">Coming Soon</span></button>
+    <div class="mm-sep"></div>
+    <div class="mm-head">Staff &amp; owner</div>
+    <button id="mmDash" class="hidden" onclick="goDashboard()">My dashboard</button>
+    <button id="mmLogin" onclick="openLogin()">Login — staff &amp; owner</button>
+    <button id="mmLogout" class="hidden" onclick="logout()">Log out</button>
   </div>
 </header>
-
-<div class="rolebar">
-  <div class="rolebar-in">
-    <span class="rb-label">View as</span>
-    <div class="roleseg" role="group" aria-label="Choose who is viewing">
-      <button id="roleBtnCustomer" aria-pressed="true" onclick="setRole('customer')">Customer</button>
-      <button id="roleBtnSupervisor" aria-pressed="false" onclick="setRole('supervisor')">Supervisor <span class="rbadge" id="supBadge">0</span></button>
-      <button id="roleBtnAdmin" aria-pressed="false" onclick="setRole('admin')">Admin</button>
-    </div>
-    <span class="rb-note" id="roleNote">What players see — book a table before coming.</span>
-  </div>
-</div>
 
 <div class="demo-note" role="note">
   <div class="demo-note-in">
     <span>⚠</span>
-    <span><strong>This is a try-out demo — nothing is saved.</strong> Book a table as a Customer, then switch to Supervisor: the booking is already waiting at the counter. Everything resets on reload.</span>
+    <span><strong>This is a try-out demo — nothing is saved.</strong> Book a table as a customer below, then tap <strong>Login</strong> (top right) and sign in as staff — the booking is already waiting at the counter. Demo PINs are shown on the login page. Everything resets on reload.</span>
   </div>
 </div>
 
@@ -736,7 +781,8 @@
 
   <!-- ================= SUPERVISOR VIEW ================= -->
   <section id="viewSupervisor" class="hidden">
-    <section class="stats" aria-label="Supervisor — today and this week" style="margin-top:18px">
+    <p class="signed-note" id="supWho"></p>
+    <section class="stats" aria-label="Supervisor — today and this week" style="margin-top:14px">
       <div class="stat">
         <div class="k">Today's earning</div>
         <div class="v" id="supToday">₹0</div>
@@ -775,7 +821,8 @@
 
   <!-- ================= ADMIN VIEW ================= -->
   <section id="viewAdmin" class="hidden">
-    <section class="stats" aria-label="Admin — all earnings" style="margin-top:18px">
+    <p class="signed-note" id="admWho"></p>
+    <section class="stats" aria-label="Admin — all earnings" style="margin-top:14px">
       <div class="stat">
         <div class="k">Today</div>
         <div class="v" id="admToday">₹0</div>
@@ -891,13 +938,46 @@
       <div class="settings-card" style="margin-top:14px">
         <h3>Who sees what</h3>
         <div class="sc-sub" style="margin-bottom:0">
-          <strong>Customer</strong> — the public website: Book Now, Amenities, Shop, Services.<br>
+          <strong>Customer</strong> — the public website: Book Now, Amenities, Shop, Services. No login, ever — the phone number is the key.<br>
           <strong>Supervisor</strong> — current tables and frame control, bookings, and only today's + this week's earnings.<br>
-          <strong>Admin (owner)</strong> — everything: all earnings and history, the full Day Book, students, bookings and these settings. In the full version, Supervisor and Admin each sign in with their own PIN.<br>
+          <strong>Admin (owner)</strong> — everything: all earnings and history, the full Day Book, students, bookings and these settings.<br>
+          <strong>Sign-in</strong> — the Login button (top right) opens a separate sign-in page that asks "staff or owner?": staff sign in with name + PIN and land on the Supervisor view; the owner signs in with email + PIN and gets full Admin.<br>
           <strong>Customer profiles</strong> — regulars are saved by mobile number only when they opt in; guests are never saved. A customer's name and number never appear on the public availability board.
         </div>
       </div>
     </section>
+  </section>
+
+  <!-- ================= LOGIN PAGE (staff & owner only) ================= -->
+  <section id="viewLogin" class="hidden">
+    <div class="login-wrap">
+      <button class="btn btn-ghost btn-small" onclick="navGo('home')">← Back to the website</button>
+      <div class="login-card">
+        <h2>Sign in</h2>
+        <p class="login-q">Are you the staff or are you the owner?</p>
+        <p class="login-sub">Pick one — staff run the counter, the owner sees and controls everything. Customers don't sign in at all: booking and records work with just a phone number.</p>
+        <div class="login-choices">
+          <button type="button" class="choice on" id="choiceStaff" onclick="chooseLogin('staff')">I'm staff<span>Counter / supervisor — sign in with your name + PIN.</span></button>
+          <button type="button" class="choice" id="choiceOwner" onclick="chooseLogin('owner')">I'm the owner<span>Full admin — sign in with your email + PIN.</span></button>
+        </div>
+        <form id="staffForm" class="login-form" onsubmit="return doStaffLogin()">
+          <div class="login-err hidden" id="staffErr"></div>
+          <div class="field"><label for="liStaffName">Your name</label><input id="liStaffName" type="text" placeholder="e.g. Rahul — evening counter" autocomplete="off"></div>
+          <div class="field"><label for="liStaffPin">PIN</label><input id="liStaffPin" type="password" inputmode="numeric" placeholder="Your staff PIN" autocomplete="off"></div>
+          <button class="btn btn-start" type="submit">Sign in as staff →</button>
+          <p class="login-note">Forgot your PIN? The owner resets staff PINs from Admin — it takes ten seconds. Every bill you save is tagged with your name.</p>
+        </form>
+        <form id="ownerForm" class="login-form hidden" onsubmit="return doOwnerLogin()">
+          <div class="login-err hidden" id="ownerErr"></div>
+          <div class="field"><label for="liOwnerEmail">Owner email</label><input id="liOwnerEmail" type="email" placeholder="e.g. owner@cueclub.in" autocomplete="off"></div>
+          <div class="field"><label for="liOwnerPin">PIN</label><input id="liOwnerPin" type="password" inputmode="numeric" placeholder="Your owner PIN" autocomplete="off"></div>
+          <button class="btn btn-start" type="submit">Sign in as owner →</button>
+          <p class="login-note">Forgot your PIN? In the live version a reset code is emailed to this address — or use the one-time recovery code given at setup.</p>
+        </form>
+        <div class="login-demo"><strong>Demo sign-ins —</strong> Staff: any name, PIN <strong>1234</strong>. Owner: any email, PIN <strong>4321</strong>. In the live version the real PINs are set by the owner and checked on the server — they never appear in the page itself.</div>
+        <p class="login-note"><strong>Customers:</strong> no login, no password, no account — your phone number is your key for bookings and your record. Customer accounts arrive with the <strong>Shop in version two</strong>, so anything you order there is saved under your account.</p>
+      </div>
+    </div>
   </section>
 
   <!-- Shared tables mount — the live counter grid, shown to Supervisor and Admin -->
@@ -1130,15 +1210,18 @@ function toast(msg){
   toastTimer = setTimeout(function(){ el.classList.remove('show'); }, 2800);
 }
 
-/* =============== Roles & tabs =============== */
+/* =============== Roles, navigation & sign-in ===============
+   The page always opens on the public customer website. Staff and the
+   owner reach their views only through the Login page (top right):
+   staff = name + PIN → Supervisor, owner = email + PIN → Admin.
+   Customers never sign in — the phone number is their key. */
 var role = 'customer';
 var supTab = 'tables';
 var admTab = 'overview';
-var ROLE_NOTES = {
-  customer: 'What players see — book a table before coming.',
-  supervisor: 'The counter view — tables, bookings, today + this week only.',
-  admin: 'The owner\u2019s view — full control, all data.'
-};
+var session = null;        /* null | {kind:'staff', name} | {kind:'owner', email} */
+var loginKind = 'staff';
+var DEMO_STAFF_PIN = '1234';
+var DEMO_OWNER_PIN = '4321';
 function placeTables(){
   var mount = document.getElementById('tablesMount');
   var slotId = null;
@@ -1153,19 +1236,138 @@ function placeTables(){
     document.querySelector('.wrap').appendChild(mount);
   }
 }
-function setRole(r){
+function setRole(r, keepScroll){
   role = r;
   document.getElementById('viewCustomer').classList.toggle('hidden', r!=='customer');
   document.getElementById('viewSupervisor').classList.toggle('hidden', r!=='supervisor');
   document.getElementById('viewAdmin').classList.toggle('hidden', r!=='admin');
-  document.getElementById('roleBtnCustomer').setAttribute('aria-pressed', r==='customer');
-  document.getElementById('roleBtnSupervisor').setAttribute('aria-pressed', r==='supervisor');
-  document.getElementById('roleBtnAdmin').setAttribute('aria-pressed', r==='admin');
-  document.getElementById('roleNote').textContent = ROLE_NOTES[r];
+  document.getElementById('viewLogin').classList.add('hidden');
   placeTables();
   if (r==='customer') renderCustomer();
   renderStats();
+  if (!keepScroll) window.scrollTo({top:0, behavior:'smooth'});
+}
+/* --- Top navigation: always lands on the public customer website --- */
+function navGo(target){
+  closeMenu();
+  setRole('customer', true);
+  var ids = { book:'bookNowSec', amenities:'amenitiesSec', record:'myBookingsSec', services:'servicesSec', shop:'shopSec' };
+  if (target==='home' || !ids[target]){ window.scrollTo({top:0, behavior:'smooth'}); return; }
+  var el = document.getElementById(ids[target]);
+  if (el) el.scrollIntoView({behavior:'smooth'});
+}
+/* --- Hamburger menu --- */
+function toggleMenu(ev){
+  if (ev) ev.stopPropagation();
+  var m = document.getElementById('mmenu');
+  var nowHidden = m.classList.toggle('hidden');
+  document.getElementById('burgerBtn').setAttribute('aria-expanded', String(!nowHidden));
+}
+function closeMenu(){
+  var m = document.getElementById('mmenu');
+  if (m) m.classList.add('hidden');
+  var b = document.getElementById('burgerBtn');
+  if (b) b.setAttribute('aria-expanded','false');
+}
+document.addEventListener('click', function(e){
+  var m = document.getElementById('mmenu');
+  if (m && !m.classList.contains('hidden') && !m.contains(e.target)) closeMenu();
+});
+/* --- Login page: "Are you the staff or are you the owner?" --- */
+function openLogin(){
+  closeMenu();
+  document.getElementById('viewCustomer').classList.add('hidden');
+  document.getElementById('viewSupervisor').classList.add('hidden');
+  document.getElementById('viewAdmin').classList.add('hidden');
+  document.getElementById('tablesMount').classList.add('hidden');
+  document.getElementById('viewLogin').classList.remove('hidden');
+  chooseLogin(loginKind);
   window.scrollTo({top:0, behavior:'smooth'});
+}
+function chooseLogin(k){
+  loginKind = k;
+  document.getElementById('staffForm').classList.toggle('hidden', k!=='staff');
+  document.getElementById('ownerForm').classList.toggle('hidden', k!=='owner');
+  document.getElementById('choiceStaff').classList.toggle('on', k==='staff');
+  document.getElementById('choiceOwner').classList.toggle('on', k==='owner');
+  document.getElementById('staffErr').classList.add('hidden');
+  document.getElementById('ownerErr').classList.add('hidden');
+}
+function loginError(id, msg){
+  var el = document.getElementById(id);
+  el.textContent = msg;
+  el.classList.remove('hidden');
+}
+function doStaffLogin(){
+  var name = document.getElementById('liStaffName').value.trim();
+  var pin = document.getElementById('liStaffPin').value.trim();
+  if (!name){ loginError('staffErr', 'Enter your name first — it is how the counter knows who is on shift, and it tags every bill you save.'); document.getElementById('liStaffName').focus(); return false; }
+  if (pin !== DEMO_STAFF_PIN){ loginError('staffErr', 'That PIN does not match. In this demo the staff PIN is 1234 — in the live version, 5 wrong tries lock sign-in for 15 minutes and the owner can reset your PIN.'); document.getElementById('liStaffPin').focus(); return false; }
+  session = { kind:'staff', name:name };
+  document.getElementById('liStaffPin').value = '';
+  updateAuthUI();
+  setRole('supervisor');
+  toast('Welcome, '+name+' — signed in as staff. You are on the counter (Supervisor) view.');
+  return false;
+}
+function doOwnerLogin(){
+  var email = document.getElementById('liOwnerEmail').value.trim();
+  var pin = document.getElementById('liOwnerPin').value.trim();
+  if (!/^\S+@\S+\.\S+$/.test(email)){ loginError('ownerErr', 'Enter the owner\u2019s email address — that email is also where a PIN reset code is sent if the PIN is ever forgotten.'); document.getElementById('liOwnerEmail').focus(); return false; }
+  if (pin !== DEMO_OWNER_PIN){ loginError('ownerErr', 'That PIN does not match. In this demo the owner PIN is 4321 — in the live version, use "Forgot PIN" on this page to get a reset code on your email.'); document.getElementById('liOwnerPin').focus(); return false; }
+  session = { kind:'owner', email:email };
+  document.getElementById('liOwnerPin').value = '';
+  updateAuthUI();
+  setRole('admin');
+  toast('Welcome back — signed in as the owner. Full Admin control.');
+  return false;
+}
+function logout(){
+  session = null;
+  closeMenu();
+  updateAuthUI();
+  setRole('customer');
+  toast('Signed out — you are back on the public website.');
+}
+function goDashboard(){
+  closeMenu();
+  if (!session){ openLogin(); return; }
+  setRole(session.kind==='owner' ? 'admin' : 'supervisor');
+}
+/* From a booking confirmation: the counter screen sits behind sign-in. */
+function goCounter(){
+  if (session && session.kind==='owner'){ setRole('admin'); showAdmTab('bookings'); }
+  else if (session){ setRole('supervisor'); showSupTab('bookings'); }
+  else { openLogin(); toast('That is the counter\u2019s screen — sign in as staff or the owner to watch the booking land.'); }
+}
+function updateAuthUI(){
+  var chip = document.getElementById('sessionChip');
+  var loginBtn = document.getElementById('loginBtn');
+  var logoutBtn = document.getElementById('logoutBtn');
+  var mmDash = document.getElementById('mmDash');
+  var mmLogin = document.getElementById('mmLogin');
+  var mmLogout = document.getElementById('mmLogout');
+  if (session){
+    chip.textContent = session.kind==='owner' ? ('Owner · '+session.email) : (session.name+' · Staff');
+    chip.classList.remove('hidden');
+    loginBtn.classList.add('hidden');
+    logoutBtn.classList.remove('hidden');
+    mmLogin.classList.add('hidden');
+    mmLogout.classList.remove('hidden');
+    mmDash.classList.remove('hidden');
+    mmDash.textContent = session.kind==='owner' ? 'Admin dashboard' : 'Counter dashboard';
+    document.getElementById('supWho').innerHTML = 'Signed in as <strong>'+esc(session.kind==='staff' ? session.name : 'staff')+'</strong> — Supervisor (staff). You see today\u2019s and this week\u2019s earnings only.';
+    document.getElementById('admWho').innerHTML = 'Signed in as the <strong>owner</strong>'+(session.kind==='owner' ? ' ('+esc(session.email)+')' : '')+' — Admin, full control: every day, every record, all settings.';
+  } else {
+    chip.classList.add('hidden'); chip.textContent = '';
+    loginBtn.classList.remove('hidden');
+    logoutBtn.classList.add('hidden');
+    mmLogin.classList.remove('hidden');
+    mmLogout.classList.add('hidden');
+    mmDash.classList.add('hidden');
+    document.getElementById('supWho').innerHTML = 'Signed in as <strong>staff</strong> — Supervisor. You see today\u2019s and this week\u2019s earnings only.';
+    document.getElementById('admWho').innerHTML = 'Signed in as the <strong>owner</strong> — Admin, full control: every day, every record, all settings.';
+  }
 }
 function showSupTab(v){
   supTab = v;
@@ -1573,9 +1775,6 @@ function renderStats(){
   document.getElementById('admPendingSub').textContent = pendNames.length ? ('Owed by: '+pendNames.join(', ')) : 'Nobody owes anything';
   document.getElementById('bookCount').textContent = ledger.length;
   document.getElementById('admBookCount').textContent = waiting;
-  var badge = document.getElementById('supBadge');
-  badge.textContent = waiting;
-  badge.classList.toggle('show', waiting>0);
 }
 function payLabel(p){ return p==='cash' ? 'Cash' : p==='upi' ? 'UPI-Scanner' : 'Pending'; }
 function renderEarnings(){
@@ -1796,7 +1995,7 @@ function createBooking(){
       '<p>Your booking is <strong>already on the supervisor\u2019s screen</strong> at the counter — they will keep '+esc(t.name)+' ready. You can also forward it to the club on WhatsApp:</p>' +
       '<div class="cp-btns">' +
         '<a class="btn btn-wa" href="'+waHref+'" target="_blank" rel="noopener">Send booking on WhatsApp</a>' +
-        '<button class="btn btn-ghost" onclick="setRole(\'supervisor\');showSupTab(\'bookings\')">See it at the counter →</button>' +
+        '<button class="btn btn-ghost" onclick="goCounter()">See it at the counter →</button>' +
       '</div>' +
     '</div>';
   toast('Booking confirmed — it is already showing on the supervisor\u2019s screen.');
@@ -2061,6 +2260,7 @@ function renderStudents(){
   renderStudents();
   renderCustomer();
   renderStats();
+  updateAuthUI();
   tick();
 })();
 </script>
