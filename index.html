@@ -731,7 +731,7 @@
         </div>
         <div class="save-row" id="bkSaveRow">
           <input type="checkbox" id="bkSave">
-          <label for="bkSave"><strong>Save my details for next time?</strong><br><span>Tick this and the club keeps a record under your number — visits, frames won/lost, minutes played, total spent and any pending dues — so next time the counter pulls it up the moment you give your number. No login, no password, no app. Leave it unticked and nothing is saved beyond this one booking.</span></label>
+          <label for="bkSave"><strong>Save my details for next time?</strong> <span>Your visits, frames and spending stay linked to this number — next time, just enter it and your record opens. No login or password needed.</span></label>
         </div>
         <div class="estimate-bar">
           <span class="el">Estimated table charge</span>
@@ -1438,7 +1438,7 @@ function freeCard(t){
       '<div class="phone-hint hidden" id="phHint-'+t.id+'"></div>' +
       '<div class="free-note" id="startNote-'+t.id+'">'+(mode==='saved'
         ? 'Saved player — the number is the key. A number already on record pulls up their history below; a new number creates their profile when the timer starts, and this session is added to their record when the bill is saved.'
-        : 'Guest — just names for the bill, billed exactly as normal. Nothing is saved: no profile, no record. Best for one-off walk-ins who come once or twice.')+'</div>' +
+        : 'Guest — just names for the bill, billed exactly as normal. Nothing is saved: no profile, no record.')+'</div>' +
       '<button class="btn btn-start" onclick="startTable('+t.id+')">▶&ensp;Start timer</button>' +
     '</div>' +
   '</article>';
@@ -1453,7 +1453,7 @@ function setStartMode(id, mode){
   var note = document.getElementById('startNote-'+id);
   if (note) note.textContent = mode==='saved'
     ? 'Saved player — the number is the key. A number already on record pulls up their history below; a new number creates their profile when the timer starts, and this session is added to their record when the bill is saved.'
-    : 'Guest — just names for the bill, billed exactly as normal. Nothing is saved: no profile, no record. Best for one-off walk-ins who come once or twice.';
+    : 'Guest — just names for the bill, billed exactly as normal. Nothing is saved: no profile, no record.';
   var hint = document.getElementById('phHint-'+id);
   if (hint && mode!=='saved'){ hint.classList.add('hidden'); hint.innerHTML = ''; }
   if (mode==='saved') counterPhoneHint(id);
