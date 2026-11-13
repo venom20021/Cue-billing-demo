@@ -508,6 +508,15 @@
   .student-rows .sr .v.mono{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
   .student-rows .sr .v.due-pending{color:var(--red)}
   @media (prefers-color-scheme: dark){ .student-rows .sr .v.due-pending{color:#ff9a86} }
+  /* Student actions (Admin only — this whole tab is owner-side) */
+  .stu-actions{border-top:1px solid var(--line);margin-top:13px;padding-top:12px;display:flex;flex-direction:column;gap:9px}
+  .stu-actions .sa-label{font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3)}
+  .stu-actions .sa-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .stu-actions .sa-row .btn{width:auto}
+  .fee-paid-note{font-size:13.5px;color:var(--ink-2);font-weight:600;line-height:1.5}
+  /* Bill correction note in the Day Book */
+  .corr-note{font-size:12.5px;font-weight:700;color:var(--amber);background:var(--amber-soft);border-radius:8px;padding:6px 9px;margin-top:6px;line-height:1.45}
+  .ledger-row .corr-btn{margin-top:7px}
 
   /* ---------- Settings ---------- */
   .settings-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:20px}
@@ -763,9 +772,228 @@
     .bk-side{text-align:left;align-items:flex-start}
     .bk-btns{justify-content:flex-start}
   }
+
+  /* ---------- MCSA intro (Royal Flourish) — full-screen, tap to skip ----------
+     Hand-drawn "MCSA" in the Royal Flourish hand: thin copperplate strokes,
+     sweeping entry arc into the M, peaked A with its crossbar drawn last, a
+     long A tail and an under-flourish sweep. Namespaced mc- classes so it
+     never collides with the page's own brand/ball styles. */
+  .mc-intro{
+    position:fixed;inset:0;z-index:200;overflow:hidden;display:grid;place-items:center;
+    background:radial-gradient(110% 85% at 50% 38%,#12573a 0%,#0a3524 52%,#04150e 100%);
+    transition:opacity 1.1s cubic-bezier(.22,.8,.3,1),transform 1.1s cubic-bezier(.22,.8,.3,1),visibility 1.1s;
+    cursor:pointer;-webkit-tap-highlight-color:transparent;
+  }
+  .mc-intro::after{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(90% 70% at 50% 45%,transparent 62%,rgba(0,0,0,.38) 100%);
+  }
+  .mc-intro.done{opacity:0;transform:scale(1.02);visibility:hidden;pointer-events:none}
+  .mc-halo{
+    position:absolute;left:50%;top:44%;width:min(78vw,560px);aspect-ratio:1.6;
+    transform:translate(-50%,-50%);pointer-events:none;
+    background:radial-gradient(50% 50% at 50% 50%,rgba(230,193,92,.13),rgba(70,200,140,.06) 55%,transparent 75%);
+    filter:blur(10px);opacity:0;transition:opacity 1.8s ease;
+  }
+  .mc-intro.playing .mc-halo{opacity:1}
+  .mc-stage{position:relative;z-index:2;text-align:center;padding:1rem;width:100%}
+  .mc-wordbox{position:relative;display:inline-block;width:min(92vw,720px)}
+  .mc-svg{display:block;width:100%;height:auto;overflow:visible}
+  .mc-wordgroup{filter:drop-shadow(0 2px 12px rgba(230,193,92,.22)) drop-shadow(0 1px 2px rgba(0,0,0,.3))}
+  .mc-draw{fill:none;stroke:url(#mcStrokeGrad);stroke-width:8;stroke-linecap:round;stroke-linejoin:round}
+  .mc-shinep{fill:none;stroke:rgba(255,253,242,.6);stroke-width:8;stroke-linecap:round;stroke-linejoin:round;filter:blur(2px)}
+  .mc-pen{
+    position:absolute;top:0;left:0;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;
+    pointer-events:none;opacity:0;
+    background:radial-gradient(circle,#fffdf2 0%,rgba(243,217,139,.85) 42%,rgba(230,193,92,0) 74%);
+    filter:blur(.6px);
+  }
+  .mc-brand{margin-top:clamp(.9rem,3vh,1.8rem);opacity:0;transform:translateY(10px);transition:opacity 1.1s ease,transform 1.1s cubic-bezier(.22,.8,.3,1)}
+  .mc-brand.show{opacity:1;transform:none}
+  .mc-brandmark{display:inline-flex;align-items:center;gap:.5rem;font-weight:800;letter-spacing:.34em;text-indent:.34em;font-size:clamp(.95rem,3.4vw,1.25rem);color:#f4efe2;font-family:"Public Sans",system-ui,sans-serif}
+  .mc-ball{width:.68em;height:.68em;border-radius:50%;background:radial-gradient(circle at 32% 30%,#ff9a8a,#d8402f 62%,#8f1f14);box-shadow:0 2px 8px rgba(0,0,0,.45);display:inline-block}
+  .mc-swoosh{display:block;margin:.35rem auto .5rem;width:min(240px,60vw)}
+  .mc-swoosh path{stroke:#e6c15c;stroke-width:2.2;fill:none;stroke-linecap:round;stroke-dasharray:300;stroke-dashoffset:300;transition:stroke-dashoffset 1.5s cubic-bezier(.22,.8,.3,1) .25s}
+  .mc-brand.show .mc-swoosh path{stroke-dashoffset:0}
+  .mc-bname{color:#f4efe2;font-size:clamp(1.05rem,4vw,1.5rem);font-weight:700;letter-spacing:.02em}
+  .mc-bsub{color:rgba(244,239,226,.62);font-size:clamp(.8rem,2.8vw,.95rem);font-weight:500;margin-top:.35rem;letter-spacing:.04em}
+  .mc-skip{
+    position:absolute;z-index:3;left:50%;bottom:max(1.6rem,env(safe-area-inset-bottom));transform:translateX(-50%);
+    color:rgba(244,239,226,.5);font-size:.82rem;font-weight:600;letter-spacing:.06em;white-space:nowrap;
+    opacity:0;transition:opacity 1s ease .8s;pointer-events:none;
+  }
+  .mc-intro.playing .mc-skip{opacity:1}
+  @media (prefers-reduced-motion: reduce){
+    .mc-intro{transition-duration:.2s}
+    .mc-brand{transition-duration:.2s}
+  }
 </style>
 </head>
 <body>
+
+<!-- ============ MCSA intro — Royal Flourish, plays on load, tap to skip ============
+     "MCSA" draws itself stroke-by-stroke (~3.6s), a glass shine sweeps across,
+     the academy name fades in, then the intro lifts at ~7.4s to reveal the
+     home page below. Tapping anywhere skips instantly; reduced-motion
+     preference skips it entirely. Inline SVG/CSS/JS only — no extra assets. -->
+<div class="mc-intro" id="mcIntro" role="button" aria-label="MCSA intro. Tap to skip." tabindex="0">
+  <div class="mc-halo"></div>
+  <div class="mc-stage">
+    <div class="mc-wordbox">
+      <svg class="mc-svg" viewBox="0 0 1000 400" role="img" aria-label="MCSA">
+        <defs>
+          <linearGradient id="mcStrokeGrad" gradientUnits="userSpaceOnUse" x1="60" y1="0" x2="940" y2="0">
+            <stop offset="0" stop-color="#a9ecc9" />
+            <stop offset=".3" stop-color="#eafbef" />
+            <stop offset=".46" stop-color="#fdf8e2" />
+            <stop offset=".6" stop-color="#f6dd8f" />
+            <stop offset=".84" stop-color="#c9f2da" />
+            <stop offset="1" stop-color="#9fe8c0" />
+          </linearGradient>
+          <linearGradient id="mcShineGrad" gradientUnits="userSpaceOnUse" x1="-420" y1="0" x2="-80" y2="0">
+            <stop offset="0" stop-color="#000000" />
+            <stop offset=".5" stop-color="#ffffff" />
+            <stop offset="1" stop-color="#000000" />
+          </linearGradient>
+          <mask id="mcShineMask" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="400">
+            <rect x="0" y="0" width="1000" height="400" fill="url(#mcShineGrad)" />
+          </mask>
+        </defs>
+        <g class="mc-wordgroup" id="mcWordGroup"></g>
+        <g id="mcShineGroup" mask="url(#mcShineMask)" opacity="0" aria-hidden="true"></g>
+      </svg>
+      <span class="mc-pen" id="mcPen"></span>
+    </div>
+    <div class="mc-brand" id="mcBrand">
+      <div class="mc-brandmark">MCSA <span class="mc-ball"></span></div>
+      <svg class="mc-swoosh" viewBox="0 0 240 18" aria-hidden="true"><path d="M4 13 C 70 3, 170 3, 236 10" /></svg>
+      <div class="mc-bname">Masters Cue Sport Academy</div>
+      <div class="mc-bsub">Snooker · Pool · Coaching — Balaganj, Lucknow</div>
+    </div>
+  </div>
+  <div class="mc-skip">Tap to skip</div>
+</div>
+<script>
+/* MCSA intro player — Royal Flourish hand, locked. Each letter is a
+   centreline path trimmed 0→1 with stroke-dashoffset so the pen truly
+   writes M-C-S-A in sequence; the A's crossbar is drawn last, then the
+   under-flourish sweep. Paths were cold-read as a rendered frame:
+   M-C-S-A must be unmistakable. */
+(function(){
+  var intro = document.getElementById('mcIntro');
+  if (!intro) return;
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced){ intro.style.display = 'none'; return; }  /* skip instantly */
+  var wordGroup = document.getElementById('mcWordGroup');
+  var shine = document.getElementById('mcShineGroup');
+  var shineGrad = document.getElementById('mcShineGrad');
+  var pen = document.getElementById('mcPen');
+  var brand = document.getElementById('mcBrand');
+  var SVGNS = 'http://www.w3.org/2000/svg';
+  var ROYAL = [
+    "M 52 236 C 60 158, 86 94, 130 81 C 147 76, 161 79, 167 92 C 177 128, 185 170, 195 205 C 199 220, 209 220, 215 204 C 223 176, 229 128, 233 92 C 235 74, 246 74, 252 96 C 260 128, 266 172, 275 206 C 279 220, 289 220, 295 204 C 303 174, 309 124, 313 92 C 315 76, 325 76, 329 100 C 335 140, 329 220, 325 286 C 326 294, 335 294, 343 286",
+    "M 516 152 C 508 118, 484 94, 452 92 C 416 90, 392 118, 386 158 C 380 198, 386 242, 408 266 C 430 290, 470 292, 494 268 C 504 258, 510 246, 511 234",
+    "M 676 130 C 665 100, 628 82, 600 98 C 575 112, 572 142, 591 160 C 610 177, 639 186, 651 206 C 663 227, 654 258, 631 274 C 606 292, 568 286, 555 256",
+    "M 700 290 C 718 216, 746 128, 772 90 C 780 77, 792 77, 800 94 C 815 124, 836 196, 853 246 C 860 267, 868 281, 881 288 C 905 300, 940 296, 962 272 C 976 256, 978 238, 968 228",
+    "M 720 214 C 754 199, 800 197, 838 209 C 851 213, 863 211, 871 204",
+    "M 118 324 C 320 350, 640 350, 884 316"
+  ];
+  var paths = ROYAL.map(function(d){
+    var p = document.createElementNS(SVGNS, 'path');
+    p.setAttribute('d', d); p.setAttribute('class', 'mc-draw');
+    wordGroup.appendChild(p);
+    var s = document.createElementNS(SVGNS, 'path');
+    s.setAttribute('d', d); s.setAttribute('class', 'mc-shinep');
+    shine.appendChild(s);
+    return p;
+  });
+  var WRITE_START = 700, WRITE_DUR = 3600;   /* the hand writes the word */
+  var SHINE_AT = 4750, SHINE_DUR = 1500;     /* one glass shine sweeps across */
+  var BRAND_AT = 5550;                       /* academy name fades in */
+  var LIFT_AT = 7400;                        /* intro lifts, home page revealed */
+  var GAP = 90;                              /* ms of pen lift between letters */
+  var raf = null, startT = 0, finished = false;
+  var lens = [], starts = [], durs = [], totalLen = 0, built = false;
+  function easeInOut(t){ return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2; }
+  function buildSchedule(){
+    if (built) return;
+    var drawTotal = WRITE_DUR - GAP * (paths.length - 1);
+    var i, L;
+    for (i = 0; i < paths.length; i++){ L = paths[i].getTotalLength(); lens.push(L); totalLen += L; }
+    var cursor = 0;
+    for (i = 0; i < paths.length; i++){
+      starts.push(cursor);
+      durs.push(drawTotal * lens[i] / totalLen);
+      cursor += durs[i] + GAP;
+      paths[i].style.strokeDasharray = lens[i];
+      paths[i].style.strokeDashoffset = lens[i];
+    }
+    built = true;
+  }
+  function setProgress(p){
+    buildSchedule();
+    var target = p * WRITE_DUR;
+    var penPt = null, penFade = 1;
+    for (var i = 0; i < paths.length; i++){
+      var local = target - starts[i];
+      var drawn = Math.max(0, Math.min(lens[i], lens[i] * local / durs[i]));
+      paths[i].style.strokeDashoffset = lens[i] - drawn;
+      if (local >= 0 && local <= durs[i]){
+        penPt = paths[i].getPointAtLength(drawn);
+        var lp = local / durs[i];
+        penFade = Math.min(1, lp / 0.1, (1 - lp) / 0.06 + 0.25);
+      }
+    }
+    if (penPt && p > 0 && p < 1){
+      pen.style.left = (penPt.x / 10) + '%';   /* viewBox is 1000 × 400 */
+      pen.style.top = (penPt.y / 4) + '%';
+      pen.style.opacity = (0.85 * Math.max(0, penFade)).toFixed(3);
+    } else {
+      pen.style.opacity = 0;
+    }
+  }
+  var WORD_X = 40, WORD_W = 940, BAND = 170;
+  function frame(now){
+    var t = now - startT;
+    if (t < WRITE_START){ setProgress(0); pen.style.opacity = 0; }
+    else if (t <= WRITE_START + WRITE_DUR){ setProgress(easeInOut((t - WRITE_START) / WRITE_DUR)); }
+    else { setProgress(1); pen.style.opacity = 0; }
+    if (t >= SHINE_AT && t <= SHINE_AT + SHINE_DUR){
+      var s = easeInOut((t - SHINE_AT) / SHINE_DUR);
+      var pos = WORD_X - BAND + s * (WORD_W + 2 * BAND);
+      shineGrad.setAttribute('x1', (pos - BAND).toFixed(1));
+      shineGrad.setAttribute('x2', (pos + BAND).toFixed(1));
+      shine.style.opacity = 1;
+    } else if (t > SHINE_AT + SHINE_DUR){
+      shine.style.opacity = 0;
+    }
+    if (t >= BRAND_AT) brand.classList.add('show');
+    if (t >= LIFT_AT){ finish(); return; }
+    raf = requestAnimationFrame(frame);
+  }
+  function finish(){
+    if (finished) return;
+    finished = true;
+    cancelAnimationFrame(raf);
+    setProgress(1);
+    shine.style.opacity = 0;
+    pen.style.opacity = 0;
+    brand.classList.add('show');
+    intro.classList.add('done');
+    intro.classList.remove('playing');
+    intro.setAttribute('aria-hidden', 'true');
+    setTimeout(function(){ intro.style.display = 'none'; }, 1300);
+  }
+  intro.addEventListener('click', finish);
+  intro.addEventListener('keydown', function(e){
+    if (e.key === 'Enter' || e.key === ' ' || e.key === 'Escape'){ e.preventDefault(); finish(); }
+  });
+  intro.classList.add('playing');
+  setProgress(0);
+  startT = performance.now();
+  raf = requestAnimationFrame(frame);
+})();
+</script>
 
 <header class="topbar">
   <div class="topbar-in">
@@ -801,8 +1029,8 @@
     <div class="mm-head">Staff &amp; owner</div>
     <button id="mmDash" class="hidden" onclick="goDashboard()">My dashboard</button>
     <button id="mmLogin" onclick="openLogin()">Login — staff &amp; owner</button>
-    <button class="mm-demo" id="mmDemoSup" onclick="demoQuickLogin('supervisor')">Demo: Supervisor login<small>One tap · PIN 1234 · counter view</small></button>
-    <button class="mm-demo" id="mmDemoAdm" onclick="demoQuickLogin('admin')">Demo: Admin (Owner) login<small>One tap · PIN 4321 · full control</small></button>
+    <button class="mm-demo" id="mmDemoSup" onclick="demoQuickLogin('supervisor')">Demo: Supervisor login<small>One tap · Name: employee · PIN 1234 · counter view</small></button>
+    <button class="mm-demo" id="mmDemoAdm" onclick="demoQuickLogin('admin')">Demo: Admin (Owner) login<small>One tap · ID: admin · PIN 4321 · full control</small></button>
     <button id="mmLogout" class="hidden" onclick="logout()">Log out</button>
   </div>
 </header>
@@ -839,15 +1067,15 @@
         <button type="button" class="btn-demo btn-demo-sup" onclick="demoQuickLogin('supervisor')">
           <span class="bd-title">Login as Supervisor →</span>
           <span class="bd-sub">Counter view — current tables, live timers &amp; frame control, bookings, and today's + this week's earnings only.</span>
-          <span class="bd-cred">Demo · Name: Demo Supervisor · PIN: 1234</span>
+          <span class="bd-cred">Demo · Name: employee · PIN: 1234</span>
         </button>
         <button type="button" class="btn-demo btn-demo-adm" onclick="demoQuickLogin('admin')">
           <span class="bd-title">Login as Admin (Owner) →</span>
           <span class="bd-sub">Full control — all earnings &amp; history, Day Book, Students / Coaching, Customers, bookings and rate settings.</span>
-          <span class="bd-cred">Demo · Email: owner@demo.club · PIN: 4321</span>
+          <span class="bd-cred">Demo · ID: admin · PIN: 4321</span>
         </button>
       </div>
-      <p class="da-foot">Prefer the full sign-in flow? Use the <strong>Login</strong> button at the top right — it asks “staff or owner?” and takes the same demo PINs (Staff 1234 · Owner 4321). In the live version these demo logins are removed and real PINs are set by the owner.</p>
+      <p class="da-foot">Prefer the full sign-in flow? Use the <strong>Login</strong> button at the top right — it asks “staff or owner?” and takes the same demo details: <strong>Staff — name <span style="font-family:'IBM Plex Mono',monospace">employee</span>, PIN 1234 · Owner — ID <span style="font-family:'IBM Plex Mono',monospace">admin</span>, PIN 4321</strong>. In the live version these demo logins are removed and real PINs are set by the owner.</p>
     </div>
 
     <div id="bookNowSec">
@@ -1058,15 +1286,28 @@
     </section>
 
     <section id="admStudentsSec" class="hidden">
-      <p class="section-note">Coaching students at a glance — who joined when, how long they have been learning, their monthly fee, whether this month is paid or pending, and how many sessions they have attended. <strong>Sample data for this demo only</strong> — in the full version the owner adds real students and marks fees as they come in.</p>
+      <p class="section-note">Coaching students, managed by the owner — add a student once with their joining date and <strong>"learning since" is worked out automatically</strong> from then on. Collect a fee by Cash or UPI-Scanner, or leave it Pending; add attended sessions with one tap. Four sample students are pre-loaded so the shape is visible. Supervisors never see this tab.</p>
       <div class="students-summary">
         <div class="stat"><div class="k">Active students</div><div class="v" id="stuTotal">4</div><div class="s">Currently learning</div></div>
-        <div class="stat"><div class="k">Fees collected · Nov</div><div class="v" id="stuCollected">₹0</div><div class="s" id="stuCollectedSub">This month</div></div>
-        <div class="stat pending"><div class="k">Fees pending · Nov</div><div class="v" id="stuPending">₹0</div><div class="s" id="stuPendingSub">To collect</div></div>
+        <div class="stat"><div class="k" id="stuCollectedK">Fees collected · this month</div><div class="v" id="stuCollected">₹0</div><div class="s" id="stuCollectedSub">This month</div></div>
+        <div class="stat pending"><div class="k" id="stuPendingK">Fees pending · this month</div><div class="v" id="stuPending">₹0</div><div class="s" id="stuPendingSub">To collect</div></div>
         <div class="stat"><div class="k">Sessions attended</div><div class="v" id="stuSessions">0</div><div class="s">All students, total</div></div>
       </div>
+      <div class="form-card" style="margin:0 0 14px">
+        <h3>Add a student</h3>
+        <div class="fc-sub">Name, joining date and monthly fee are all it takes — the new student starts with this month's fee Pending and 0 sessions.</div>
+        <div class="form-grid">
+          <div class="field"><label for="nsName">Student name</label><input id="nsName" type="text" placeholder="e.g. Dev Patel" autocomplete="off"></div>
+          <div class="field"><label for="nsPhone">Mobile (optional)</label><input id="nsPhone" type="tel" placeholder="For fee reminders" autocomplete="off"></div>
+          <div class="field"><label for="nsJoined">Joining date</label><input id="nsJoined" type="date"></div>
+          <div class="field"><label for="nsFee">Monthly fee (₹)</label><input id="nsFee" type="number" min="0" step="100" placeholder="e.g. 5000"></div>
+          <div class="field"><label for="nsCoach">Coach</label><input id="nsCoach" type="text" placeholder="e.g. Rahul Verma" autocomplete="off"></div>
+          <div class="field"><label for="nsBatch">Batch / timing</label><input id="nsBatch" type="text" placeholder="e.g. Evening · 5–6 PM" autocomplete="off"></div>
+        </div>
+        <div style="margin-top:14px"><button class="btn btn-start" style="max-width:280px" onclick="addStudent()">Add student</button></div>
+      </div>
       <div class="student-grid" id="studentGrid"></div>
-      <p class="section-note" style="margin:14px 0 0">In the full version: tap a student to see full fee history month by month, mark a fee paid in one tap, and see joining anniversaries — e.g. “learning for 6 months” — automatically, no manual counting.</p>
+      <p class="section-note" style="margin:14px 0 0">Fee due dates roll forward from each student's joining day every month — pay on time and the next due date appears on its own; leave it pending and it shows as overdue until collected.</p>
     </section>
 
     <section id="admCustomersSec" class="hidden">
@@ -1101,7 +1342,7 @@
           <strong>Customer</strong> — the public website: Book Now, Amenities, Shop, Services. No login, ever — the phone number is the key.<br>
           <strong>Supervisor</strong> — current tables and frame control, bookings, and only today's + this week's earnings.<br>
           <strong>Admin (owner)</strong> — everything: all earnings and history, the full Day Book, students, bookings and these settings.<br>
-          <strong>Sign-in</strong> — the Login button (top right) opens a separate sign-in page that asks "staff or owner?": staff sign in with name + PIN and land on the Supervisor view; the owner signs in with email + PIN and gets full Admin.<br>
+          <strong>Sign-in</strong> — the Login button (top right) opens a separate sign-in page that asks "staff or owner?": staff sign in with their staff name + PIN and land on the Supervisor view; the owner signs in with owner ID + PIN and gets full Admin.<br>
           <strong>Customer profiles</strong> — regulars are saved by mobile number only when they opt in; guests are never saved. A customer's name and number never appear on the public availability board.
         </div>
       </div>
@@ -1124,34 +1365,34 @@
             <button type="button" class="btn-demo btn-demo-sup" onclick="demoQuickLogin('supervisor')">
               <span class="bd-title">Supervisor (Demo) →</span>
               <span class="bd-sub">Counter view — tables, bookings, today + this week only.</span>
-              <span class="bd-cred">PIN: 1234</span>
+              <span class="bd-cred">Name: employee · PIN: 1234</span>
             </button>
             <button type="button" class="btn-demo btn-demo-adm" onclick="demoQuickLogin('admin')">
               <span class="bd-title">Admin · Owner (Demo) →</span>
               <span class="bd-sub">Full control — earnings, Day Book, students, settings.</span>
-              <span class="bd-cred">PIN: 4321</span>
+              <span class="bd-cred">ID: admin · PIN: 4321</span>
             </button>
           </div>
         </div>
         <div class="login-choices">
-          <button type="button" class="choice on" id="choiceStaff" onclick="chooseLogin('staff')">I'm staff<span>Counter / supervisor — sign in with your name + PIN.</span></button>
-          <button type="button" class="choice" id="choiceOwner" onclick="chooseLogin('owner')">I'm the owner<span>Full admin — sign in with your email + PIN.</span></button>
+          <button type="button" class="choice on" id="choiceStaff" onclick="chooseLogin('staff')">I'm staff<span>Counter / supervisor — sign in with your staff name + PIN.</span></button>
+          <button type="button" class="choice" id="choiceOwner" onclick="chooseLogin('owner')">I'm the owner<span>Full admin — sign in with your owner ID + PIN.</span></button>
         </div>
         <form id="staffForm" class="login-form" onsubmit="return doStaffLogin()">
           <div class="login-err hidden" id="staffErr"></div>
-          <div class="field"><label for="liStaffName">Your name</label><input id="liStaffName" type="text" placeholder="e.g. Rahul — evening counter" autocomplete="off"></div>
+          <div class="field"><label for="liStaffName">Your staff name</label><input id="liStaffName" type="text" placeholder="Your staff sign-in name" autocomplete="off"></div>
           <div class="field"><label for="liStaffPin">PIN</label><input id="liStaffPin" type="password" inputmode="numeric" placeholder="Your staff PIN" autocomplete="off"></div>
           <button class="btn btn-start" type="submit">Sign in as staff →</button>
           <p class="login-note">Forgot your PIN? The owner resets staff PINs from Admin — it takes ten seconds. Every bill you save is tagged with your name.</p>
         </form>
         <form id="ownerForm" class="login-form hidden" onsubmit="return doOwnerLogin()">
           <div class="login-err hidden" id="ownerErr"></div>
-          <div class="field"><label for="liOwnerEmail">Owner email</label><input id="liOwnerEmail" type="email" placeholder="e.g. owner@example.com" autocomplete="off"></div>
+          <div class="field"><label for="liOwnerId">Owner ID</label><input id="liOwnerId" type="text" placeholder="Your owner sign-in ID" autocomplete="off"></div>
           <div class="field"><label for="liOwnerPin">PIN</label><input id="liOwnerPin" type="password" inputmode="numeric" placeholder="Your owner PIN" autocomplete="off"></div>
           <button class="btn btn-start" type="submit">Sign in as owner →</button>
-          <p class="login-note">Forgot your PIN? In the live version a reset code is emailed to this address — or use the one-time recovery code given at setup.</p>
+          <p class="login-note">Forgot your PIN? In the live version the owner resets it with the one-time recovery code given at setup.</p>
         </form>
-        <div class="login-demo"><strong>Demo sign-ins —</strong> Use the one-tap buttons above, or type it in: Staff: any name, PIN <strong>1234</strong>. Owner: any email, PIN <strong>4321</strong>. In the live version the demo buttons are removed, the real PINs are set by the owner and checked on the server — they never appear in the page itself.</div>
+        <div class="login-demo"><strong>Demo login details —</strong> so you can check both sides yourself:<br>Supervisor (staff): name <strong>employee</strong> · PIN <strong>1234</strong><br>Owner (admin): ID <strong>admin</strong> · PIN <strong>4321</strong><br>Or use the one-tap buttons above — they sign in with these same two accounts. In the live version the demo details are removed, the real PINs are set by the owner and checked on the server — they never appear in the page itself.</div>
         <p class="login-note"><strong>Customers:</strong> no login, no password, no account — your phone number is your key for bookings and your record. Customer accounts arrive with the <strong>Shop in version two</strong>, so anything you order there is saved under your account.</p>
       </div>
     </div>
@@ -1218,6 +1459,22 @@
   </div>
 </div>
 
+<!-- Bill correction modal (Admin only — a reason is always recorded) -->
+<div class="overlay" id="correctOverlay" role="dialog" aria-modal="true" aria-labelledby="corrTitle">
+  <div class="modal">
+    <h2 id="corrTitle">Correct this bill</h2>
+    <div class="sub" id="corrSub"></div>
+    <div class="login-err hidden" id="corrErr"></div>
+    <div class="field" style="margin-bottom:12px"><label for="corrAmt">Corrected total (₹)</label><input id="corrAmt" type="number" min="0" step="1"></div>
+    <div class="field" style="margin-bottom:12px"><label for="corrReason">Reason for the correction (required)</label><input id="corrReason" type="text" placeholder="e.g. Wrong table charged — it was Pool, not Snooker" autocomplete="off"></div>
+    <p class="section-note" style="margin:0 0 4px">The original amount, the corrected amount and your reason stay on the Day Book entry — corrections are never silent, and every total on this page re-adds itself.</p>
+    <div class="modal-btns" style="margin-top:16px">
+      <button class="btn btn-ghost" onclick="closeCorrect()">Cancel</button>
+      <button class="btn btn-brass" onclick="saveCorrect()">Save correction</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast" role="status"></div>
 
 <script>
@@ -1225,12 +1482,12 @@
 var RATES = { snooker:4, pool:2 };
 
 var TABLES = [
-  { id:1, name:'Table 1', kind:'Snooker', detail:'Sharma S1 Pro', rate:4 },
-  { id:2, name:'Table 2', kind:'Snooker', detail:'Sharma S1 Pro', rate:4 },
-  { id:3, name:'Table 3', kind:'Snooker', detail:'Sharma S1 Pro', rate:4 },
-  { id:4, name:'Table 4', kind:'Snooker', detail:'Sharma S1 Pro', rate:4 },
-  { id:5, name:'Pool 1',  kind:'Pool',    detail:'Pool table',    rate:2 },
-  { id:6, name:'Pool 2',  kind:'Pool',    detail:'Pool table',    rate:2 }
+  { id:1, name:'Table 1', kind:'Snooker', detail:'Sharma S1 Pro · 12 ft', rate:4 },
+  { id:2, name:'Table 2', kind:'Snooker', detail:'Sharma S1 Pro · 12 ft', rate:4 },
+  { id:3, name:'Table 3', kind:'Snooker', detail:'Sharma S1 Pro · 12 ft', rate:4 },
+  { id:4, name:'Table 4', kind:'Snooker', detail:'Sharma S1 Pro · 12 ft', rate:4 },
+  { id:5, name:'Pool 1',  kind:'Pool',    detail:'Sharma · 6 ft',    rate:2 },
+  { id:6, name:'Pool 2',  kind:'Pool',    detail:'Sharma · 6 ft',    rate:2 }
 ];
 /* session: { p1, p2, startTs, frames:[secs], frameStartTs, paused, f1, f2 } */
 TABLES.forEach(function(t){ t.session = null; });
@@ -1390,14 +1647,20 @@ function toast(msg){
 /* =============== Roles, navigation & sign-in ===============
    The page always opens on the public customer website. Staff and the
    owner reach their views only through the Login page (top right):
-   staff = name + PIN → Supervisor, owner = email + PIN → Admin.
+   staff = staff name + PIN → Supervisor, owner = owner ID + PIN → Admin.
+   Demo accounts: staff "employee" / 1234, owner "admin" / 4321.
    Customers never sign in — the phone number is their key. */
 var role = 'customer';
 var supTab = 'tables';
 var admTab = 'overview';
-var session = null;        /* null | {kind:'staff', name} | {kind:'owner', email} */
+var session = null;        /* null | {kind:'staff', name} | {kind:'owner', id} */
 var loginKind = 'staff';
+/* Demo accounts — exactly the details printed on the login page so the
+   owner can check both sides. The live version checks real PINs on the
+   server; these exist only in this try-out demo. */
+var DEMO_STAFF_NAME = 'employee';
 var DEMO_STAFF_PIN = '1234';
+var DEMO_OWNER_ID = 'admin';
 var DEMO_OWNER_PIN = '4321';
 function placeTables(){
   var mount = document.getElementById('tablesMount');
@@ -1489,40 +1752,42 @@ function loginError(id, msg){
 function demoQuickLogin(kind){
   closeMenu();
   if (kind === 'admin'){
-    session = { kind:'owner', email:'owner@demo.club' };
+    session = { kind:'owner', id:DEMO_OWNER_ID };
     updateAuthUI();
     setRole('admin');
-    toast('Demo login — you are in as Admin (Owner). Full control: earnings, Day Book, students & settings.');
+    toast('Demo login — you are in as Admin (Owner, ID: admin). Full control: earnings, Day Book, students & settings.');
   } else {
-    session = { kind:'staff', name:'Demo Supervisor' };
+    session = { kind:'staff', name:DEMO_STAFF_NAME };
     updateAuthUI();
     setRole('supervisor');
-    toast('Demo login — you are in as Supervisor. Counter view: tables, bookings, today + this week only.');
+    toast('Demo login — you are in as Supervisor (employee). Counter view: tables, bookings, today + this week only.');
   }
   return false;
 }
 function doStaffLogin(){
   var name = document.getElementById('liStaffName').value.trim();
   var pin = document.getElementById('liStaffPin').value.trim();
-  if (!name){ loginError('staffErr', 'Enter your name first — it is how the counter knows who is on shift, and it tags every bill you save.'); document.getElementById('liStaffName').focus(); return false; }
-  if (pin !== DEMO_STAFF_PIN){ loginError('staffErr', 'That PIN does not match. In this demo the staff PIN is 1234 — in the live version, 5 wrong tries lock sign-in for 15 minutes and the owner can reset your PIN.'); document.getElementById('liStaffPin').focus(); return false; }
-  session = { kind:'staff', name:name };
+  if (!name){ loginError('staffErr', 'Enter your staff name first — it is how the counter knows who is on shift, and it tags every bill you save. In this demo the staff name is "employee".'); document.getElementById('liStaffName').focus(); return false; }
+  if (name.toLowerCase() !== DEMO_STAFF_NAME){ loginError('staffErr', 'That staff name is not recognised. In this demo the staff name is "employee" — check the demo login details below. In the live version the owner adds each staff member by name.'); document.getElementById('liStaffName').focus(); return false; }
+  if (pin !== DEMO_STAFF_PIN){ loginError('staffErr', 'That PIN does not match the staff account. In this demo the staff PIN is 1234 — in the live version, 5 wrong tries lock sign-in for 15 minutes and the owner can reset your PIN.'); document.getElementById('liStaffPin').focus(); return false; }
+  session = { kind:'staff', name:DEMO_STAFF_NAME };
   document.getElementById('liStaffPin').value = '';
   updateAuthUI();
   setRole('supervisor');
-  toast('Welcome, '+name+' — signed in as staff. You are on the counter (Supervisor) view.');
+  toast('Welcome, employee — signed in as staff. You are on the counter (Supervisor) view.');
   return false;
 }
 function doOwnerLogin(){
-  var email = document.getElementById('liOwnerEmail').value.trim();
+  var id = document.getElementById('liOwnerId').value.trim();
   var pin = document.getElementById('liOwnerPin').value.trim();
-  if (!/^\S+@\S+\.\S+$/.test(email)){ loginError('ownerErr', 'Enter the owner\u2019s email address — that email is also where a PIN reset code is sent if the PIN is ever forgotten.'); document.getElementById('liOwnerEmail').focus(); return false; }
-  if (pin !== DEMO_OWNER_PIN){ loginError('ownerErr', 'That PIN does not match. In this demo the owner PIN is 4321 — in the live version, use "Forgot PIN" on this page to get a reset code on your email.'); document.getElementById('liOwnerPin').focus(); return false; }
-  session = { kind:'owner', email:email };
+  if (!id){ loginError('ownerErr', 'Enter the owner ID first. In this demo the owner ID is "admin" — see the demo login details below.'); document.getElementById('liOwnerId').focus(); return false; }
+  if (id.toLowerCase() !== DEMO_OWNER_ID){ loginError('ownerErr', 'That owner ID is not recognised. In this demo the owner ID is "admin" — check the demo login details below.'); document.getElementById('liOwnerId').focus(); return false; }
+  if (pin !== DEMO_OWNER_PIN){ loginError('ownerErr', 'That PIN does not match the owner account. In this demo the owner PIN is 4321 — in the live version, use the recovery code from setup to reset a forgotten PIN.'); document.getElementById('liOwnerPin').focus(); return false; }
+  session = { kind:'owner', id:DEMO_OWNER_ID };
   document.getElementById('liOwnerPin').value = '';
   updateAuthUI();
   setRole('admin');
-  toast('Welcome back — signed in as the owner. Full Admin control.');
+  toast('Welcome back — signed in as the owner (admin). Full Admin control.');
   return false;
 }
 function logout(){
@@ -1553,7 +1818,7 @@ function updateAuthUI(){
   var mmDemoSup = document.getElementById('mmDemoSup');
   var mmDemoAdm = document.getElementById('mmDemoAdm');
   if (session){
-    chip.textContent = session.kind==='owner' ? ('Owner · '+session.email) : (session.name+' · Staff');
+    chip.textContent = session.kind==='owner' ? ('Owner · '+session.id) : (session.name+' · Staff');
     chip.classList.remove('hidden');
     loginBtn.classList.add('hidden');
     logoutBtn.classList.remove('hidden');
@@ -1564,7 +1829,7 @@ function updateAuthUI(){
     mmDash.classList.remove('hidden');
     mmDash.textContent = session.kind==='owner' ? 'Admin dashboard' : 'Counter dashboard';
     document.getElementById('supWho').innerHTML = 'Signed in as <strong>'+esc(session.kind==='staff' ? session.name : 'staff')+'</strong> — Supervisor (staff). You see today\u2019s and this week\u2019s earnings only.';
-    document.getElementById('admWho').innerHTML = 'Signed in as the <strong>owner</strong>'+(session.kind==='owner' ? ' ('+esc(session.email)+')' : '')+' — Admin, full control: every day, every record, all settings.';
+    document.getElementById('admWho').innerHTML = 'Signed in as the <strong>owner</strong>'+(session.kind==='owner' ? ' (ID: '+esc(session.id)+')' : '')+' — Admin, full control: every day, every record, all settings.';
   } else {
     chip.classList.add('hidden'); chip.textContent = '';
     loginBtn.classList.remove('hidden');
@@ -2005,7 +2270,8 @@ function renderBook(){
   document.getElementById('dayTotalBreak').textContent = 'Cash '+rs(tt.cash)+' + UPI-Scanner '+rs(tt.upi)+' + Pending '+rs(tt.pending)+' — always adds up';
   document.getElementById('ledgerEmpty').style.display = ledger.length ? 'none' : 'block';
   var html = '';
-  ledger.slice().reverse().forEach(function(e){
+  ledger.map(function(e, idx){ return { e:e, idx:idx }; }).reverse().forEach(function(pair){
+    var e = pair.e;
     var frameTxt = e.split ? ' · frames '+e.f1+'–'+e.f2+' · '+esc(e.p1)+' pays '+rs(e.split.s1)+', '+esc(e.p2)+' pays '+rs(e.split.s2)+' of the table bill' : '';
     var fbTxt = (e.frameSecs && e.frameSecs.length > 1) ? ' · '+e.frameSecs.map(function(sec,i){ return 'Frame '+(i+1)+' '+fmtClock(sec); }).join(', ')+' — play time only, pauses excluded' : '';
     var comps = entryComponents(e);
@@ -2013,15 +2279,67 @@ function renderBook(){
       var lbl = comps.length > 1 ? esc(c.who)+': '+payLabel(c.pay) : payLabel(c.pay);
       return '<span class="pay '+c.pay+'">'+lbl+'</span>';
     }).join(' ');
+    var corrHtml = e.correction
+      ? '<div class="corr-note">✎ Corrected by the owner — was '+rs(e.correction.from)+', now '+rs(e.total)+'. Reason: '+esc(e.correction.reason)+'</div>'
+      : '';
     html += '<div class="ledger-row">' +
       '<div><div class="ltab">'+e.tableName+'</div><div class="lt">'+fmtTime(e.startTs)+' – '+fmtTime(e.endTs)+'</div></div>' +
       '<div><div class="lp">'+esc(e.players)+'</div><div class="ld">'+e.minutes+' min play time @ '+rs(e.rate)+'/min · table '+rs(e.tableCharge)+frameTxt+fbTxt+'</div>' +
-      '<div style="display:flex;gap:5px;flex-wrap:wrap">'+pills+'</div></div>' +
-      '<div class="lamt">'+rs(e.total)+'</div>' +
+      '<div style="display:flex;gap:5px;flex-wrap:wrap">'+pills+'</div>'+corrHtml+'</div>' +
+      '<div class="lamt">'+rs(e.total)+'<br><button class="btn btn-ghost btn-small corr-btn" onclick="openCorrect('+pair.idx+')">Correct bill</button></div>' +
     '</div>';
   });
   document.getElementById('ledgerRows').innerHTML = html;
   renderStats();
+}
+
+/* =============== Bill correction (Admin only, reason always recorded) ===============
+   Only the owner can correct a saved bill, and never silently: the entry
+   keeps the original amount and the reason, and every total re-adds. */
+var correctIdx = null;
+function openCorrect(idx){
+  var e = ledger[idx];
+  if (!e) return;
+  correctIdx = idx;
+  document.getElementById('corrSub').textContent = e.tableName+' · '+e.players+' · '+fmtTime(e.startTs)+' – '+fmtTime(e.endTs)+' · billed '+rs(e.total);
+  document.getElementById('corrAmt').value = e.total;
+  document.getElementById('corrReason').value = '';
+  document.getElementById('corrErr').classList.add('hidden');
+  document.getElementById('correctOverlay').classList.add('open');
+}
+function closeCorrect(){
+  document.getElementById('correctOverlay').classList.remove('open');
+  correctIdx = null;
+}
+function saveCorrect(){
+  if (correctIdx === null) return;
+  var e = ledger[correctIdx];
+  if (!e) return;
+  var amtEl = document.getElementById('corrAmt');
+  var reasonEl = document.getElementById('corrReason');
+  var errEl = document.getElementById('corrErr');
+  var newTotal = Math.round(+amtEl.value);
+  var reason = reasonEl.value.trim();
+  if (isNaN(newTotal) || newTotal < 0){ errEl.textContent = 'Enter the corrected total — ₹0 or more.'; errEl.classList.remove('hidden'); amtEl.focus(); return; }
+  if (!reason){ errEl.textContent = 'A reason is required — a correction is never saved silently. One line is enough: what was wrong.'; errEl.classList.remove('hidden'); reasonEl.focus(); return; }
+  var oldTotal = e.total;
+  /* Rescale each player's share so the split proportions survive */
+  var comps = entryComponents(e);
+  var sum = comps.reduce(function(a,c){ return a + c.amt; }, 0) || oldTotal || 1;
+  var assigned = 0;
+  comps.forEach(function(c, i){
+    if (i === comps.length - 1){ c.amt = newTotal - assigned; }
+    else { c.amt = Math.round(newTotal * c.amt / sum); assigned += c.amt; }
+  });
+  e.components = comps;
+  if (e.split && comps.length >= 2){ e.split = { s1:comps[0].amt, s2:comps[1].amt }; }
+  e.tableCharge = newTotal;
+  e.total = newTotal;
+  e.correction = { from:oldTotal, reason:reason, ts:Date.now() };
+  closeCorrect();
+  renderBook();
+  renderEarnings();
+  toast('Bill corrected — '+rs(oldTotal)+' → '+rs(newTotal)+'. The reason is on the Day Book entry.');
 }
 
 /* =============== Bookings =============== */
@@ -2171,6 +2489,7 @@ function createBooking(){
   var note = document.getElementById('bkNote').value.trim();
   if (!name){ toast('Add your name — the booking goes under it.'); document.getElementById('bkName').focus(); return; }
   if (!phone){ toast('Add your phone number — the counter may need to reach you.'); document.getElementById('bkPhone').focus(); return; }
+  if (date < todayStr() || date > document.getElementById('bkDate').max){ toast('Bookings open from today up to 7 days ahead — pick a date in that window.'); document.getElementById('bkDate').focus(); return; }
   var conflict = slotConflict(tid, date, time, dur);
   if (conflict){
     toast(t.name+' is already booked '+bookingRange(conflict)+' on '+prettyDate(date)+' — booked till '+minToSlot(bookingEndMin(conflict))+'. Pick a time after that, or another table.');
@@ -2398,13 +2717,48 @@ function applyRates(){
   toast('Rates saved — snooker '+rs(s)+'/min, pool '+rs(p)+'/min on free tables.');
 }
 
-/* =============== Students / Coaching — SAMPLE DATA ONLY (demo) =============== */
+/* =============== Students / Coaching (Admin-managed) ===============
+   The owner adds students with a joining date; "learning since" and the
+   monthly fee due date are always worked out from that date. Fees are
+   collected by Cash / UPI-Scanner or left Pending. Four sample students
+   are pre-loaded so the record shape is visible in the demo. */
 var STUDENTS = [
-  { name:'Aarav Sharma', joined:'15 Aug 2026', learning:'2 months 24 days', fee:5000, status:'paid',    sessions:34, coach:'Rahul Verma', nextDue:'15 Dec 2026', batch:'Evening · 5–6 PM' },
-  { name:'Kabir Singh',  joined:'20 Jun 2026', learning:'4 months 19 days', fee:6000, status:'paid',    sessions:58, coach:'Rahul Verma', nextDue:'20 Nov 2026', batch:'Evening · 4–5 PM' },
-  { name:'Vihaan Gupta', joined:'02 Sep 2026', learning:'2 months 6 days',  fee:5000, status:'pending', sessions:26, coach:'Rahul Verma', nextDue:'02 Nov 2026', batch:'Morning · 11 AM–12 PM' },
-  { name:'Arjun Mehta',  joined:'10 Oct 2026', learning:'29 days',          fee:4500, status:'pending', sessions:11, coach:'Imran Khan',  nextDue:'10 Nov 2026', batch:'Evening · 5–6 PM' }
+  { name:'Aarav Sharma', joinedISO:'2026-08-15', fee:5000, status:'paid',    feePay:'upi',  sessions:34, coach:'Rahul Verma', batch:'Evening · 5–6 PM',    sample:true },
+  { name:'Kabir Singh',  joinedISO:'2026-06-20', fee:6000, status:'paid',    feePay:'cash', sessions:58, coach:'Rahul Verma', batch:'Evening · 4–5 PM',    sample:true },
+  { name:'Vihaan Gupta', joinedISO:'2026-09-02', fee:5000, status:'pending', feePay:null,   sessions:26, coach:'Rahul Verma', batch:'Morning · 11 AM–12 PM', sample:true },
+  { name:'Arjun Mehta',  joinedISO:'2026-10-10', fee:4500, status:'pending', feePay:null,   sessions:11, coach:'Imran Khan',  batch:'Evening · 5–6 PM',    sample:true }
 ];
+var MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+var MONTHS_FULL = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+function fmtISODate(iso){
+  var p = String(iso).split('-');
+  var d = new Date(+p[0], +p[1]-1, +p[2]);
+  return pad(d.getDate())+' '+MONTHS_SHORT[d.getMonth()]+' '+d.getFullYear();
+}
+function fmtDateObj(d){ return pad(d.getDate())+' '+MONTHS_SHORT[d.getMonth()]+' '+d.getFullYear(); }
+/* "Learning since" — counted from the joining date, never typed by hand */
+function learningText(iso){
+  var p = String(iso).split('-');
+  var j = new Date(+p[0], +p[1]-1, +p[2]);
+  var now = new Date(); now.setHours(0,0,0,0);
+  if (j > now) return 'Starts '+fmtISODate(iso);
+  var months = (now.getFullYear()-j.getFullYear())*12 + (now.getMonth()-j.getMonth());
+  var anchor = new Date(j.getFullYear(), j.getMonth()+months, j.getDate());
+  if (anchor > now){ months--; anchor = new Date(j.getFullYear(), j.getMonth()+months, j.getDate()); }
+  var days = Math.round((now - anchor) / 86400000);
+  if (months <= 0) return days <= 0 ? 'Joined today' : days + (days===1 ? ' day' : ' days');
+  return months + (months===1 ? ' month ' : ' months ') + days + (days===1 ? ' day' : ' days');
+}
+/* Monthly fee falls due on the joining day-of-month: for a paid student the
+   next cycle's date; for a pending one, the date it fell due (overdue). */
+function feeDueDate(s){
+  var day = +String(s.joinedISO).split('-')[2];
+  var now = new Date(); now.setHours(0,0,0,0);
+  var due = new Date(now.getFullYear(), now.getMonth(), day);
+  if (s.status === 'paid'){ if (due <= now) due = new Date(now.getFullYear(), now.getMonth()+1, day); }
+  else if (due > now){ due = new Date(now.getFullYear(), now.getMonth()-1, day); }
+  return due;
+}
 function studentInitials(name){
   return name.split(' ').map(function(w){ return w.charAt(0); }).join('').slice(0,2).toUpperCase();
 }
@@ -2414,35 +2768,93 @@ function renderStudents(){
     sessionsTotal += s.sessions;
     if (s.status==='paid'){ collected += s.fee; paidCount++; } else { pending += s.fee; pendingCount++; }
   });
+  var monthShort = MONTHS_SHORT[new Date().getMonth()];
+  var monthFull = MONTHS_FULL[new Date().getMonth()];
   document.getElementById('stuTotal').textContent = STUDENTS.length;
   document.getElementById('studentCount').textContent = STUDENTS.length;
+  document.getElementById('stuCollectedK').textContent = 'Fees collected · '+monthShort;
+  document.getElementById('stuPendingK').textContent = 'Fees pending · '+monthShort;
   document.getElementById('stuCollected').textContent = rs(collected);
   document.getElementById('stuCollectedSub').textContent = paidCount + (paidCount===1 ? ' student paid' : ' students paid');
   document.getElementById('stuPending').textContent = rs(pending);
   document.getElementById('stuPendingSub').textContent = pendingCount + (pendingCount===1 ? ' student pending' : ' students pending');
   document.getElementById('stuSessions').textContent = sessionsTotal;
-  document.getElementById('studentGrid').innerHTML = STUDENTS.map(function(s){
+  var today0 = new Date(); today0.setHours(0,0,0,0);
+  document.getElementById('studentGrid').innerHTML = STUDENTS.map(function(s, i){
     var isPending = s.status==='pending';
+    var due = feeDueDate(s);
+    var overdue = isPending && due < today0;
+    var actions = isPending
+      ? '<div class="sa-label">Collect '+esc(monthFull)+' fee — '+rs(s.fee)+'</div>' +
+        '<div class="sa-row">' +
+          '<button class="btn btn-start btn-small" onclick="studentFee('+i+',\'cash\')">Paid · Cash</button>' +
+          '<button class="btn btn-ghost btn-small" onclick="studentFee('+i+',\'upi\')">Paid · UPI-Scanner</button>' +
+          '<button class="btn btn-ghost btn-small" onclick="studentFee('+i+',\'pending\')">Keep Pending</button>' +
+        '</div>'
+      : '<div class="fee-paid-note">✓ '+esc(monthFull)+' fee of '+rs(s.fee)+' collected · '+payLabel(s.feePay || 'cash')+'. Next fee due '+fmtDateObj(due)+'.</div>';
+    actions += '<div class="sa-row"><span class="sa-label" style="align-self:center">Sessions</span>' +
+      '<button class="btn btn-ghost btn-small" onclick="studentSession('+i+')">+1 session attended</button></div>';
     return '<article class="student-card">' +
       '<div class="student-head">' +
         '<div class="student-avatar" aria-hidden="true">'+studentInitials(s.name)+'</div>' +
-        '<div><div class="student-name">'+esc(s.name)+'</div><div class="student-sub">'+esc(s.batch)+' · Coach: '+esc(s.coach)+'</div></div>' +
+        '<div><div class="student-name">'+esc(s.name)+(s.sample ? '<span class="sample-badge">Sample</span>' : '')+'</div><div class="student-sub">'+esc(s.batch)+' · Coach: '+esc(s.coach)+'</div></div>' +
         '<span class="fee-status '+(isPending ? 'pending' : 'paid')+'">'+(isPending ? '● Fee pending' : '✓ Fee paid')+'</span>' +
       '</div>' +
       '<div class="learning-box">' +
-        '<div><div class="lb-k">Learning since</div><div class="lb-v">'+esc(s.learning)+'</div><div class="lb-s">Joined '+esc(s.joined)+'</div></div>' +
+        '<div><div class="lb-k">Learning since</div><div class="lb-v">'+learningText(s.joinedISO)+'</div><div class="lb-s">Joined '+fmtISODate(s.joinedISO)+' · counted automatically</div></div>' +
         '<div class="lb-sessions"><div class="n">'+s.sessions+'</div><div class="l">Sessions attended</div></div>' +
       '</div>' +
       '<div class="student-rows">' +
         '<div class="sr"><div class="k">Monthly coaching fee</div><div class="v mono">'+rs(s.fee)+' / month</div></div>' +
-        '<div class="sr"><div class="k">Fee status · November</div><div class="v">'+(isPending ? 'Pending — not yet paid' : 'Paid')+'</div></div>' +
+        '<div class="sr"><div class="k">Fee status · '+esc(monthFull)+'</div><div class="v">'+(isPending ? 'Pending — not yet paid' : 'Paid · '+payLabel(s.feePay || 'cash'))+'</div></div>' +
         '<div class="sr"><div class="k">Coach</div><div class="v">'+esc(s.coach)+'</div></div>' +
-        '<div class="sr"><div class="k">'+(isPending ? 'Fee was due' : 'Next fee due')+'</div><div class="v mono'+(isPending ? ' due-pending' : '')+'">'+esc(s.nextDue)+(isPending ? ' · overdue' : '')+'</div></div>' +
-        '<div class="sr"><div class="k">Joining date</div><div class="v mono">'+esc(s.joined)+'</div></div>' +
+        '<div class="sr"><div class="k">'+(isPending ? 'Fee was due' : 'Next fee due')+'</div><div class="v mono'+(overdue ? ' due-pending' : '')+'">'+fmtDateObj(due)+(overdue ? ' · overdue' : '')+'</div></div>' +
+        '<div class="sr"><div class="k">Joining date</div><div class="v mono">'+fmtISODate(s.joinedISO)+'</div></div>' +
         '<div class="sr"><div class="k">Batch / timing</div><div class="v">'+esc(s.batch)+'</div></div>' +
       '</div>' +
+      '<div class="stu-actions">'+actions+'</div>' +
     '</article>';
   }).join('');
+}
+function studentFee(i, method){
+  var s = STUDENTS[i];
+  if (!s) return;
+  if (method === 'pending'){
+    toast(s.name+'\u2019s fee stays Pending — it keeps showing in Fees pending until it is collected.');
+    return;
+  }
+  s.status = 'paid'; s.feePay = method;
+  renderStudents();
+  toast(s.name+'\u2019s fee of '+rs(s.fee)+' recorded — Paid · '+payLabel(method)+'.');
+}
+function studentSession(i){
+  var s = STUDENTS[i];
+  if (!s) return;
+  s.sessions++;
+  renderStudents();
+  toast('Session added — '+s.name+' has now attended '+s.sessions+' sessions.');
+}
+function addStudent(){
+  var name = document.getElementById('nsName').value.trim();
+  var phone = document.getElementById('nsPhone').value.trim();
+  var joined = document.getElementById('nsJoined').value;
+  var fee = Math.round(+document.getElementById('nsFee').value || 0);
+  var coach = document.getElementById('nsCoach').value.trim() || '—';
+  var batch = document.getElementById('nsBatch').value.trim() || '—';
+  if (!name){ toast('Add the student\u2019s name first.'); document.getElementById('nsName').focus(); return; }
+  if (!joined){ toast('Pick the joining date — "learning since" is counted from it automatically.'); document.getElementById('nsJoined').focus(); return; }
+  if (joined > todayStr()){ toast('The joining date cannot be in the future.'); document.getElementById('nsJoined').focus(); return; }
+  if (fee <= 0){ toast('Enter the monthly coaching fee.'); document.getElementById('nsFee').focus(); return; }
+  STUDENTS.unshift({ name:name, phone:phone, joinedISO:joined, fee:fee, status:'pending', feePay:null, sessions:0, coach:coach, batch:batch, sample:false });
+  document.getElementById('nsName').value = '';
+  document.getElementById('nsPhone').value = '';
+  document.getElementById('nsFee').value = '';
+  document.getElementById('nsCoach').value = '';
+  document.getElementById('nsBatch').value = '';
+  document.getElementById('nsJoined').value = todayStr();
+  renderStudents();
+  toast(name+' added — learning since counts from '+fmtISODate(joined)+' on its own. This month\u2019s fee starts as Pending.');
+  document.getElementById('studentGrid').scrollIntoView({behavior:'smooth', block:'nearest'});
 }
 
 /* =============== Init =============== */
@@ -2457,6 +2869,11 @@ function renderStudents(){
   var dateEl = document.getElementById('bkDate');
   dateEl.value = todayStr();
   dateEl.min = todayStr();
+  /* Bookings open today → 7 days ahead, same as the live version */
+  var maxD = new Date(); maxD.setDate(maxD.getDate() + 7);
+  dateEl.max = maxD.getFullYear()+'-'+pad(maxD.getMonth()+1)+'-'+pad(maxD.getDate());
+  var nsJoinedEl = document.getElementById('nsJoined');
+  if (nsJoinedEl) nsJoinedEl.value = todayStr();
   updEstimate();
   /* Sample bookings so the counter view shows how bookings land */
   bookingSeq++;
