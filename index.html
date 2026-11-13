@@ -517,6 +517,16 @@
   /* Bill correction note in the Day Book */
   .corr-note{font-size:12.5px;font-weight:700;color:var(--amber);background:var(--amber-soft);border-radius:8px;padding:6px 9px;margin-top:6px;line-height:1.45}
   .ledger-row .corr-btn{margin-top:7px}
+  /* Supervisor Pending account (demo: counter can clear dues here) */
+  .pend-lab{display:block;font-family:"Public Sans",sans-serif;font-size:11px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--red);margin-top:2px}
+  .pend-note{
+    background:var(--amber-soft);color:var(--amber);border-radius:10px;
+    padding:11px 14px;font-size:14px;line-height:1.55;font-weight:600;margin:0 0 14px;
+  }
+  .pend-note strong{font-weight:800}
+  .pend-actions{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-top:9px}
+  .pend-actions .btn{width:auto}
+  .pend-actions .pa-who{font-size:13px;font-weight:800;color:var(--ink-2)}
 
   /* ---------- Settings ---------- */
   .settings-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:20px}
@@ -1066,7 +1076,7 @@
       <div class="demo-login-grid">
         <button type="button" class="btn-demo btn-demo-sup" onclick="demoQuickLogin('supervisor')">
           <span class="bd-title">Login as Supervisor →</span>
-          <span class="bd-sub">Counter view — current tables, live timers &amp; frame control, bookings, and today's + this week's earnings only.</span>
+          <span class="bd-sub">Counter view — current tables, live timers &amp; frame control, bookings, today's + this week's earnings, and the Pending account (clear dues in this demo).</span>
           <span class="bd-cred">Demo · Name: employee · PIN: 1234</span>
         </button>
         <button type="button" class="btn-demo btn-demo-adm" onclick="demoQuickLogin('admin')">
@@ -1196,7 +1206,8 @@
     <nav class="tabs" aria-label="Supervisor views">
       <button class="tab" id="supTabTables" aria-selected="true" onclick="showSupTab('tables')">Current Tables</button>
       <button class="tab" id="supTabBookings" aria-selected="false" onclick="showSupTab('bookings')">Bookings <span class="count" id="supBookCount">0</span></button>
-      <span class="try-hint">You run the floor: start and pause frames here as games finish. Bookings from the website land in the Bookings tab the moment a player confirms.</span>
+      <button class="tab" id="supTabPending" aria-selected="false" onclick="showSupTab('pending')">Pending <span class="count" id="supPendCount">0</span></button>
+      <span class="try-hint">You run the floor: start and pause frames here as games finish. Bookings from the website land in the Bookings tab the moment a player confirms. The Pending tab shows who owes what — and in this demo you can clear a due here when it is paid.</span>
     </nav>
 
     <section id="supTablesSec"><div id="supTablesSlot"></div></section>
@@ -1204,7 +1215,26 @@
       <p class="section-note">Every booking made on the website shows here instantly. When the player arrives, tap <strong>Start table</strong> — the timer starts under their name. Full booking history and all records sit with Admin.</p>
       <div class="bk-list bookings-list"></div>
     </section>
-    <p class="section-note" style="margin-top:16px">Supervisors see today's earning and this week's earning only — monthly totals, the full Day Book and settings are Admin's.</p>
+    <section id="supPendingSec" class="hidden">
+      <p class="pend-note"><strong>The Pending account.</strong> Every rupee still to collect — who owes what, bill by bill and fee by fee. In this demo the counter can clear a due right here: when a player or student pays, tap <strong>Collected · Cash</strong> or <strong>Collected · UPI-Scanner</strong> against their share and the totals, earnings and Day Book update on the spot. Everything else stays as it was — no monthly totals, no full Day Book history, no rates or settings, and no adding or editing students.</p>
+      <div class="book-summary">
+        <div class="stat pending"><div class="k">Pending to collect</div><div class="v" id="supPendTotal">₹0</div><div class="s" id="supPendTotalSub">Nobody owes anything</div></div>
+        <div class="stat"><div class="k">Table bills pending</div><div class="v" id="supPendBills">₹0</div><div class="s" id="supPendBillsSub">No bill shares pending</div></div>
+        <div class="stat"><div class="k">Coaching fees pending</div><div class="v" id="supPendFees">₹0</div><div class="s" id="supPendFeesSub">No fees pending</div></div>
+        <div class="stat"><div class="k">People owing</div><div class="v" id="supPendPeople">0</div><div class="s" id="supPendPeopleSub">All clear at the counter</div></div>
+      </div>
+      <div class="sec-head" style="margin-top:18px"><h2>Pending table bills</h2><span class="sh-note">Shares marked Pending when the bill was closed — plus earlier dues on a saved player's record.</span></div>
+      <div class="ledger-card">
+        <div class="empty" id="supPendBillsEmpty">
+          <div class="big">No table bills pending</div>
+          <div>When a bill is closed with any share as Pending, it appears here with the players, table and amount.</div>
+        </div>
+        <div id="supPendBillsRows"></div>
+      </div>
+      <div class="sec-head" style="margin-top:22px"><h2>Pending coaching fees</h2><span class="sh-note">Students whose monthly fee is still unpaid — the counter can collect and clear it here in this demo; adding or editing students stays Admin-only.</span></div>
+      <div class="bk-list" id="supPendStudents"></div>
+    </section>
+    <p class="section-note" style="margin-top:16px">Supervisors see today's earning and this week's earning, plus the Pending account — and in this demo they can clear pending dues from it. Monthly totals, the full Day Book history and settings stay Admin-only.</p>
   </section>
 
   <!-- ================= ADMIN VIEW ================= -->
@@ -1227,9 +1257,9 @@
         <div class="s">Every day on record</div>
       </div>
       <div class="stat pending">
-        <div class="k">Pending to collect</div>
+        <div class="k">Pending to collect · today</div>
         <div class="v" id="admPending">₹0</div>
-        <div class="s" id="admPendingSub">Nobody owes anything</div>
+        <div class="s" id="admPendingSub">No bill shares pending today</div>
       </div>
     </section>
 
@@ -1286,7 +1316,7 @@
     </section>
 
     <section id="admStudentsSec" class="hidden">
-      <p class="section-note">Coaching students, managed by the owner — add a student once with their joining date and <strong>"learning since" is worked out automatically</strong> from then on. Collect a fee by Cash or UPI-Scanner, or leave it Pending; add attended sessions with one tap. Four sample students are pre-loaded so the shape is visible. Supervisors never see this tab.</p>
+      <p class="section-note">Coaching students, managed by the owner — add a student once with their joining date and <strong>"learning since" is worked out automatically</strong> from then on. Collect a fee by Cash or UPI-Scanner, or leave it Pending; add attended sessions with one tap. Four sample students are pre-loaded so the shape is visible. Supervisors never see this tab — in their Pending account they only see a student's pending fee, which in this demo they can clear when it is paid.</p>
       <div class="students-summary">
         <div class="stat"><div class="k">Active students</div><div class="v" id="stuTotal">4</div><div class="s">Currently learning</div></div>
         <div class="stat"><div class="k" id="stuCollectedK">Fees collected · this month</div><div class="v" id="stuCollected">₹0</div><div class="s" id="stuCollectedSub">This month</div></div>
@@ -1340,7 +1370,7 @@
         <h3>Who sees what</h3>
         <div class="sc-sub" style="margin-bottom:0">
           <strong>Customer</strong> — the public website: Book Now, Amenities, Shop, Services. No login, ever — the phone number is the key.<br>
-          <strong>Supervisor</strong> — current tables and frame control, bookings, and only today's + this week's earnings.<br>
+          <strong>Supervisor</strong> — current tables and frame control, bookings, today's + this week's earnings, and the Pending account — in this demo the Supervisor can also clear pending dues from it (mark a bill share or a student fee collected by Cash or UPI-Scanner). Monthly totals, the full Day Book history, rates and settings stay Admin-only.<br>
           <strong>Admin (owner)</strong> — everything: all earnings and history, the full Day Book, students, bookings and these settings.<br>
           <strong>Sign-in</strong> — the Login button (top right) opens a separate sign-in page that asks "staff or owner?": staff sign in with their staff name + PIN and land on the Supervisor view; the owner signs in with owner ID + PIN and gets full Admin.<br>
           <strong>Customer profiles</strong> — regulars are saved by mobile number only when they opt in; guests are never saved. A customer's name and number never appear on the public availability board.
@@ -1364,7 +1394,7 @@
           <div class="demo-login-grid">
             <button type="button" class="btn-demo btn-demo-sup" onclick="demoQuickLogin('supervisor')">
               <span class="bd-title">Supervisor (Demo) →</span>
-              <span class="bd-sub">Counter view — tables, bookings, today + this week only.</span>
+              <span class="bd-sub">Counter view — tables, bookings, today + this week, and Pending (clear dues in this demo).</span>
               <span class="bd-cred">Name: employee · PIN: 1234</span>
             </button>
             <button type="button" class="btn-demo btn-demo-adm" onclick="demoQuickLogin('admin')">
@@ -1760,7 +1790,7 @@ function demoQuickLogin(kind){
     session = { kind:'staff', name:DEMO_STAFF_NAME };
     updateAuthUI();
     setRole('supervisor');
-    toast('Demo login — you are in as Supervisor (employee). Counter view: tables, bookings, today + this week only.');
+    toast('Demo login — you are in as Supervisor (employee). Counter view: tables, bookings, today + this week, and the Pending account.');
   }
   return false;
 }
@@ -1828,7 +1858,7 @@ function updateAuthUI(){
     mmLogout.classList.remove('hidden');
     mmDash.classList.remove('hidden');
     mmDash.textContent = session.kind==='owner' ? 'Admin dashboard' : 'Counter dashboard';
-    document.getElementById('supWho').innerHTML = 'Signed in as <strong>'+esc(session.kind==='staff' ? session.name : 'staff')+'</strong> — Supervisor (staff). You see today\u2019s and this week\u2019s earnings only.';
+    document.getElementById('supWho').innerHTML = 'Signed in as <strong>'+esc(session.kind==='staff' ? session.name : 'staff')+'</strong> — Supervisor (staff). You see today\u2019s and this week\u2019s earnings, plus the Pending account — in this demo you can clear dues from it too.';
     document.getElementById('admWho').innerHTML = 'Signed in as the <strong>owner</strong>'+(session.kind==='owner' ? ' (ID: '+esc(session.id)+')' : '')+' — Admin, full control: every day, every record, all settings.';
   } else {
     chip.classList.add('hidden'); chip.textContent = '';
@@ -1839,7 +1869,7 @@ function updateAuthUI(){
     if (mmDemoAdm) mmDemoAdm.classList.remove('hidden');
     mmLogout.classList.add('hidden');
     mmDash.classList.add('hidden');
-    document.getElementById('supWho').innerHTML = 'Signed in as <strong>staff</strong> — Supervisor. You see today\u2019s and this week\u2019s earnings only.';
+    document.getElementById('supWho').innerHTML = 'Signed in as <strong>staff</strong> — Supervisor. You see today\u2019s and this week\u2019s earnings, plus the Pending account — in this demo you can clear dues from it too.';
     document.getElementById('admWho').innerHTML = 'Signed in as the <strong>owner</strong> — Admin, full control: every day, every record, all settings.';
   }
 }
@@ -1847,9 +1877,12 @@ function showSupTab(v){
   supTab = v;
   document.getElementById('supTablesSec').classList.toggle('hidden', v!=='tables');
   document.getElementById('supBookingsSec').classList.toggle('hidden', v!=='bookings');
+  document.getElementById('supPendingSec').classList.toggle('hidden', v!=='pending');
   document.getElementById('supTabTables').setAttribute('aria-selected', v==='tables');
   document.getElementById('supTabBookings').setAttribute('aria-selected', v==='bookings');
+  document.getElementById('supTabPending').setAttribute('aria-selected', v==='pending');
   placeTables();
+  if (v==='pending') renderSupPending();
   window.scrollTo({top:0, behavior:'smooth'});
 }
 function showAdmTab(v){
@@ -2246,9 +2279,10 @@ function renderStats(){
   ledger.forEach(function(e){
     entryComponents(e).forEach(function(c){ if (c.pay==='pending') pendNames.push(c.who); });
   });
-  document.getElementById('admPendingSub').textContent = pendNames.length ? ('Owed by: '+pendNames.join(', ')) : 'Nobody owes anything';
+  document.getElementById('admPendingSub').textContent = pendNames.length ? ('Owed by: '+pendNames.join(', ')) : 'No bill shares pending today';
   document.getElementById('bookCount').textContent = ledger.length;
   document.getElementById('admBookCount').textContent = waiting;
+  renderSupPending();
 }
 function payLabel(p){ return p==='cash' ? 'Cash' : p==='upi' ? 'UPI-Scanner' : 'Pending'; }
 function renderEarnings(){
@@ -2291,6 +2325,145 @@ function renderBook(){
   });
   document.getElementById('ledgerRows').innerHTML = html;
   renderStats();
+}
+
+/* =============== Supervisor Pending account (demo: counter can clear) ===============
+   Every outstanding due in one place: pending shares of today's bills,
+   earlier pending dues sitting on a saved player's record, and pending
+   coaching fees. In THIS DEMO the Supervisor can clear a due here —
+   marking a share or a fee collected by Cash / UPI-Scanner updates the
+   totals, the earnings and the Day Book. The Supervisor still gets no
+   monthly totals, no full Day Book history, no rates/settings and no
+   student add/edit — those stay Admin-only. */
+function pendingBillItems(){
+  var items = [];
+  ledger.forEach(function(e, ei){
+    var comps = entryComponents(e);
+    var shares = [];
+    var amt = 0;
+    comps.forEach(function(c, ci){
+      if (c.pay==='pending'){ shares.push({ who:c.who, amt:c.amt, entryIdx:ei, compIdx:ci }); amt += c.amt; }
+    });
+    if (!shares.length) return;
+    items.push({ kind:'ledger', players:e.players, table:e.tableName, when:'Today', time:fmtTime(e.startTs)+' – '+fmtTime(e.endTs), detail:e.minutes+' min play time · full bill '+rs(e.total), amt:amt, shares:shares, sample:false });
+  });
+  Object.keys(CUSTOMERS).forEach(function(k){
+    var p = CUSTOMERS[k];
+    (p.history || []).forEach(function(h, hi){
+      if (h.pay!=='pending' || h.when==='Today') return;
+      items.push({ kind:'history', players:p.name, table:h.table, when:h.when, time:'', detail:h.detail+' · '+h.minutes+' min', amt:h.amount, shares:[{ who:p.name, amt:h.amount, custKey:k, histIdx:hi }], sample:!!p.sample });
+    });
+  });
+  return items;
+}
+function pendingStudentItems(){
+  var studs = (typeof STUDENTS!=='undefined' && STUDENTS) ? STUDENTS : [];
+  var out = [];
+  studs.forEach(function(s, i){ if (s.status==='pending') out.push({ s:s, idx:i }); });
+  return out;
+}
+function renderSupPending(){
+  if (!document.getElementById('supPendTotal')) return;
+  var bills = pendingBillItems();
+  var studs = pendingStudentItems();
+  var billsTotal = bills.reduce(function(a,b){ return a+b.amt; }, 0);
+  var feesTotal = studs.reduce(function(a,x){ return a+x.s.fee; }, 0);
+  var people = [];
+  bills.forEach(function(b){ b.shares.forEach(function(sh){ if (people.indexOf(sh.who)<0) people.push(sh.who); }); });
+  studs.forEach(function(x){ if (people.indexOf(x.s.name)<0) people.push(x.s.name); });
+  document.getElementById('supPendTotal').textContent = rs(billsTotal + feesTotal);
+  document.getElementById('supPendTotalSub').textContent = (billsTotal + feesTotal) ? ('Owed by: '+people.join(', ')) : 'Nobody owes anything';
+  document.getElementById('supPendBills').textContent = rs(billsTotal);
+  document.getElementById('supPendBillsSub').textContent = bills.length ? (bills.length + (bills.length===1 ? ' bill' : ' bills') + ' with a pending share') : 'No bill shares pending';
+  document.getElementById('supPendFees').textContent = rs(feesTotal);
+  document.getElementById('supPendFeesSub').textContent = studs.length ? (studs.length + (studs.length===1 ? ' student' : ' students') + ' pending') : 'No fees pending';
+  document.getElementById('supPendPeople').textContent = people.length;
+  document.getElementById('supPendPeopleSub').textContent = people.length ? people.join(', ') : 'All clear at the counter';
+  document.getElementById('supPendCount').textContent = bills.length + studs.length;
+  document.getElementById('supPendBillsEmpty').style.display = bills.length ? 'none' : 'block';
+  document.getElementById('supPendBillsRows').innerHTML = bills.map(function(b){
+    var shareHtml = b.shares.map(function(sh){
+      var fn = b.kind==='ledger'
+        ? 'clearLedgerPending('+sh.entryIdx+','+sh.compIdx+','
+        : 'clearHistoryPending(\''+sh.custKey+'\','+sh.histIdx+',';
+      return '<div class="pend-actions">' +
+        '<span class="pay pending">'+esc(sh.who)+': Pending '+rs(sh.amt)+'</span>' +
+        '<button class="btn btn-start btn-small" onclick="'+fn+'\'cash\')">Collected · Cash</button>' +
+        '<button class="btn btn-ghost btn-small" onclick="'+fn+'\'upi\')">Collected · UPI-Scanner</button>' +
+      '</div>';
+    }).join('');
+    return '<div class="ledger-row">' +
+      '<div><div class="ltab">'+esc(b.table)+'</div><div class="lt">'+esc(b.when)+(b.time ? ' · '+esc(b.time) : '')+'</div></div>' +
+      '<div><div class="lp">'+esc(b.players)+(b.sample ? '<span class="sample-badge">Sample</span>' : '')+'</div><div class="ld">'+esc(b.detail)+'</div>'+shareHtml+'</div>' +
+      '<div class="lamt">'+rs(b.amt)+'<span class="pend-lab">Pending</span></div>' +
+    '</div>';
+  }).join('');
+  var monthFull = MONTHS_FULL[new Date().getMonth()];
+  var today0 = new Date(); today0.setHours(0,0,0,0);
+  document.getElementById('supPendStudents').innerHTML = studs.length ? studs.map(function(x){
+    var s = x.s;
+    var due = feeDueDate(s);
+    var overdue = due < today0;
+    return '<div class="bk-card">' +
+      '<div class="bk-main"><div class="bk-name">'+esc(s.name)+(s.sample ? '<span class="sample-badge">Sample</span>' : '')+'</div>' +
+      '<div class="bk-meta">'+esc(monthFull)+' coaching fee · '+esc(s.batch)+' · Coach: '+esc(s.coach)+'<br>Fee was due <strong>'+fmtDateObj(due)+'</strong>'+(overdue ? ' · <strong>overdue</strong>' : '')+'</div>' +
+      '<div class="pend-actions">' +
+        '<button class="btn btn-start btn-small" onclick="studentFee('+x.idx+',\'cash\')">Collected · Cash</button>' +
+        '<button class="btn btn-ghost btn-small" onclick="studentFee('+x.idx+',\'upi\')">Collected · UPI-Scanner</button>' +
+      '</div></div>' +
+      '<div class="bk-side"><div class="bk-when">'+rs(s.fee)+'</div><span class="bstatus pending">Fee pending</span></div>' +
+    '</div>';
+  }).join('') : '<div class="bk-card"><div class="bk-main"><div class="bk-name">No coaching fees pending</div><div class="bk-meta">Every student\u2019s fee for this month is collected — nothing to clear here.</div></div></div>';
+}
+/* When a saved player's pending share is cleared, clear it on their
+   customer record too, so the two never disagree. */
+function syncCustomerClear(e, c, method){
+  var keys = Object.keys(CUSTOMERS);
+  var done = false;
+  [true, false].forEach(function(exact){
+    if (done) return;
+    keys.forEach(function(k){
+      if (done) return;
+      var p = CUSTOMERS[k];
+      if (exact && p.name !== c.who) return;
+      var hist = p.history || [];
+      for (var i=0; i<hist.length; i++){
+        var h = hist[i];
+        if (h.when==='Today' && h.pay==='pending' && h.amount===c.amt && h.table===e.tableName){
+          h.pay = method;
+          p.pending = Math.max(0, p.pending - c.amt);
+          done = true;
+          break;
+        }
+      }
+    });
+  });
+}
+function clearLedgerPending(ei, ci, method){
+  var e = ledger[ei];
+  if (!e) return;
+  var comps = entryComponents(e);
+  var c = comps[ci];
+  if (!c || c.pay!=='pending') return;
+  c.pay = method;
+  e.components = comps;
+  syncCustomerClear(e, c, method);
+  renderBook();
+  renderEarnings();
+  renderCustomers();
+  renderSupPending();
+  toast(c.who+'\u2019s pending share of '+rs(c.amt)+' marked collected · '+payLabel(method)+' — totals, earnings and the Day Book are updated.');
+}
+function clearHistoryPending(key, hi, method){
+  var p = CUSTOMERS[key];
+  if (!p) return;
+  var h = (p.history || [])[hi];
+  if (!h || h.pay!=='pending') return;
+  h.pay = method;
+  p.pending = Math.max(0, p.pending - h.amount);
+  renderCustomers();
+  renderSupPending();
+  toast(p.name+'\u2019s earlier pending due of '+rs(h.amount)+' ('+h.when+', '+h.table+') marked collected · '+payLabel(method)+'.');
 }
 
 /* =============== Bill correction (Admin only, reason always recorded) ===============
@@ -2815,6 +2988,7 @@ function renderStudents(){
       '<div class="stu-actions">'+actions+'</div>' +
     '</article>';
   }).join('');
+  renderSupPending();
 }
 function studentFee(i, method){
   var s = STUDENTS[i];
